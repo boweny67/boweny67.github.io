@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机器增强的人机混合神经系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #faf7f2;
+            --ink: #1a1a2e;
+            --coral: #e85d4a;
+            --teal: #2a9d8f;
+            --sun: #e9c46a;
+            --lavender: #9b8de3;
+            --rose: #f4a6b8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Georgia', 'Noto Serif SC', serif;
+            background: var(--cream);
+            color: var(--ink);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 背景装饰 */
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+            transition: transform 0.3s ease;
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--rose);
+            top: -100px;
+            left: -100px;
+        }
+
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--sun);
+            top: 40%;
+            right: -100px;
+        }
+
+        .blob-3 {
+            width: 450px;
+            height: 450px;
+            background: var(--teal);
+            bottom: -100px;
+            left: 30%;
+        }
+
+        /* 进度条 */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--coral), var(--sun), var(--teal));
+            z-index: 1000;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* 侧边导航 */
+        .side-nav {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(26, 26, 46, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-dot:hover, .nav-dot.active {
+            background: var(--coral);
+            transform: scale(1.5);
+        }
+
+        .nav-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: var(--ink);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: sans-serif;
+        }
+
+        .nav-dot:hover::after {
+            opacity: 1;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .hero-eyebrow {
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--coral);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            max-width: 900px;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--coral);
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: rgba(26, 26, 46, 0.7);
+            max-width: 600px;
+            margin-bottom: 60px;
+            font-style: italic;
+        }
+
+        .hero-arrow {
+            font-size: 2rem;
+            color: var(--coral);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
+
+        /* 通用 section */
+        .layer-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 100px 40px;
+            position: relative;
+        }
+
+        .layer-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .layer-number {
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+
+        .layer-1 .layer-number { background: rgba(232, 93, 74, 0.15); color: var(--coral); }
+        .layer-2 .layer-number { background: rgba(233, 196, 106, 0.2); color: #d4a045; }
+        .layer-3 .layer-number { background: rgba(42, 157, 143, 0.15); color: var(--teal); }
+        .layer-4 .layer-number { background: rgba(155, 141, 227, 0.15); color: var(--lavender); }
+        .layer-5 .layer-number { background: rgba(244, 166, 184, 0.2); color: #d4708a; }
+        .layer-6 .layer-number { background: rgba(26, 26, 46, 0.1); color: var(--ink); }
+
+        .layer-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .layer-desc {
+            font-size: 1.15rem;
+            color: rgba(26, 26, 46, 0.7);
+            margin-bottom: 50px;
+            max-width: 650px;
+            font-style: italic;
+        }
+
+        /* 交互卡片 */
+        .cards-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .cards-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .cards-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .interactive-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--card-accent, var(--coral));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-8px) rotate(-1deg);
+            box-shadow: 0 12px 40px rgba(26, 26, 46, 0.15);
+        }
+
+        .interactive-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .interactive-card.expanded .card-content {
+            max-height: 800px;
+        }
+
+        .card-text {
+            color: rgba(26, 26, 46, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .card-list li {
+            padding: 6px 0;
+            color: rgba(26, 26, 46, 0.7);
+            font-size: 0.95rem;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .card-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--card-accent, var(--coral));
+        }
+
+        .card-hint {
+            font-family: sans-serif;
+            font-size: 0.8rem;
+            color: var(--card-accent, var(--coral));
+            margin-top: 16px;
+            font-weight: 600;
+        }
+
+        /* 层级图 */
+        .hierarchy-visual {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+            margin: 60px 0;
+        }
+
+        .hierarchy-title {
+            text-align: center;
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(26, 26, 46, 0.5);
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        .hierarchy-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .hier-item {
+            padding: 18px 24px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .hier-item:hover {
+            transform: scale(1.03);
+        }
+
+        .hier-item.h1 { background: rgba(232, 93, 74, 0.15); color: var(--coral); }
+        .hier-item.h2 { background: rgba(233, 196, 106, 0.2); color: #d4a045; }
+        .hier-item.h3 { background: rgba(42, 157, 143, 0.15); color: var(--teal); }
+        .hier-item.h4 { background: rgba(155, 141, 227, 0.15); color: var(--lavender); }
+        .hier-item.h5 { background: rgba(244, 166, 184, 0.2); color: #d4708a; }
+        .hier-item.h6 { background: rgba(26, 26, 46, 0.08); color: var(--ink); }
+
+        /* 关系图 */
+        .relation-diagram {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+            margin: 40px 0;
+        }
+
+        .relation-title {
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(26, 26, 46, 0.5);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .relation-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .relation-node {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .relation-node.env { background: rgba(42, 157, 143, 0.1); color: var(--teal); }
+        .relation-node.body { background: rgba(232, 93, 74, 0.1); color: var(--coral); }
+        .relation-node.machine { background: rgba(155, 141, 227, 0.1); color: var(--lavender); }
+
+        .relation-arrow {
+            font-size: 1.5rem;
+            color: rgba(26, 26, 46, 0.3);
+        }
+
+        /* 底部 */
+        .footer {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .footer-quote {
+            font-size: 2rem;
+            font-style: italic;
+            max-width: 700px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        .footer-quote::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--coral);
+            line-height: 0;
+            vertical-align: -30px;
+            margin-right: 10px;
+        }
+
+        .footer-author {
+            font-family: sans-serif;
+            font-size: 0.9rem;
+            color: rgba(26, 26, 46, 0.5);
+            letter-spacing: 0.1em;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .side-nav {
+                right: 15px;
+            }
+
+            .cards-2, .cards-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .layer-section {
+                padding: 80px 24px;
+            }
+
+            .relation-flow {
+                flex-direction: column;
+            }
+
+            .relation-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* 滚动动画 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="bg-blob blob-1" id="blob1"></div>
+    <div class="bg-blob blob-2" id="blob2"></div>
+    <div class="bg-blob blob-3" id="blob3"></div>
+
+    <!-- 进度条 -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- 侧边导航 -->
+    <nav class="side-nav">
+        <div class="nav-dot active" data-target="hero" data-label="开头"></div>
+        <div class="nav-dot" data-target="layer1" data-label="任务"></div>
+        <div class="nav-dot" data-target="layer2" data-label="体系"></div>
+        <div class="nav-dot" data-target="layer3" data-label="整机"></div>
+        <div class="nav-dot" data-target="layer4" data-label="系统"></div>
+        <div class="nav-dot" data-target="layer5" data-label="子系统"></div>
+        <div class="nav-dot" data-target="layer6" data-label="模块"></div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-eyebrow">系统工程 · 小组作业 1</div>
+        <h1>机器增强的<br><em>人机混合</em>神经系统</h1>
+        <p class="hero-subtitle">从生命维持到感知行动，从生物神经到机器增强——六层架构，层层拆解一个未来系统</p>
+        <div class="hero-arrow">↓</div>
+    </section>
+
+    <!-- 层级总览 -->
+    <section class="layer-section" id="overview">
+        <div class="layer-container reveal">
+            <div class="hierarchy-visual">
+                <div class="hierarchy-title">六层架构 · 从宏观到微观</div>
+                <div class="hierarchy-stack">
+                    <div class="hier-item h1">任务 Mission</div>
+                    <div class="hier-item h2">体系 SoS</div>
+                    <div class="hier-item h3">整机 Vehicles</div>
+                    <div class="hier-item h4">系统 Systems</div>
+                    <div class="hier-item h5">子系统 Sub-systems</div>
+                    <div class="hier-item h6">模块 Modules</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第1层：任务 -->
+    <section class="layer-section layer-1" id="layer1">
+        <div class="layer-container reveal">
+            <div class="layer-number">第 1 层</div>
+            <h2 class="layer-title">任务 Mission</h2>
+            <p class="layer-desc">系统存在的根本理由——维持生命，扩展能力。</p>
+            
+            <div class="cards-grid cards-3">
+                <div class="interactive-card" style="--card-accent: var(--coral);">
+                    <div class="card-title">基础任务</div>
+                    <div class="card-content">
+                        <p class="card-text">维持人体生命活动稳态，这是系统存在的底线：</p>
+                        <ul class="card-list">
+                            <li>维持呼吸、循环、体温等生命体征稳定</li>
+                            <li>基础神经反射与自稳态调节</li>
+                            <li>日常感知与运动控制</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--sun);">
+                    <div class="card-title">核心任务</div>
+                    <div class="card-content">
+                        <p class="card-text">完成"感知—决策—行动"闭环：</p>
+                        <ul class="card-list">
+                            <li>感知外部环境</li>
+                            <li>神经中枢处理</li>
+                            <li>躯体行动响应</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--teal);">
+                    <div class="card-title">增强任务</div>
+                    <div class="card-content">
+                        <p class="card-text">通过机器增强扩展人的能力边界：</p>
+                        <ul class="card-list">
+                            <li>超越人体生理极限的感知（红外/超声波）</li>
+                            <li>超越肌肉极限的力量输出</li>
+                            <li>超越生物记忆的信息存储与调用</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第2层：体系 -->
+    <section class="layer-section layer-2" id="layer2">
+        <div class="layer-container reveal">
+            <div class="layer-number">第 2 层</div>
+            <h2 class="layer-title">体系 SoS</h2>
+            <p class="layer-desc">外部环境 + 人体 + 机器增强设备，三者耦合形成的大系统。</p>
+            
+            <div class="relation-diagram">
+                <div class="relation-title">体系构成关系</div>
+                <div class="relation-flow">
+                    <div class="relation-node env">外部环境</div>
+                    <div class="relation-arrow">⇄</div>
+                    <div class="relation-node body">人体系统</div>
+                    <div class="relation-arrow">⇄</div>
+                    <div class="relation-node machine">机器增强系统</div>
+                </div>
+            </div>
+            
+            <div class="cards-grid cards-3">
+                <div class="interactive-card" style="--card-accent: var(--teal);">
+                    <div class="card-title">外部环境</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>物理世界：光、声、力、温度</li>
+                            <li>信息世界：互联网、云服务</li>
+                            <li>社会环境：其他人、设备网络</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--coral);">
+                    <div class="card-title">人体系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>天然的生物神经系统</li>
+                            <li>感知器官</li>
+                            <li>运动系统</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--lavender);">
+                    <div class="card-title">机器增强系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>人工神经接口</li>
+                            <li>计算单元</li>
+                            <li>执行机构</li>
+                            <li>云端服务</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <div class="interactive-card" style="--card-accent: var(--sun);">
+                    <div class="card-title">三者关系闭环</div>
+                    <div class="card-content">
+                        <p class="card-text">环境刺激 → 人体感知 + 机器感知融合 → 中枢决策（生物+人工混合）→ 人体行动 + 机器辅助行动 → 反作用于环境</p>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第3层：整机 -->
+    <section class="layer-section layer-3" id="layer3">
+        <div class="layer-container reveal">
+            <div class="layer-number">第 3 层</div>
+            <h2 class="layer-title">整机 Vehicles</h2>
+            <p class="layer-desc">人体 + 机器增强设备的完整组合体。</p>
+            
+            <div class="cards-grid cards-2">
+                <div class="interactive-card" style="--card-accent: var(--coral);">
+                    <div class="card-title">生物整机</div>
+                    <div class="card-content">
+                        <p class="card-text">人体本身就是最精密的整机：</p>
+                        <ul class="card-list">
+                            <li>骨骼框架</li>
+                            <li>肌肉驱动</li>
+                            <li>神经通信</li>
+                            <li>内脏器官</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--teal);">
+                    <div class="card-title">可穿戴增强整机</div>
+                    <div class="card-content">
+                        <p class="card-text">根据任务需求灵活配置的设备组合：</p>
+                        <ul class="card-list">
+                            <li>头戴式：EEG头环、AR眼镜、听觉增强耳麦</li>
+                            <li>躯干式：腰挂/胸挂边缘计算主机、电源模块</li>
+                            <li>四肢式：上肢机械臂、下肢助力腿、手部触觉反馈手套</li>
+                            <li>植入式：脑机接口芯片、周围神经接口</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第4层：系统 -->
+    <section class="layer-section layer-4" id="layer4">
+        <div class="layer-container reveal">
+            <div class="layer-number">第 4 层</div>
+            <h2 class="layer-title">系统 Systems</h2>
+            <p class="layer-desc">整机下的大系统，生物系统与人工系统并列融合。</p>
+            
+            <div class="cards-grid cards-2">
+                <div class="interactive-card" style="--card-accent: var(--lavender);">
+                    <div class="card-title">感知系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>生物感知：眼、耳、鼻、舌、皮肤本体感受器</li>
+                            <li>人工感知：红外摄像头、麦克风阵列、压力传感器、GPS、环境监测传感器</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--sun);">
+                    <div class="card-title">信息传输系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>生物传输：传入神经、传出神经</li>
+                            <li>人工传输：无线通信模块、植入式导线、蓝牙/WiFi</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--coral);">
+                    <div class="card-title">决策与控制系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>生物决策：大脑皮层、脊髓反射</li>
+                            <li>人工决策：边缘计算单元、AI推理模型、云端协同决策</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--teal);">
+                    <div class="card-title">执行与运动系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>生物执行：骨骼肌、关节</li>
+                            <li>人工执行：外骨骼电机、机械驱动器、电刺激器</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--rose);">
+                    <div class="card-title">能源与代谢系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>生物能源：消化系统、循环系统、ATP代谢</li>
+                            <li>人工能源：电池组、无线充电、能量采集（运动发电、体温发电）</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: #d4708a;">
+                    <div class="card-title">安全与监护系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>生物安全：免疫系统、疼痛反射、自稳态调节</li>
+                            <li>人工安全：过压保护、热管理、故障熔断、医疗监测算法</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第5层：子系统 -->
+    <section class="layer-section layer-5" id="layer5">
+        <div class="layer-container reveal">
+            <div class="layer-number">第 5 层</div>
+            <h2 class="layer-title">子系统 Sub-systems</h2>
+            <p class="layer-desc">每个大系统再往下拆一层，功能更具体。</p>
+            
+            <div class="cards-grid cards-2">
+                <div class="interactive-card" style="--card-accent: var(--lavender);">
+                    <div class="card-title">感知系统 → 子系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>视觉子系统：生物视网膜 + 人工摄像头 + 图像预处理</li>
+                            <li>听觉子系统：生物耳蜗 + 人工麦克风阵列 + 降噪算法</li>
+                            <li>触觉子系统：皮肤感受器 + 人工压力/温度传感器 + 力反馈映射</li>
+                            <li>本体感觉子系统：前庭器官 + IMU惯性测量单元</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--sun);">
+                    <div class="card-title">信息传输系统 → 子系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>神经接口子系统：电极阵列、信号放大、阻抗匹配</li>
+                            <li>无线传输子系统：蓝牙模块、NFC、数据压缩</li>
+                            <li>有线植入子系统：植入式导线、绝缘封装、生物相容涂层</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--coral);">
+                    <div class="card-title">决策与控制系统 → 子系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>信号解扣子系统：EEG/EMG降噪、特征提取、模式分类</li>
+                            <li>混合决策子系统：生物-人工信号融合、权重分配、冲突仲裁</li>
+                            <li>预测控制子系统：运动意图预测、前馈补偿、延迟补偿</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--teal);">
+                    <div class="card-title">执行与运动系统 → 子系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>驱动子系统：伺服电机、液压/气动驱动器、电刺激器</li>
+                            <li>关节控制子系统：角度闭环、力矩控制、阻抗控制</li>
+                            <li>反馈子系统：肌电反馈、触觉反馈、视觉反馈</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--rose);">
+                    <div class="card-title">能源与代谢系统 → 子系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>电池管理子系统：充放电管理、SOC估计、热管理</li>
+                            <li>能量采集子系统：运动振动发电、体温温差发电</li>
+                            <li>生物供能子系统：营养代谢监测、血糖调节</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: #d4708a;">
+                    <div class="card-title">安全与监护系统 → 子系统</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>实时监测子系统：心率/脑电/体温异常检测</li>
+                            <li>故障诊断子系统：电极脱落检测、信号质量评估</li>
+                            <li>安全降级子系统：紧急停机、安全模式切换、人工接管</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第6层：模块 -->
+    <section class="layer-section layer-6" id="layer6">
+        <div class="layer-container reveal">
+            <div class="layer-number">第 6 层</div>
+            <h2 class="layer-title">模块 Modules</h2>
+            <p class="layer-desc">最底层的硬件与软件单元，系统的基本积木。</p>
+            
+            <div class="cards-grid cards-2">
+                <div class="interactive-card" style="--card-accent: var(--ink);">
+                    <div class="card-title">硬件模块</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>信号采集模块：干电极/湿电极阵列、仪表放大器、ADC采样芯片</li>
+                            <li>信号处理模块：DSP芯片、FPGA加速板</li>
+                            <li>刺激输出模块：电脉冲生成器、电流源芯片、幅值/脉宽调节模块</li>
+                            <li>通信模块：蓝牙SoC芯片、无线充电线圈、天线模块</li>
+                            <li>电源模块：锂电池单元、DC-DC变换器、电源管理IC</li>
+                            <li>机械模块：外骨骼关节结构件、碳纤维支撑杆、快拆接口</li>
+                            <li>生物封装模块：医用级钛合金外壳、生物相容硅胶封装、防感染涂层</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+                
+                <div class="interactive-card" style="--card-accent: var(--coral);">
+                    <div class="card-title">软件/算法模块</div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>信号预处理模块：降噪、滤波、伪迹去除</li>
+                            <li>特征提取模块：时域/频域特征提取算法</li>
+                            <li>算法模块：运动意图分类器、视觉目标检测模型、安全规则引擎</li>
+                            <li>能量管理算法：充放电策略、功耗优化</li>
+                            <li>故障诊断算法：异常检测、预测性维护</li>
+                        </ul>
+                    </div>
+                    <div class="card-hint">点击展开 →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 结尾 -->
+    <section class="footer">
+        <div class="footer-quote reveal">
+            从生命维持的顶层任务，到最底层的芯片模块——<br>六层架构，层层嵌套，生物与机器深度融合。
+        </div>
+        <div class="footer-author reveal reveal-delay-1">—— 机器增强的人机混合神经系统 · 小组作业 1</div>
+    </section>
+
+    <script>
+        // 进度条
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // 背景 blob 跟随鼠标
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.getElementById('blob1').style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+            document.getElementById('blob2').style.transform = `translate(${x * -20}px, ${y * -20}px)`;
+            document.getElementById('blob3').style.transform = `translate(${x * 15}px, ${y * -15}px)`;
+        });
+
+        // 滚动淡入动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 卡片展开
+        document.querySelectorAll('.interactive-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('expanded');
+                const hint = card.querySelector('.card-hint');
+                hint.textContent = card.classList.contains('expanded') ? '点击收起 ↑' : '点击展开 →';
+            });
+        });
+
+        // 侧边导航点击跳转
+        document.querySelectorAll('.nav-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const target = document.getElementById(dot.dataset.target);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // 侧边导航高亮
+        const sections = ['hero', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6'];
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(id => {
+                const section = document.getElementById(id);
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= window.innerHeight / 2) {
+                        current = id;
+                    }
+                }
+            });
+            
+            document.querySelectorAll('.nav-dot').forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.dataset.target === current) {
+                    dot.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
