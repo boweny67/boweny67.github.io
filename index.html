@@ -72,6 +72,9 @@
             border-radius: 8px;
             border: 1px solid #e5e5e5;
             transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
         .assignment-item:hover {
             border-color: #4f46e5;
@@ -95,14 +98,6 @@
             border-radius: 4px;
             font-size: 0.8rem;
             font-weight: 500;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-        .empty-state p {
-            font-size: 1rem;
         }
         footer {
             margin-top: 80px;
@@ -135,9 +130,11 @@
         <section>
             <h2>课程作业</h2>
             <div class="assignment-list">
-                <div class="empty-state">
-                    <p>暂无作业，后续会陆续更新</p>
-                </div>
+                <a href="assignment1/" class="assignment-item">
+                    <div class="assignment-title">小组作业 1：机器增强的人机混合神经系统</div>
+                    <p class="assignment-desc">围绕"机器增强的人机混合神经系统"，拆解任务-体系-整机-系统-子系统-模块六层架构。</p>
+                    <span class="assignment-tag">系统工程</span>
+                </a>
             </div>
         </section>
 
