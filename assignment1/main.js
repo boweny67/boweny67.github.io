@@ -1,177 +1,19 @@
 /* ============================================================
-   一次抬手，要经过六层 —— 交互与数据
+   一次抬手，要经过六层 —— 交互逻辑
+   （数据在 data.js，文案改动只需动那一个文件）
    ============================================================ */
 (function () {
   'use strict';
 
+  var D = window.EMB || {};
+  var LAYERS = D.LAYERS || [];
+  var SYSTEMS = D.SYSTEMS || [];
+  var MODULES = D.MODULES || [];
+  var BREAKS = D.BREAKS || [];
+  var BUILDER = D.BUILDER || [];
+  var PRESETS = D.PRESETS || [];
+
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ----------------------------------------------------------
-     数据
-     ---------------------------------------------------------- */
-  var LAYERS = [
-    {
-      n: '01', cn: '任务', en: 'Mission', scale: '人生 · 年', kind: 'duo', tag: '为什么存在',
-      gist: '系统为什么存在。所有设计从这里开始，也从这里被否定。',
-      pairs: [
-        ['维持生命稳态', '冗余供能 + 故障降级'],
-        ['感知—决策—行动', '闭环控制架构'],
-        ['突破生理极限', '增强任务：红外、力、记忆']
-      ],
-      kpi: '任务成功率 = 可用性 × 精度 × 时间',
-      kpiLabel: '衡量'
-    },
-    {
-      n: '02', cn: '体系', en: 'SoS', scale: '房间 · 城市', kind: 'duo', tag: '和谁咬在一起',
-      gist: '环境、人体、机器，三个东西咬成一个环。任一边变了，整个环要重新配平。',
-      pairs: [
-        ['物理世界：光、声、力、温度', '多模态感知场'],
-        ['信息世界：网络与云', '外部算力与知识'],
-        ['社会世界：他人与设备', '人机协同网络']
-      ],
-      kpi: '闭环增益：环境变、人变、机器变，三者必须同步',
-      kpiLabel: '衡量'
-    },
-    {
-      n: '03', cn: '整机', en: 'Vehicles', scale: '人 · 米', kind: 'duo', tag: '一个完整的我',
-      gist: '一个人配上一套设备，就是一个整机。生物件与机器件，在这里第一次装到一起。',
-      pairs: [
-        ['骨骼', '碳纤维支架'],
-        ['肌肉', '外骨骼电机 / 功能电刺激'],
-        ['皮肤', '传感器阵列'],
-        ['神经', '电极与线缆'],
-        ['代谢', '电池与能量采集']
-      ],
-      kpi: '穿戴时间 × 重量 × 自由度',
-      kpiLabel: '衡量'
-    },
-    {
-      n: '04', cn: '系统', en: 'Systems', scale: '分米 · 厘米', kind: 'systems', tag: '分工',
-      gist: '整机内部按功能分家。六个系统，每一个都是“生物做法”与“机器做法”的双轨。',
-      kpi: '系统之间不许抢同一个执行器',
-      kpiLabel: '约束'
-    },
-    {
-      n: '05', cn: '子系统', en: 'Sub-systems', scale: '厘米 · 毫米', kind: 'subs', tag: '再拆一层',
-      gist: '每个系统再往下拆一层，功能才落到能画接口图的程度。点开看。',
-      kpi: '每个子系统必须能独立测试',
-      kpiLabel: '约束'
-    },
-    {
-      n: '06', cn: '模块', en: 'Modules', scale: '毫米 · 微米', kind: 'mods', tag: '基本积木',
-      gist: '最后剩下的是可以采购、贴片、烧固件的东西。点选它们，看看一台机器有多重、多耗电。',
-      kpi: '模块是可替换的最小单位',
-      kpiLabel: '约束'
-    }
-  ];
-
-  var SYSTEMS = [
-    { name: '感知系统', bio: '眼、耳、鼻、舌、皮肤本体感受器', art: '红外相机、麦克风阵列、压力传感、GPS',
-      subs: ['视觉：视网膜 + 摄像头 + 图像预处理', '听觉：内耳 + 麦克风阵列 + 降噪', '触觉：皮肤感受器 + 压力温度传感 + 力反馈映射', '本体感觉：前庭器官 + IMU 惯性测量'] },
-    { name: '信息传输系统', bio: '传入神经、传出神经', art: '无线模块、植入导线、蓝牙 / WiFi',
-      subs: ['神经接口：电极阵列、信号放大、阻抗匹配', '无线传输：蓝牙、NFC、数据压缩', '有线植入：导线、绝缘封装、生物相容涂层'] },
-    { name: '决策与控制系统', bio: '大脑皮层、脊髓反射', art: '边缘计算单元、AI 推理、云端协同',
-      subs: ['信号解扣：EEG / EMG 降噪、特征提取、模式分类', '混合决策：生物—人工信号融合、权重分配、冲突仲裁', '预测控制：运动意图预测、前馈补偿、延迟补偿'] },
-    { name: '执行与运动系统', bio: '骨骼肌、关节', art: '外骨骼电机、机械驱动、功能电刺激',
-      subs: ['驱动：伺服电机、液压 / 气动、电刺激器', '关节控制：角度闭环、力矩控制、阻抗控制', '反馈：肌电反馈、触觉反馈、视觉反馈'] },
-    { name: '能源与代谢系统', bio: '消化系统、循环系统、ATP 代谢', art: '电池组、无线充电、能量采集',
-      subs: ['电池管理：充放电、SOC 估计、热管理', '能量采集：运动振动发电、体温温差发电', '生物供能：营养代谢监测、血糖调节'] },
-    { name: '安全与监护系统', bio: '免疫系统、疼痛反射、自稳态调节', art: '过压保护、热管理、故障熔断、监测算法',
-      subs: ['实时监测：心率 / 脑电 / 体温异常检测', '故障诊断：电极脱落检测、信号质量评估', '安全降级：紧急停机、模式切换、人工接管'] }
-  ];
-
-  var MODULES = [
-    { n: '干电极阵列', t: 'hw', p: 0.05, w: 12 },
-    { n: '仪表放大器', t: 'hw', p: 0.02, w: 2 },
-    { n: '24-bit ADC', t: 'hw', p: 0.03, w: 1.5 },
-    { n: 'DSP 芯片', t: 'hw', p: 0.35, w: 4 },
-    { n: 'FPGA 加速板', t: 'hw', p: 1.8, w: 22 },
-    { n: '电脉冲发生器', t: 'hw', p: 0.6, w: 18 },
-    { n: '电流源 IC', t: 'hw', p: 0.12, w: 1 },
-    { n: '蓝牙 SoC', t: 'hw', p: 0.09, w: 1.2 },
-    { n: '无线充电线圈', t: 'hw', p: 0.0, w: 9 },
-    { n: '天线模块', t: 'hw', p: 0.0, w: 2 },
-    { n: '锂电单元', t: 'hw', p: 0.0, w: 148 },
-    { n: 'DC-DC 变换器', t: 'hw', p: 0.22, w: 2.4 },
-    { n: '电源管理 IC', t: 'hw', p: 0.05, w: 1.1 },
-    { n: '外骨骼关节', t: 'hw', p: 0.0, w: 210 },
-    { n: '碳纤维支撑杆', t: 'hw', p: 0.0, w: 86 },
-    { n: '快拆接口', t: 'hw', p: 0.0, w: 24 },
-    { n: '钛合金外壳', t: 'hw', p: 0.0, w: 64 },
-    { n: '生物相容硅胶', t: 'hw', p: 0.0, w: 18 },
-    { n: 'IMU 九轴', t: 'hw', p: 0.04, w: 2.2 },
-    { n: '麦克风阵列', t: 'hw', p: 0.1, w: 6 },
-    { n: '降噪与滤波', t: 'sw', p: 0.02, w: 0 },
-    { n: '伪迹去除', t: 'sw', p: 0.05, w: 0 },
-    { n: '时域特征', t: 'sw', p: 0.01, w: 0 },
-    { n: '频域特征', t: 'sw', p: 0.03, w: 0 },
-    { n: '意图分类器', t: 'sw', p: 0.18, w: 0 },
-    { n: '视觉目标检测', t: 'sw', p: 1.2, w: 0 },
-    { n: '安全规则引擎', t: 'sw', p: 0.02, w: 0 },
-    { n: '功耗调度', t: 'sw', p: 0.01, w: 0 },
-    { n: 'SOC 估计', t: 'sw', p: 0.01, w: 0 },
-    { n: '异常检测', t: 'sw', p: 0.04, w: 0 },
-    { n: '预测性维护', t: 'sw', p: 0.03, w: 0 },
-    { n: '冲突仲裁', t: 'sw', p: 0.09, w: 0 }
-  ];
-
-  var BREAKS = [
-    { cn: '任务', n: '01', left: 100, symptom: '目标被改写或者消失。', effect: '系统仍在完美运转，但已经不再服务于任何人。', taker: '没有一层能接管，只能回到起点重定义任务。' },
-    { cn: '体系', n: '02', left: 72, symptom: '耦合断开：设备连不上环境，也连不上云。', effect: '增强体退化成孤岛，人被迫回到纯生物模式。', taker: '人体自己。能力陇降，但活着。' },
-    { cn: '整机', n: '03', left: 66, symptom: '设备脱落、快拆松脱、配重失衡。', effect: '整机散架，外骨骼变成累赘挂在身上。', taker: '机械自锁 + 无源支撑，先保住人不摔倒。' },
-    { cn: '系统', n: '04', left: 78, symptom: '某一功能整体宕机，比如视觉通道全黑。', effect: '剩下五个系统仍工作，但任务降级。', taker: '冗余通道：视觉切听觉提示，云端切本地规则。' },
-    { cn: '子系统', n: '05', left: 92, symptom: '电极脱落、阻抗劣化、特征漂移。', effect: '信号还在，只是不准了——最危险的一种失效。', taker: '本地缓存 + 阻抗监测 + 提示重贴。' },
-    { cn: '模块', n: '06', left: 88, symptom: '单枚芯片死掉，或者固件跑飞。', effect: '局部功能消失，整机仍能运转。', taker: '看门狗重启，双机热备切换。' }
-  ];
-
-  var BUILDER = [
-    {
-      key: 'iface', title: '接口 · 怎么接上神经',
-      opts: [
-        { id: 'dry', label: '无创头环', lat: 14, bw: 0.6, risk: 1, w: 420, pw: 3.0 },
-        { id: 'emg', label: '肌电臂环', lat: 9, bw: 1.4, risk: 2, w: 180, pw: 1.2 },
-        { id: 'implant', label: '植入电极', lat: 2, bw: 9.0, risk: 5, w: 30, pw: 0.8 }
-      ]
-    },
-    {
-      key: 'trans', title: '传输 · 信号怎么走',
-      opts: [
-        { id: 'ble', label: '无线 BLE', lat: 16, bw: 2.0, risk: 1, w: 5, pw: 0.4 },
-        { id: 'wire', label: '有线总线', lat: 1, bw: 12.0, risk: 3, w: 60, pw: 0.2 },
-        { id: 'dual', label: '双通道冗余', lat: 7, bw: 6.0, risk: 2, w: 42, pw: 0.9 }
-      ]
-    },
-    {
-      key: 'dec', title: '决策 · 谁来做判断',
-      opts: [
-        { id: 'mcu', label: '本地 MCU', lat: 6, bw: 0, risk: 1, w: 12, pw: 0.5 },
-        { id: 'npu', label: '边缘 NPU', lat: 12, bw: 2.0, risk: 1, w: 45, pw: 4.0 },
-        { id: 'cloud', label: '云端推理', lat: 55, bw: 8.0, risk: 1, w: 8, pw: 0.3 }
-      ]
-    },
-    {
-      key: 'energy', title: '能源 · 电从哪来',
-      opts: [
-        { id: 'li', label: '锂电 5000mAh', lat: 0, bw: 0, risk: 1, w: 148, pw: 0, cap: 18.5 },
-        { id: 'harvest', label: '能量采集', lat: 0, bw: 0, risk: 1, w: 92, pw: 0, cap: 6.0 },
-        { id: 'mix', label: '采集 + 电池', lat: 0, bw: 0, risk: 2, w: 210, pw: 0, cap: 24.5 }
-      ]
-    },
-    {
-      key: 'exec', title: '执行 · 谁来动手',
-      opts: [
-        { id: 'exo', label: '外骨骼', lat: 8, bw: 0, risk: 2, w: 900, pw: 12.0 },
-        { id: 'fes', label: '功能电刺激', lat: 3, bw: 0, risk: 3, w: 120, pw: 1.5 },
-        { id: 'haptic', label: '触觉反馈', lat: 5, bw: 0, risk: 1, w: 60, pw: 1.0 }
-      ]
-    }
-  ];
-
-  var PRESETS = [
-    { name: '康复外骨骼', pick: { iface: 'emg', trans: 'wire', dec: 'mcu', energy: 'li', exec: 'exo' } },
-    { name: '消费级头环', pick: { iface: 'dry', trans: 'ble', dec: 'npu', energy: 'li', exec: 'haptic' } },
-    { name: '实验级植入', pick: { iface: 'implant', trans: 'dual', dec: 'npu', energy: 'mix', exec: 'fes' } }
-  ];
 
   /* ----------------------------------------------------------
      01 · HERO 信号链
@@ -220,7 +62,7 @@
     nodeEls.forEach(function (n) { n.classList.remove('on'); });
     var b = lineBounds();
     pulseEl.classList.add('on');
-    var dur = reduceMotion ? 300 : 500;
+    var dur = reduceMotion ? 300 : 500;   // 慢放 ~3 倍，标签已写在读数旁边
     var t0 = performance.now();
     var total = 0.18;
 
@@ -374,11 +216,19 @@
             '</div>';
         }).join('') + '</div>';
       } else if (L.kind === 'mods') {
-        body = '<div class="mod-filter" data-filter="all"><button class="on" data-f="all" type="button">全部</button><button data-f="hw" type="button">硬件</button><button data-f="sw" type="button">软件 / 算法</button></div>' +
+        body = '<div class="mod-filter" data-filter="all">' +
+          '<button class="on" data-f="all" type="button">全部</button>' +
+          '<button data-f="hw" type="button">硬件</button>' +
+          '<button data-f="sw" type="button">软件 / 算法</button></div>' +
           '<div class="mods">' + MODULES.map(function (m) {
             return '<button class="mod" type="button" data-t="' + m.t + '" data-p="' + m.p + '" data-w="' + m.w + '">' + m.n + '</button>';
           }).join('') + '</div>' +
-          '<div class="mod-tally"><span>已选 <b class="t-n">0</b> 个模块</span><span>合计功耗 <b class="t-p">0.0</b> W</span><span>合计重量 <b class="t-w">0</b> g</span></div>';
+          '<div class="mod-tally">' +
+          '<span>已选 <b class="t-n">0</b> 个模块</span>' +
+          '<span>合计功耗 <b class="t-p">0.0</b> W</span>' +
+          '<span>合计重量 <b class="t-w">0</b> g</span>' +
+          '</div>' +
+          '<p class="fixed">功耗为典型工作功耗，不是峰值；执行器启动时的峰值可达持续功耗的 3 倍。软件模块不占重量，其算力与所选芯片共享。重量含外壳、线缆与紧固件的分摊。</p>';
       }
 
       html += '<section class="layer" data-i="' + i + '">' +
@@ -580,7 +430,6 @@
 
     // 读数
     var errPx = Math.abs(tx - hx);
-    var errMm = Math.round(errPx / ampPx() * AMP_MM);
     smoothedErr = smoothedErr * 0.85 + errPx * 0.15;
 
     if (now - lastReadout > 90) {
@@ -704,12 +553,13 @@
     var hours = cap / Math.max(0.5, pw);
     var risk = Math.max.apply(null, opts.map(function (o) { return o.risk; }));
 
+    /* 五维评分：0–1，仅用于形状比较，不是绝对打分 */
     var scores = [
-      Math.max(0.05, Math.min(1, (200 - lat) / 200)),   // 响应
-      Math.max(0.05, Math.min(1, bw / 10)),             // 带宽
-      Math.max(0.05, Math.min(1, hours / 24)),          // 续航
-      Math.max(0.05, Math.min(1, (6 - risk) / 5)),      // 舒适
-      Math.max(0.05, Math.min(1, (1000 - weight) / 1000)) // 便携
+      Math.max(0.05, Math.min(1, (200 - lat) / 200)),          // 响应
+      Math.max(0.05, Math.min(1, bw / 10)),                    // 带宽
+      Math.max(0.05, Math.min(1, hours / 8)),                  // 续航（8 h 视为够用）
+      Math.max(0.05, Math.min(1, (6 - risk) / 5)),             // 舒适
+      Math.max(0.05, Math.min(1, (7000 - weight) / 7000))      // 便携（7 kg 视为不可携）
     ];
 
     drawRadar(scores);
@@ -718,18 +568,20 @@
       '<div class="bn"><span>环路延迟</span><b>' + Math.round(lat) + '<i>ms</i></b></div>' +
       '<div class="bn"><span>数据带宽</span><b>' + fmt(bw, 1) + '<i>Mbps</i></b></div>' +
       '<div class="bn"><span>续航</span><b>' + fmt(hours, 1) + '<i>h</i></b></div>' +
-      '<div class="bn"><span>整机重量</span><b>' + Math.round(weight) + '<i>g</i></b></div>' +
-      '<div class="bn"><span>功耗</span><b>' + fmt(pw, 1) + '<i>W</i></b></div>' +
+      '<div class="bn"><span>整机重量</span><b>' + fmt(weight / 1000, 2) + '<i>kg</i></b></div>' +
+      '<div class="bn"><span>工作功耗</span><b>' + fmt(pw, 1) + '<i>W</i></b></div>' +
       '<div class="bn"><span>侵入性</span><b>' + risk + '<i>/5</i></b></div>';
 
     var tier = lat < 40 ? '直觉级' : (lat < 80 ? '可控' : (lat < 120 ? '迟滞明显' : '追不上'));
-    var s = '这台系统的环路延迟 ' + Math.round(lat) + ' ms（' + tier + '），带宽 ' + fmt(bw, 1) + ' Mbps，整机 ' + Math.round(weight) + ' g、功耗 ' + fmt(pw, 1) + ' W，续航约 ' + fmt(hours, 1) + ' 小时，侵入性 ' + risk + '/5。';
+    var s = '这台系统的环路延迟 ' + Math.round(lat) + ' ms（' + tier + '），带宽 ' + fmt(bw, 1) + ' Mbps，整机 ' + fmt(weight / 1000, 2) + ' kg、工作功耗 ' + fmt(pw, 1) + ' W，' + fmt(cap, 1) + ' Wh 电池撑约 ' + fmt(hours, 1) + ' 小时，侵入性 ' + risk + '/5。';
     if (risk >= 4) {
       s += '为此你要接受一次手术，以及长期的生物相容性与感染风险。';
     } else if (hours < 4) {
-      s += '代价是续航撑不过半天——现实中它会退化成间歇使用的工具。';
+      s += '代价是续航只有几小时——现实中它退化成“用完就得插电”的工具。';
     } else if (lat > 90) {
       s += '代价是精细动作必须交给本地反射兜底，人能做的只剩下“下命令”。';
+    } else if (weight > 2000) {
+      s += '代价是 2 kg 以上的负重会反过来改变你的步态，外骨骼得先解决“背得动”这件事。';
     } else {
       s += '这是可以日常使用的区间；代价写在带宽和自由度上——它救急，但不让你变强太多。';
     }
