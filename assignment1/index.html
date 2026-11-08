@@ -33,38 +33,61 @@
             overflow-x: hidden;
         }
 
-        /* 背景装饰 */
+        /* 背景网格纹理 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(26, 26, 46, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26, 26, 46, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -2;
+        }
+
+        /* 背景装饰 blob */
         .bg-blob {
             position: fixed;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
+            filter: blur(100px);
+            opacity: 0.35;
             z-index: -1;
             transition: transform 0.3s ease;
         }
 
         .blob-1 {
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             background: var(--rose);
-            top: -100px;
-            left: -100px;
+            top: -150px;
+            left: -150px;
         }
 
         .blob-2 {
-            width: 400px;
-            height: 400px;
+            width: 500px;
+            height: 500px;
             background: var(--sun);
-            top: 40%;
-            right: -100px;
+            top: 30%;
+            right: -150px;
         }
 
         .blob-3 {
-            width: 450px;
-            height: 450px;
+            width: 550px;
+            height: 550px;
             background: var(--teal);
-            bottom: -100px;
-            left: 30%;
+            bottom: -150px;
+            left: 20%;
+        }
+
+        .blob-4 {
+            width: 400px;
+            height: 400px;
+            background: var(--lavender);
+            top: 60%;
+            right: 10%;
         }
 
         /* 进度条 */
@@ -73,7 +96,7 @@
             top: 0;
             left: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--coral), var(--sun), var(--teal));
+            background: linear-gradient(90deg, var(--coral), var(--sun), var(--teal), var(--lavender));
             z-index: 1000;
             width: 0%;
             transition: width 0.1s ease;
@@ -139,6 +162,15 @@
             position: relative;
         }
 
+        .hero-number {
+            position: absolute;
+            font-size: 20rem;
+            font-weight: 900;
+            color: rgba(232, 93, 74, 0.05);
+            line-height: 1;
+            z-index: -1;
+        }
+
         .hero-eyebrow {
             font-family: sans-serif;
             font-size: 0.85rem;
@@ -185,16 +217,28 @@
         /* 通用 section */
         .layer-section {
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 100px 40px;
+            padding: 120px 40px;
             position: relative;
+        }
+
+        .layer-section::before {
+            content: attr(data-number);
+            position: absolute;
+            right: 40px;
+            top: 80px;
+            font-size: 12rem;
+            font-weight: 900;
+            color: var(--layer-color, rgba(232, 93, 74, 0.08));
+            line-height: 1;
+            z-index: 0;
         }
 
         .layer-container {
             max-width: 1000px;
             margin: 0 auto;
             width: 100%;
+            position: relative;
+            z-index: 1;
         }
 
         .layer-number {
@@ -202,18 +246,23 @@
             font-size: 0.85rem;
             font-weight: 700;
             letter-spacing: 0.1em;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             display: inline-block;
             padding: 6px 16px;
             border-radius: 20px;
-            margin-bottom: 24px;
         }
 
+        .layer-1 { --layer-color: rgba(232, 93, 74, 0.08); }
         .layer-1 .layer-number { background: rgba(232, 93, 74, 0.15); color: var(--coral); }
+        .layer-2 { --layer-color: rgba(233, 196, 106, 0.12); }
         .layer-2 .layer-number { background: rgba(233, 196, 106, 0.2); color: #d4a045; }
+        .layer-3 { --layer-color: rgba(42, 157, 143, 0.08); }
         .layer-3 .layer-number { background: rgba(42, 157, 143, 0.15); color: var(--teal); }
+        .layer-4 { --layer-color: rgba(155, 141, 227, 0.08); }
         .layer-4 .layer-number { background: rgba(155, 141, 227, 0.15); color: var(--lavender); }
+        .layer-5 { --layer-color: rgba(244, 166, 184, 0.12); }
         .layer-5 .layer-number { background: rgba(244, 166, 184, 0.2); color: #d4708a; }
+        .layer-6 { --layer-color: rgba(26, 26, 46, 0.06); }
         .layer-6 .layer-number { background: rgba(26, 26, 46, 0.1); color: var(--ink); }
 
         .layer-title {
@@ -249,7 +298,7 @@
             background: white;
             border-radius: 16px;
             padding: 32px;
-            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.06);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -269,9 +318,21 @@
             transition: transform 0.4s ease;
         }
 
+        .interactive-card::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--card-bg, rgba(232, 93, 74, 0.1));
+            opacity: 0.5;
+        }
+
         .interactive-card:hover {
-            transform: translateY(-8px) rotate(-1deg);
-            box-shadow: 0 12px 40px rgba(26, 26, 46, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(26, 26, 46, 0.12);
         }
 
         .interactive-card:hover::before {
@@ -282,6 +343,8 @@
             font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
         }
 
         .card-content {
@@ -291,7 +354,7 @@
         }
 
         .interactive-card.expanded .card-content {
-            max-height: 800px;
+            max-height: 1000px;
         }
 
         .card-text {
@@ -338,7 +401,7 @@
             background: white;
             border-radius: 20px;
             padding: 50px 40px;
-            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.06);
             margin: 60px 0;
         }
 
@@ -387,7 +450,7 @@
             background: white;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.06);
             margin: 40px 0;
         }
 
@@ -414,8 +477,10 @@
             flex: 1;
             min-width: 120px;
             text-align: center;
-            padding: 20px;
+            padding: 24px 20px;
             border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .relation-node.env { background: rgba(42, 157, 143, 0.1); color: var(--teal); }
@@ -476,6 +541,12 @@
                 padding: 80px 24px;
             }
 
+            .layer-section::before {
+                font-size: 6rem;
+                right: 20px;
+                top: 40px;
+            }
+
             .relation-flow {
                 flex-direction: column;
             }
@@ -506,6 +577,7 @@
     <div class="bg-blob blob-1" id="blob1"></div>
     <div class="bg-blob blob-2" id="blob2"></div>
     <div class="bg-blob blob-3" id="blob3"></div>
+    <div class="bg-blob blob-4" id="blob4"></div>
 
     <!-- 进度条 -->
     <div class="progress-bar" id="progressBar"></div>
@@ -523,6 +595,7 @@
 
     <!-- Hero -->
     <section class="hero" id="hero">
+        <div class="hero-number">01</div>
         <div class="hero-eyebrow">系统工程 · 小组作业 1</div>
         <h1>机器增强的<br><em>人机混合</em>神经系统</h1>
         <p class="hero-subtitle">从生命维持到感知行动，从生物神经到机器增强——六层架构，层层拆解一个未来系统</p>
@@ -547,14 +620,14 @@
     </section>
 
     <!-- 第1层：任务 -->
-    <section class="layer-section layer-1" id="layer1">
+    <section class="layer-section layer-1" id="layer1" data-number="01">
         <div class="layer-container reveal">
             <div class="layer-number">第 1 层</div>
             <h2 class="layer-title">任务 Mission</h2>
             <p class="layer-desc">系统存在的根本理由——维持生命，扩展能力。</p>
             
             <div class="cards-grid cards-3">
-                <div class="interactive-card" style="--card-accent: var(--coral);">
+                <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
                     <div class="card-title">基础任务</div>
                     <div class="card-content">
                         <p class="card-text">维持人体生命活动稳态，这是系统存在的底线：</p>
@@ -567,7 +640,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--sun);">
+                <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233, 196, 106, 0.15);">
                     <div class="card-title">核心任务</div>
                     <div class="card-content">
                         <p class="card-text">完成"感知—决策—行动"闭环：</p>
@@ -580,7 +653,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--teal);">
+                <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42, 157, 143, 0.1);">
                     <div class="card-title">增强任务</div>
                     <div class="card-content">
                         <p class="card-text">通过机器增强扩展人的能力边界：</p>
@@ -597,7 +670,7 @@
     </section>
 
     <!-- 第2层：体系 -->
-    <section class="layer-section layer-2" id="layer2">
+    <section class="layer-section layer-2" id="layer2" data-number="02">
         <div class="layer-container reveal">
             <div class="layer-number">第 2 层</div>
             <h2 class="layer-title">体系 SoS</h2>
@@ -615,7 +688,7 @@
             </div>
             
             <div class="cards-grid cards-3">
-                <div class="interactive-card" style="--card-accent: var(--teal);">
+                <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42, 157, 143, 0.1);">
                     <div class="card-title">外部环境</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -627,7 +700,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--coral);">
+                <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
                     <div class="card-title">人体系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -639,7 +712,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--lavender);">
+                <div class="interactive-card" style="--card-accent: var(--lavender); --card-bg: rgba(155, 141, 227, 0.1);">
                     <div class="card-title">机器增强系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -654,7 +727,7 @@
             </div>
             
             <div style="margin-top: 40px;">
-                <div class="interactive-card" style="--card-accent: var(--sun);">
+                <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233, 196, 106, 0.15);">
                     <div class="card-title">三者关系闭环</div>
                     <div class="card-content">
                         <p class="card-text">环境刺激 → 人体感知 + 机器感知融合 → 中枢决策（生物+人工混合）→ 人体行动 + 机器辅助行动 → 反作用于环境</p>
@@ -666,14 +739,14 @@
     </section>
 
     <!-- 第3层：整机 -->
-    <section class="layer-section layer-3" id="layer3">
+    <section class="layer-section layer-3" id="layer3" data-number="03">
         <div class="layer-container reveal">
             <div class="layer-number">第 3 层</div>
             <h2 class="layer-title">整机 Vehicles</h2>
             <p class="layer-desc">人体 + 机器增强设备的完整组合体。</p>
             
             <div class="cards-grid cards-2">
-                <div class="interactive-card" style="--card-accent: var(--coral);">
+                <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
                     <div class="card-title">生物整机</div>
                     <div class="card-content">
                         <p class="card-text">人体本身就是最精密的整机：</p>
@@ -687,7 +760,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--teal);">
+                <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42, 157, 143, 0.1);">
                     <div class="card-title">可穿戴增强整机</div>
                     <div class="card-content">
                         <p class="card-text">根据任务需求灵活配置的设备组合：</p>
@@ -705,14 +778,14 @@
     </section>
 
     <!-- 第4层：系统 -->
-    <section class="layer-section layer-4" id="layer4">
+    <section class="layer-section layer-4" id="layer4" data-number="04">
         <div class="layer-container reveal">
             <div class="layer-number">第 4 层</div>
             <h2 class="layer-title">系统 Systems</h2>
             <p class="layer-desc">整机下的大系统，生物系统与人工系统并列融合。</p>
             
             <div class="cards-grid cards-2">
-                <div class="interactive-card" style="--card-accent: var(--lavender);">
+                <div class="interactive-card" style="--card-accent: var(--lavender); --card-bg: rgba(155, 141, 227, 0.1);">
                     <div class="card-title">感知系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -723,7 +796,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--sun);">
+                <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233, 196, 106, 0.15);">
                     <div class="card-title">信息传输系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -734,7 +807,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--coral);">
+                <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
                     <div class="card-title">决策与控制系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -745,7 +818,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--teal);">
+                <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42, 157, 143, 0.1);">
                     <div class="card-title">执行与运动系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -756,7 +829,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--rose);">
+                <div class="interactive-card" style="--card-accent: var(--rose); --card-bg: rgba(244, 166, 184, 0.15);">
                     <div class="card-title">能源与代谢系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -767,7 +840,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: #d4708a;">
+                <div class="interactive-card" style="--card-accent: #d4708a; --card-bg: rgba(212, 112, 138, 0.1);">
                     <div class="card-title">安全与监护系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -782,14 +855,14 @@
     </section>
 
     <!-- 第5层：子系统 -->
-    <section class="layer-section layer-5" id="layer5">
+    <section class="layer-section layer-5" id="layer5" data-number="05">
         <div class="layer-container reveal">
             <div class="layer-number">第 5 层</div>
             <h2 class="layer-title">子系统 Sub-systems</h2>
             <p class="layer-desc">每个大系统再往下拆一层，功能更具体。</p>
             
             <div class="cards-grid cards-2">
-                <div class="interactive-card" style="--card-accent: var(--lavender);">
+                <div class="interactive-card" style="--card-accent: var(--lavender); --card-bg: rgba(155, 141, 227, 0.1);">
                     <div class="card-title">感知系统 → 子系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -802,7 +875,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--sun);">
+                <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233, 196, 106, 0.15);">
                     <div class="card-title">信息传输系统 → 子系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -814,7 +887,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--coral);">
+                <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
                     <div class="card-title">决策与控制系统 → 子系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -826,7 +899,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--teal);">
+                <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42, 157, 143, 0.1);">
                     <div class="card-title">执行与运动系统 → 子系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -838,7 +911,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--rose);">
+                <div class="interactive-card" style="--card-accent: var(--rose); --card-bg: rgba(244, 166, 184, 0.15);">
                     <div class="card-title">能源与代谢系统 → 子系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -850,7 +923,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: #d4708a;">
+                <div class="interactive-card" style="--card-accent: #d4708a; --card-bg: rgba(212, 112, 138, 0.1);">
                     <div class="card-title">安全与监护系统 → 子系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -866,14 +939,14 @@
     </section>
 
     <!-- 第6层：模块 -->
-    <section class="layer-section layer-6" id="layer6">
+    <section class="layer-section layer-6" id="layer6" data-number="06">
         <div class="layer-container reveal">
             <div class="layer-number">第 6 层</div>
             <h2 class="layer-title">模块 Modules</h2>
             <p class="layer-desc">最底层的硬件与软件单元，系统的基本积木。</p>
             
             <div class="cards-grid cards-2">
-                <div class="interactive-card" style="--card-accent: var(--ink);">
+                <div class="interactive-card" style="--card-accent: var(--ink); --card-bg: rgba(26, 26, 46, 0.08);">
                     <div class="card-title">硬件模块</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -889,7 +962,7 @@
                     <div class="card-hint">点击展开 →</div>
                 </div>
                 
-                <div class="interactive-card" style="--card-accent: var(--coral);">
+                <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
                     <div class="card-title">软件/算法模块</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -931,6 +1004,7 @@
             document.getElementById('blob1').style.transform = `translate(${x * 30}px, ${y * 30}px)`;
             document.getElementById('blob2').style.transform = `translate(${x * -20}px, ${y * -20}px)`;
             document.getElementById('blob3').style.transform = `translate(${x * 15}px, ${y * -15}px)`;
+            document.getElementById('blob4').style.transform = `translate(${x * -25}px, ${y * 25}px)`;
         });
 
         // 滚动淡入动画
