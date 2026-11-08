@@ -228,7 +228,7 @@
           '<span>合计功耗 <b class="t-p">0.0</b> W</span>' +
           '<span>合计重量 <b class="t-w">0</b> g</span>' +
           '</div>' +
-          '<p class="fixed">功耗为典型工作功耗，不是峰值；执行器启动时的峰值可达持续功耗的 3 倍。软件模块不占重量，其算力与所选芯片共享。重量含外壳、线缆与紧固件的分摊。</p>';
+          '<p class="fixed">功耗为典型工作功耗，不是峰值：外骨骼关节行走时约 25 W，启动峰值可达 800 W 级（厂商标称）。软件模块不占重量，其算力摊在所选芯片上。重量含外壳、线缆与紧固件的分摊。数值逐项对到型号，见页面「07 数据与来源」。</p>';
       }
 
       html += '<section class="layer" data-i="' + i + '">' +
@@ -556,7 +556,7 @@
     /* 五维评分：0–1，仅用于形状比较，不是绝对打分 */
     var scores = [
       Math.max(0.05, Math.min(1, (200 - lat) / 200)),          // 响应
-      Math.max(0.05, Math.min(1, bw / 10)),                    // 带宽
+      Math.max(0.05, Math.min(1, Math.log10(bw / 0.04) / Math.log10(10 / 0.04))), // 带宽（对数轴：0.04 Mbps 刚够 16 通道脑电，10 Mbps 视为满）
       Math.max(0.05, Math.min(1, hours / 8)),                  // 续航（8 h 视为够用）
       Math.max(0.05, Math.min(1, (6 - risk) / 5)),             // 舒适
       Math.max(0.05, Math.min(1, (7000 - weight) / 7000))      // 便携（7 kg 视为不可携）
@@ -564,24 +564,28 @@
 
     drawRadar(scores);
 
+    /* 带宽跨三个数量级（0.04 → 46 Mbps），小于 1 Mbps 时按 kbps 显示 */
+    var bwNum = bw < 1 ? String(Math.round(bw * 1000)) : fmt(bw, 1);
+    var bwUnit = bw < 1 ? 'kbps' : 'Mbps';
+
     buildNums.innerHTML =
       '<div class="bn"><span>环路延迟</span><b>' + Math.round(lat) + '<i>ms</i></b></div>' +
-      '<div class="bn"><span>数据带宽</span><b>' + fmt(bw, 1) + '<i>Mbps</i></b></div>' +
+      '<div class="bn"><span>数据带宽</span><b>' + bwNum + '<i>' + bwUnit + '</i></b></div>' +
       '<div class="bn"><span>续航</span><b>' + fmt(hours, 1) + '<i>h</i></b></div>' +
       '<div class="bn"><span>整机重量</span><b>' + fmt(weight / 1000, 2) + '<i>kg</i></b></div>' +
       '<div class="bn"><span>工作功耗</span><b>' + fmt(pw, 1) + '<i>W</i></b></div>' +
       '<div class="bn"><span>侵入性</span><b>' + risk + '<i>/5</i></b></div>';
 
     var tier = lat < 40 ? '直觉级' : (lat < 80 ? '可控' : (lat < 120 ? '迟滞明显' : '追不上'));
-    var s = '这台系统的环路延迟 ' + Math.round(lat) + ' ms（' + tier + '），带宽 ' + fmt(bw, 1) + ' Mbps，整机 ' + fmt(weight / 1000, 2) + ' kg、工作功耗 ' + fmt(pw, 1) + ' W，' + fmt(cap, 1) + ' Wh 电池撑约 ' + fmt(hours, 1) + ' 小时，侵入性 ' + risk + '/5。';
+    var s = '这台系统的环路延迟 ' + Math.round(lat) + ' ms（' + tier + '），带宽 ' + bwNum + ' ' + bwUnit + '，整机 ' + fmt(weight / 1000, 2) + ' kg、工作功耗 ' + fmt(pw, 1) + ' W，' + fmt(cap, 1) + ' Wh 电池撑约 ' + fmt(hours, 1) + ' 小时，侵入性 ' + risk + '/5。';
     if (risk >= 4) {
       s += '为此你要接受一次手术，以及长期的生物相容性与感染风险。';
+    } else if (weight > 2000) {
+      s += '代价是 2 kg 以上的负重会反过来改变你的步态，外骨骼得先解决“背得动”这件事。';
     } else if (hours < 4) {
       s += '代价是续航只有几小时——现实中它退化成“用完就得插电”的工具。';
     } else if (lat > 90) {
       s += '代价是精细动作必须交给本地反射兜底，人能做的只剩下“下命令”。';
-    } else if (weight > 2000) {
-      s += '代价是 2 kg 以上的负重会反过来改变你的步态，外骨骼得先解决“背得动”这件事。';
     } else {
       s += '这是可以日常使用的区间；代价写在带宽和自由度上——它救急，但不让你变强太多。';
     }
