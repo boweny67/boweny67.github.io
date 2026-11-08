@@ -15,6 +15,23 @@
     padding:2px 6px;border-radius:3px;
   }
   @media (max-width:560px){ .slowtag{display:none} }
+
+  /* 每个实验开头：目的 / 玩法 / 它证明了什么 */
+  .purpose{
+    margin:34px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
+    padding-top:20px;border-top:1px solid var(--rule);
+  }
+  .p-item h5{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--purple);margin:0 0 9px;font-weight:600;
+  }
+  .p-item p{font-size:14px;line-height:1.9;color:var(--ink-2);margin:0}
+  .p-item:last-child{
+    background:rgba(99,56,138,.05);border-left:2px solid var(--purple-soft);
+    padding:14px 16px 16px;border-radius:0 8px 8px 0;
+  }
+  .p-item:last-child p{color:var(--ink)}
+  @media (max-width:980px){ .purpose{grid-template-columns:1fr;gap:16px} }
 </style>
 </head>
 <body>
@@ -96,6 +113,21 @@
       <p>不用相信我的话。拖一下滑块，看那只手追不追得上目标。</p>
     </div>
 
+    <div class="purpose">
+      <div class="p-item">
+        <h5>这个实验想干什么</h5>
+        <p>把“延迟”这个抽象的毫秒数，变成眼睛能看见的失误。目标是量出人到底能容忍多少延迟，以及超过之后，身体先坏在哪一环。</p>
+      </div>
+      <div class="p-item">
+        <h5>怎么玩</h5>
+        <p>紫点是目标，墨绿指针是“你的手”，中间那根橙线是偏差。拖三根滑块改变采集、传输、推理的耗时，看右下角的状态在“跟随 / 滞后 / 过冲 / 振荡”之间怎么翻。</p>
+      </div>
+      <div class="p-item">
+        <h5>它证明了什么</h5>
+        <p>60 毫秒以内，机器的手和你的手差不多快；过了 100 毫秒，快速动作开始画弧；145 毫秒以上，环路自己开始振荡——你越纠正，它越抖。所以“反射”不能放在云端，必须留在本地。</p>
+      </div>
+    </div>
+
     <div class="lab-panel">
       <div class="lab-canvas-wrap">
         <canvas id="labCanvas" aria-label="延迟跟踪实验：目标点左右往返，手按设定延迟跟随"></canvas>
@@ -131,6 +163,21 @@
       <p>点一层，把它拆掉。看这套系统还剩下什么。</p>
     </div>
 
+    <div class="purpose">
+      <div class="p-item">
+        <h5>这个实验想干什么</h5>
+        <p>检验分层设计最核心的那个承诺：故障会被关在一层里，不会顺着线传上去把整机拖垮。六个层一个个拔掉，看谁的窟巢能补、谁补不了。</p>
+      </div>
+      <div class="p-item">
+        <h5>怎么玩</h5>
+        <p>点上方 L1–L6 任意一层。卡片会给出这段断链的“症状 / 后果 / 谁接管”，以及剩余能力条——这条越短，说明这一层越没有下层兜底。</p>
+      </div>
+      <div class="p-item">
+        <h5>它证明了什么</h5>
+        <p>越往下断，越有人兜：模块死了重启，信号飘了就用缓存和阻抗监测。越往上断，越没人接管：体系断了退回纯生物，任务断了反而“一切正常、只剩方向错了”。最危险的失效不是停摆，是还在跑、但跑的不是这件事。</p>
+      </div>
+    </div>
+
     <div class="break-wrap">
       <div class="break-picker" id="breakPicker" role="tablist" aria-label="选择要断掉的一层"></div>
       <div class="break-card">
@@ -159,6 +206,21 @@
     <div class="prose narrow">
       <p>每一层其实只有一个旋钮是真的：你愿意用多少<em>侵入性</em>，换多少<em>实时性</em>。</p>
       <p>下面三种组合是常见的原型。点一下，换成你自己的。</p>
+    </div>
+
+    <div class="purpose">
+      <div class="p-item">
+        <h5>这个实验想干什么</h5>
+        <p>把前面拆了半天的六层，重新压回一个人的身体上：不是问你“能做到多少”，而是问你“愿意付多少”。侵入性、实时性、续航、负重，这四样东西不可能同时拿满。</p>
+      </div>
+      <div class="p-item">
+        <h5>怎么玩</h5>
+        <p>五类各三个选项——接口、传输、决策、能源、执行。也可以直接点三个预设原型。每次改动，右边的延迟、带宽、续航、重量、功耗、侵入性和雷达形状都会立刻重算。</p>
+      </div>
+      <div class="p-item">
+        <h5>它证明了什么</h5>
+        <p>想要 20 毫秒的直觉级响应，就得准备开颅或背上两公斤；想要轻、安全、不开刀，就得接受延迟和带宽的折扣。每一种组合都有一句“代价”结语，因为系统工程的工作不是找最优解，而是把代价说清楚摆在台面上。</p>
+      </div>
     </div>
 
     <div class="presets" id="presets"></div>
