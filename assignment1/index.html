@@ -6,6 +6,16 @@
 <title>一次抬手，要经过六层 · 机器增强的人机混合神经系统</title>
 <meta name="description" content="把“抬手”按系统工程的分层语法拆成六层：任务、体系、整机、系统、子系统、模块。含三个可操作的交互实验：环路延迟、断链降级、系统配置。">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* 首屏读头：真实时长 + 慢放倍率标注，只此一处用到 */
+  .foot-right{display:flex;align-items:baseline;gap:10px}
+  .slowtag{
+    font-family:SFMono-Regular,Consolas,monospace;font-size:10px;letter-spacing:.12em;
+    color:rgba(250,246,236,.55);border:1px solid rgba(250,246,236,.18);
+    padding:2px 6px;border-radius:3px;
+  }
+  @media (max-width:560px){ .slowtag{display:none} }
+</style>
 </head>
 <body>
 <div class="noise" aria-hidden="true"></div>
@@ -26,7 +36,10 @@
       </div>
       <div class="stage-foot">
         <button class="btn" id="reachBtn" type="button">抬一次手</button>
-        <span class="clock" id="reachTime">0.000 s</span>
+        <div class="foot-right">
+          <span class="clock" id="reachTime">0.000 s</span>
+          <span class="slowtag" id="slowTag">慢放 ×3</span>
+        </div>
       </div>
     </div>
 
@@ -90,8 +103,8 @@
       </div>
       <div class="lab-side">
         <div class="readout">
-          <div class="ro"><span class="ro-k">环路延迟</span><span class="ro-v"><b id="roLat">32</b><small>ms</small></span></div>
-          <div class="ro"><span class="ro-k">跟踪误差</span><span class="ro-v"><b id="roErr">4</b><small>mm</small></span></div>
+          <div class="ro"><span class="ro-k">环路延迟</span><span class="ro-v"><b id="roLat">44</b><small>ms</small></span></div>
+          <div class="ro"><span class="ro-k">跟踪误差</span><span class="ro-v"><b id="roErr">16</b><small>mm</small></span></div>
           <div class="ro"><span class="ro-k">状态</span><span class="ro-v"><b id="roState" class="state">跟随</b></span></div>
         </div>
         <div class="controls">
@@ -122,8 +135,8 @@
       <div class="break-picker" id="breakPicker" role="tablist" aria-label="选择要断掉的一层"></div>
       <div class="break-card">
         <div class="break-head">
-          <span class="break-layer" id="bLayer">子系统</span>
-          <span class="break-left">剩余能力 <b id="bLeft">92</b>%</span>
+          <span class="break-layer" id="bLayer">任务</span>
+          <span class="break-left">剩余能力 <b id="bLeft">100</b>%</span>
         </div>
         <div class="break-meter"><span id="bMeter"></span></div>
         <div class="break-grid">
@@ -183,7 +196,7 @@
     </div>
     <div>
       <h5>方法与诚实</h5>
-      <p>页面中所有延迟、功耗、重量、续航均为教学量级估算，用于说明数量关系，非实测数据。延迟实验是一个简化的一维跟踪模型：手按设定延迟复现目标历史位置，误差随相位滞后增大。</p>
+      <p>页面中所有延迟、功耗、重量、续航均为教学量级估算，用于说明数量关系，非实测数据。延迟实验是一个简化的一维跟踪模型：手按设定延迟复现目标历史位置，误差随相位滒后增大。</p>
     </div>
     <div>
       <h5>参考</h5>
