@@ -67,7 +67,7 @@
 
   var SYSTEMS = [
     { name: '感知系统', bio: '眼、耳、鼻、舌、皮肤本体感受器', art: '红外相机、麦克风阵列、压力传感、GPS',
-      subs: ['视觉：视网膜 + 摄像头 + 图像预处理', '听觉：耳蜗 + 麦克风阵列 + 降噪', '触觉：皮肤感受器 + 压力温度传感 + 力反馈映射', '本体感觉：前庭器官 + IMU 惯性测量'] },
+      subs: ['视觉：视网膜 + 摄像头 + 图像预处理', '听觉：耳蝇 + 麦克风阵列 + 降噪', '触觉：皮肤感受器 + 压力温度传感 + 力反馈映射', '本体感觉：前庭器官 + IMU 惯性测量'] },
     { name: '信息传输系统', bio: '传入神经、传出神经', art: '无线模块、植入导线、蓝牙 / WiFi',
       subs: ['神经接口：电极阵列、信号放大、阻抗匹配', '无线传输：蓝牙、NFC、数据压缩', '有线植入：导线、绝缘封装、生物相容涂层'] },
     { name: '决策与控制系统', bio: '大脑皮层、脊髓反射', art: '边缘计算单元、AI 推理、云端协同',
@@ -117,7 +117,7 @@
 
   var BREAKS = [
     { cn: '任务', n: '01', left: 100, symptom: '目标被改写或者消失。', effect: '系统仍在完美运转，但已经不再服务于任何人。', taker: '没有一层能接管，只能回到起点重定义任务。' },
-    { cn: '体系', n: '02', left: 72, symptom: '耦合断开：设备连不上环境，也连不上云。', effect: '增强体退化成孤岛，人被迫回到纯生物模式。', taker: '人体自己。能力骤降，但活着。' },
+    { cn: '体系', n: '02', left: 72, symptom: '耦合断开：设备连不上环境，也连不上云。', effect: '增强体退化成孤岛，人被迫回到纯生物模式。', taker: '人体自己。能力陇降，但活着。' },
     { cn: '整机', n: '03', left: 66, symptom: '设备脱落、快拆松脱、配重失衡。', effect: '整机散架，外骨骼变成累赘挂在身上。', taker: '机械自锁 + 无源支撑，先保住人不摔倒。' },
     { cn: '系统', n: '04', left: 78, symptom: '某一功能整体宕机，比如视觉通道全黑。', effect: '剩下五个系统仍工作，但任务降级。', taker: '冗余通道：视觉切听觉提示，云端切本地规则。' },
     { cn: '子系统', n: '05', left: 92, symptom: '电极脱落、阻抗劣化、特征漂移。', effect: '信号还在，只是不准了——最危险的一种失效。', taker: '本地缓存 + 阻抗监测 + 提示重贴。' },
@@ -220,7 +220,7 @@
     nodeEls.forEach(function (n) { n.classList.remove('on'); });
     var b = lineBounds();
     pulseEl.classList.add('on');
-    var dur = reduceMotion ? 400 : 1700;
+    var dur = reduceMotion ? 300 : 500;
     var t0 = performance.now();
     var total = 0.18;
 
@@ -251,7 +251,7 @@
     reachTime.textContent = '0.180 s';
     heroNote.classList.add('show');
   } else {
-    setTimeout(runReach, 900);
+    setTimeout(runReach, 700);
   }
 
   /* ----------------------------------------------------------
@@ -280,7 +280,7 @@
       rect.setAttribute('stroke-width', '1');
       rect.setAttribute('class', 'frame');
       rect.setAttribute('data-i', i);
-      svgNS && stack.appendChild(rect);
+      stack.appendChild(rect);
 
       var label = document.createElementNS(svgNS, 'text');
       label.setAttribute('x', inset + 12);
@@ -375,7 +375,7 @@
         }).join('') + '</div>';
       } else if (L.kind === 'mods') {
         body = '<div class="mod-filter" data-filter="all"><button class="on" data-f="all" type="button">全部</button><button data-f="hw" type="button">硬件</button><button data-f="sw" type="button">软件 / 算法</button></div>' +
-          '<div class="mods">' + MODULES.map(function (m, k) {
+          '<div class="mods">' + MODULES.map(function (m) {
             return '<button class="mod" type="button" data-t="' + m.t + '" data-p="' + m.p + '" data-w="' + m.w + '">' + m.n + '</button>';
           }).join('') + '</div>' +
           '<div class="mod-tally"><span>已选 <b class="t-n">0</b> 个模块</span><span>合计功耗 <b class="t-p">0.0</b> W</span><span>合计重量 <b class="t-w">0</b> g</span></div>';
