@@ -32,6 +32,38 @@
   }
   .p-item:last-child p{color:var(--ink)}
   @media (max-width:980px){ .purpose{grid-template-columns:1fr;gap:16px} }
+
+  /* 首屏数字的出处小字 */
+  .hero-src{
+    max-width:640px;margin:14px auto 0;font-size:12px;line-height:1.85;
+    color:rgba(250,246,236,.52);letter-spacing:.01em;
+  }
+
+  /* 07 数据与来源 */
+  .src-table{
+    width:100%;margin-top:34px;border-collapse:collapse;
+    font-size:13px;line-height:1.7;
+  }
+  .src-table th{
+    text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--purple);font-weight:600;
+    padding:0 14px 10px 0;border-bottom:1px solid var(--ink);
+    white-space:nowrap;
+  }
+  .src-table td{
+    padding:11px 14px 11px 0;vertical-align:top;color:var(--ink-2);
+    border-bottom:1px solid var(--rule);
+  }
+  .src-table td:first-child{color:var(--ink);font-weight:600;width:24%}
+  .src-table td:last-child{color:var(--muted);font-size:12px;width:23%}
+  .src-note{
+    margin-top:26px;padding-left:16px;border-left:2px solid var(--purple-soft);
+    font-size:12.5px;line-height:1.9;color:var(--muted);max-width:760px;
+  }
+  @media (max-width:640px){
+    .src-table{font-size:12px}
+    .src-table td:first-child,.src-table td:last-child{width:auto}
+  }
 </style>
 </head>
 <body>
@@ -61,6 +93,7 @@
     </div>
 
     <p class="hero-note" id="heroNote">六层同时在工作，你却什么都感觉不到。</p>
+    <p class="hero-src">0.180 s 有出处：人体自然神经环路传导约 0.2 s（中科院 2025 年临床报道）；把采集、无线、推理、执行抠到本地后，文献实测的闭环 BCI 端到端在 90–131 ms。</p>
     <p class="signature">杨博文 · 吉林大学 · 2026</p>
     <div class="cue" aria-hidden="true">↓</div>
   </div>
@@ -135,15 +168,16 @@
       </div>
       <div class="lab-side">
         <div class="readout">
-          <div class="ro"><span class="ro-k">环路延迟</span><span class="ro-v"><b id="roLat">44</b><small>ms</small></span></div>
-          <div class="ro"><span class="ro-k">跟踪误差</span><span class="ro-v"><b id="roErr">16</b><small>mm</small></span></div>
+          <div class="ro"><span class="ro-k">环路延迟</span><span class="ro-v"><b id="roLat">52</b><small>ms</small></span></div>
+          <div class="ro"><span class="ro-k">跟踪误差</span><span class="ro-v"><b id="roErr">20</b><small>mm</small></span></div>
           <div class="ro"><span class="ro-k">状态</span><span class="ro-v"><b id="roState" class="state">跟随</b></span></div>
         </div>
         <div class="controls">
-          <label class="slider"><span>采集与滤波 <b id="v1">8</b> ms</span><input type="range" id="s1" min="2" max="40" step="2" value="8"></label>
+          <label class="slider"><span>采集与滤波 <b id="v1">16</b> ms</span><input type="range" id="s1" min="2" max="40" step="2" value="16"></label>
           <label class="slider"><span>无线 / 总线 <b id="v2">10</b> ms</span><input type="range" id="s2" min="0" max="60" step="2" value="10"></label>
           <label class="slider"><span>边缘推理 <b id="v3">14</b> ms</span><input type="range" id="s3" min="2" max="90" step="2" value="14"></label>
-          <p class="fixed">执行与反馈固定 12 ms（电机响应 + 传感器回读）</p>
+          <p class="fixed">执行反馈固定 12 ms（伺服响应 2 ms + 传感器回读 10 ms）。默认值：250 Hz 采样滑窗 4–8 ms + 滤波、BLE 连接间隔的一半（≈10 ms）、小模型推理 ≈14 ms。</p>
+          <p class="fixed">对照：36 通道 / 5 kHz 的实验室闭环系统实测端到端 90–131 ms；中科院 2025 年的临床系统压到了 100 ms 以内。</p>
         </div>
         <p class="verdict" id="labVerdict">和自己的身体差不多：你还没想，手已经到位。</p>
       </div>
@@ -250,6 +284,38 @@
   <p class="pull serif">人不是被替换，<br>是被扩展——<br>前提是这条线不断。</p>
 </section>
 
+<!-- ============ 07 数据与来源 ============ -->
+<section class="chapter src">
+  <p class="eyebrow">07 / 数据与来源</p>
+  <h2 class="serif">每个数字<br><em>都能对上一个型号</em></h2>
+  <div class="prose">
+    <p>这一节只有一个用途：让你能核对。页面里出现的功耗、重量、延迟、带宽、续航，逐条对应到下面某个器件的数据手册、厂商规格页，或一篇公开实测的论文与审评文件。对不上型号的数字，页面里不放。</p>
+  </div>
+
+  <table class="src-table">
+    <thead><tr><th>页面里的数字</th><th>依据</th><th>出处</th></tr></thead>
+    <tbody>
+      <tr><td>脑电前端 45 mW / 8 通道</td><td>ADS1299 每通道 5 mW 典型值，8 通道 40 mW，加外围与 LDO 取 45 mW</td><td>TI SBAS499 数据手册</td></tr>
+      <tr><td>无创 16 通道只有 0.05 Mbps</td><td>Cyton+Daisy 的 16 通道受无线带宽限制只能跑到 125 Hz（8 通道才是 250 Hz）；16 × 24 bit × 125 Hz ≈ 48 kbps</td><td>OpenBCI 官方文档与论坛</td></tr>
+      <tr><td>蓝牙 6 mW</td><td>nRF52840 在 BLE 1 Mbps 发射时 16.4 mA，连接态平均约 1.1 mA，按 3 V 折算约 3–6 mW</td><td>Nordic Semiconductor</td></tr>
+      <tr><td>FPGA 1.6 W / 26 g</td><td>XC7A35T 轻载设计 &lt;0.5 W，典型设计约 1.6 W，满载 2–3 W；取典型值</td><td>AMD Artix-7 / 第三方选型手册</td></tr>
+      <tr><td>IMU 3 mW</td><td>BMI270 满 ODR 功耗 685 µA，3 V 下约 2 mW，取 3 mW 含接口开销</td><td>Bosch Sensortec</td></tr>
+      <tr><td>植入 96 通道 46 Mbps</td><td>96 通道 × 30 kSPS × 16 bit ≈ 46 Mbps，对应 Utah / Blackrock 级皮层阵列的常规采样率</td><td>皮层阵列公开规格</td></tr>
+      <tr><td>外骨骼关节 25 W / 1.45 kg</td><td>实测：行走时每髋关节约 25 W、每膝关节约 27 W，四关节整机 117 W，整机 12 kg</td><td>Farris et al., 2011（下肢动力矫形器实测）</td></tr>
+      <tr><td>康复外骨骼续航 2.9 h</td><td>官方审评文件：主电池单次充电可连续行走 2 h 以上，另有备用电池 +15 min</td><td>FDA De Novo, ReWalk, DEN130034</td></tr>
+      <tr><td>小电池包 18.5 Wh / 190 g</td><td>21700 锂电芯约 250 Wh/kg：2 节 = 17.6 Wh / 140 g，加 BMS 与外壳取 190 g</td><td>电芯规格（能量密度量级）</td></tr>
+      <tr><td>固定 12 ms 执行反馈</td><td>外骨骼电机官方响应时间 2 ms + 传感器回读约 10 ms</td><td>Hypershell M-One 规格</td></tr>
+      <tr><td>实验室闭环 90–131 ms</td><td>36–72 通道、5–100 kHz 的实时脑电系统，实测系统延迟最低 90 ms、最高 131 ms</td><td>Closed-loop feedback system delay, 2021</td></tr>
+      <tr><td>100 ms 是“好用”的门槛</td><td>采集缓冲就要 20–30 ms；闭环 BCI 端到端应保持在 200 ms 以内，理想约 100 ms</td><td>Frontiers in Human Neuroscience, 2026</td></tr>
+      <tr><td>首屏 0.180 s</td><td>人体自然神经环路传导时间约 0.2 s；把链路压到本地的临床系统端到端可低于 100 ms</td><td>中国科学院 2025 年脑机接口临床进展报道</td></tr>
+      <tr><td>雷达的“带宽”轴按对数取分</td><td>0.04 Mbps（16 通道脑电的刚够）记 0 分，10 Mbps（植入级阵列的门槛）记满分，中间取对数；线性打分会让 0.04 与 1.4 看起来差不多</td><td>由上两行带宽数据推出</td></tr>
+      <tr><td>全部模块点亮 29.0 W / 2.43 kg</td><td>第 06 层 20 个硬件模块逐项相加，含外壳、线缆、关节与电池</td><td>本页数据层逐项求和</td></tr>
+    </tbody>
+  </table>
+
+  <p class="src-note">仍然要承认三件事：一、器件功耗是数据手册的典型值，真实板级功耗会高出 10–30%；二、外骨骼、刺激器这类执行部件的重量包含结构件分摊，不同产品差别很大；三、延迟实验是一个简化的一维跟踪模型，它演示的是相位滞后的后果，不是某个具体产品的实测曲线。</p>
+</section>
+
 <footer class="foot">
   <div class="foot-grid">
     <div>
@@ -258,7 +324,7 @@
     </div>
     <div>
       <h5>方法与诚实</h5>
-      <p>页面中所有延迟、功耗、重量、续航均为工程估算：取自公开器件规格与整机拆解量级的典型值，用于说明数量关系，非实测。功耗为典型工作功耗，非峰值。延迟实验是一个简化的一维跟踪模型：手按设定延迟复现目标历史位置，误差随相位滞后增大。</p>
+      <p>所有数字都对应到具体型号或公开实测，逐条列在上方「07 / 数据与来源」。功耗为典型工作功耗（非峰值），重量含外壳、线缆与紧固件分摊。延迟实验是简化的一维跟踪模型：手按设定延迟复现目标历史位置，演示的是相位滞后的后果，不代表某一具体产品的实测曲线。</p>
     </div>
     <div>
       <h5>参考</h5>
