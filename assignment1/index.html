@@ -58,37 +58,10 @@
             transition: transform 0.3s ease;
         }
 
-        .blob-1 {
-            width: 600px;
-            height: 600px;
-            background: var(--rose);
-            top: -150px;
-            left: -150px;
-        }
-
-        .blob-2 {
-            width: 500px;
-            height: 500px;
-            background: var(--sun);
-            top: 30%;
-            right: -150px;
-        }
-
-        .blob-3 {
-            width: 550px;
-            height: 550px;
-            background: var(--teal);
-            bottom: -150px;
-            left: 20%;
-        }
-
-        .blob-4 {
-            width: 400px;
-            height: 400px;
-            background: var(--lavender);
-            top: 60%;
-            right: 10%;
-        }
+        .blob-1 { width: 600px; height: 600px; background: var(--rose); top: -150px; left: -150px; }
+        .blob-2 { width: 500px; height: 500px; background: var(--sun); top: 30%; right: -150px; }
+        .blob-3 { width: 550px; height: 550px; background: var(--teal); bottom: -150px; left: 20%; }
+        .blob-4 { width: 400px; height: 400px; background: var(--lavender); top: 60%; right: 10%; }
 
         /* 进度条 */
         .progress-bar {
@@ -146,9 +119,7 @@
             font-family: sans-serif;
         }
 
-        .nav-dot:hover::after {
-            opacity: 1;
-        }
+        .nav-dot:hover::after { opacity: 1; }
 
         /* Hero */
         .hero {
@@ -171,11 +142,22 @@
             z-index: -1;
         }
 
+        /* Hero 视觉锚点 */
+        .hero-visual {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .hero-visual svg {
+            width: 180px;
+            height: 180px;
+        }
+
         .hero h1 {
-            font-size: clamp(2.5rem, 8vw, 5.5rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 700;
             line-height: 1.1;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             max-width: 900px;
         }
 
@@ -185,12 +167,41 @@
         }
 
         .hero-sub {
-            font-size: 1.2rem;
-            color: rgba(26, 26, 46, 0.7);
-            max-width: 600px;
-            margin-bottom: 60px;
+            font-size: 1.15rem;
+            color: rgba(26, 26, 46, 0.6);
+            max-width: 580px;
+            margin-bottom: 50px;
             font-style: italic;
         }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-family: sans-serif;
+            font-size: 0.8rem;
+            color: rgba(26, 26, 46, 0.5);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .stat-item:nth-child(1) .stat-num { color: var(--coral); }
+        .stat-item:nth-child(2) .stat-num { color: var(--teal); }
+        .stat-item:nth-child(3) .stat-num { color: var(--lavender); }
 
         .hero-arrow {
             font-size: 2rem;
@@ -206,17 +217,20 @@
 
         /* 通用 section */
         .layer-section {
-            min-height: 100vh;
-            padding: 120px 40px;
+            padding: 100px 40px;
             position: relative;
+        }
+
+        .layer-section.tight {
+            padding: 80px 40px;
         }
 
         .layer-section::before {
             content: attr(data-number);
             position: absolute;
             right: 40px;
-            top: 80px;
-            font-size: 12rem;
+            top: 60px;
+            font-size: 10rem;
             font-weight: 900;
             color: var(--layer-color, rgba(232, 93, 74, 0.08));
             line-height: 1;
@@ -231,12 +245,29 @@
             z-index: 1;
         }
 
+        .layer-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .layer-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
         .layer-number {
             font-family: sans-serif;
             font-size: 0.85rem;
             font-weight: 700;
             letter-spacing: 0.1em;
-            margin-bottom: 24px;
             display: inline-block;
             padding: 6px 16px;
             border-radius: 20px;
@@ -244,19 +275,30 @@
 
         .layer-1 { --layer-color: rgba(232, 93, 74, 0.08); }
         .layer-1 .layer-number { background: rgba(232, 93, 74, 0.15); color: var(--coral); }
+        .layer-1 .layer-icon { background: rgba(232, 93, 74, 0.15); }
+
         .layer-2 { --layer-color: rgba(233, 196, 106, 0.12); }
         .layer-2 .layer-number { background: rgba(233, 196, 106, 0.2); color: #d4a045; }
+        .layer-2 .layer-icon { background: rgba(233, 196, 106, 0.2); }
+
         .layer-3 { --layer-color: rgba(42, 157, 143, 0.08); }
         .layer-3 .layer-number { background: rgba(42, 157, 143, 0.15); color: var(--teal); }
+        .layer-3 .layer-icon { background: rgba(42, 157, 143, 0.15); }
+
         .layer-4 { --layer-color: rgba(155, 141, 227, 0.08); }
         .layer-4 .layer-number { background: rgba(155, 141, 227, 0.15); color: var(--lavender); }
+        .layer-4 .layer-icon { background: rgba(155, 141, 227, 0.15); }
+
         .layer-5 { --layer-color: rgba(244, 166, 184, 0.12); }
         .layer-5 .layer-number { background: rgba(244, 166, 184, 0.2); color: #d4708a; }
+        .layer-5 .layer-icon { background: rgba(244, 166, 184, 0.2); }
+
         .layer-6 { --layer-color: rgba(26, 26, 46, 0.06); }
         .layer-6 .layer-number { background: rgba(26, 26, 46, 0.1); color: var(--ink); }
+        .layer-6 .layer-icon { background: rgba(26, 26, 46, 0.08); }
 
         .layer-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-size: clamp(2rem, 5vw, 3.2rem);
             font-weight: 700;
             margin-bottom: 16px;
             line-height: 1.2;
@@ -264,7 +306,7 @@
 
         .layer-desc {
             font-size: 1.15rem;
-            color: rgba(26, 26, 46, 0.7);
+            color: rgba(26, 26, 46, 0.6);
             margin-bottom: 50px;
             max-width: 650px;
             font-style: italic;
@@ -276,13 +318,8 @@
             gap: 24px;
         }
 
-        .cards-2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .cards-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
+        .cards-2 { grid-template-columns: repeat(2, 1fr); }
+        .cards-3 { grid-template-columns: repeat(3, 1fr); }
 
         .interactive-card {
             background: white;
@@ -325,9 +362,7 @@
             box-shadow: 0 16px 48px rgba(26, 26, 46, 0.12);
         }
 
-        .interactive-card:hover::before {
-            transform: scaleX(1);
-        }
+        .interactive-card:hover::before { transform: scaleX(1); }
 
         .card-title {
             font-size: 1.25rem;
@@ -386,13 +421,13 @@
             font-weight: 600;
         }
 
-        /* 层级图 */
+        /* 层级总览 */
         .hierarchy-visual {
             background: white;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 50px 40px;
             box-shadow: 0 4px 20px rgba(26, 26, 46, 0.06);
-            margin: 60px 0;
+            margin: 40px 0;
         }
 
         .hierarchy-title {
@@ -409,31 +444,43 @@
         .hierarchy-stack {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             max-width: 550px;
             margin: 0 auto;
         }
 
         .hier-item {
-            padding: 18px 24px;
+            padding: 16px 24px;
             border-radius: 12px;
             text-align: center;
             font-weight: 600;
             font-size: 1rem;
             transition: all 0.3s ease;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .hier-item:hover {
-            transform: scale(1.03);
+        .hier-item:hover { transform: scale(1.02); }
+
+        .hier-item .hier-icon {
+            font-size: 1.2rem;
         }
 
-        .hier-item.h1 { background: rgba(232, 93, 74, 0.15); color: var(--coral); }
-        .hier-item.h2 { background: rgba(233, 196, 106, 0.2); color: #d4a045; }
-        .hier-item.h3 { background: rgba(42, 157, 143, 0.15); color: var(--teal); }
-        .hier-item.h4 { background: rgba(155, 141, 227, 0.15); color: var(--lavender); }
-        .hier-item.h5 { background: rgba(244, 166, 184, 0.2); color: #d4708a; }
+        .hier-item.h1 { background: rgba(232, 93, 74, 0.12); color: var(--coral); }
+        .hier-item.h2 { background: rgba(233, 196, 106, 0.18); color: #d4a045; }
+        .hier-item.h3 { background: rgba(42, 157, 143, 0.12); color: var(--teal); }
+        .hier-item.h4 { background: rgba(155, 141, 227, 0.12); color: var(--lavender); }
+        .hier-item.h5 { background: rgba(244, 166, 184, 0.18); color: #d4708a; }
         .hier-item.h6 { background: rgba(26, 26, 46, 0.08); color: var(--ink); }
+
+        .hier-arrow {
+            text-align: center;
+            color: rgba(26, 26, 46, 0.3);
+            font-size: 0.8rem;
+            line-height: 1;
+        }
 
         /* 关系图 */
         .relation-diagram {
@@ -484,17 +531,17 @@
 
         /* 底部 */
         .footer {
-            min-height: 60vh;
+            min-height: 50vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 100px 20px;
+            padding: 80px 20px;
         }
 
         .footer-quote {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-style: italic;
             max-width: 700px;
             margin-bottom: 30px;
@@ -516,50 +563,6 @@
             color: rgba(26, 26, 46, 0.5);
             letter-spacing: 0.1em;
         }
-
-        /* 响应式 */
-        @media (max-width: 768px) {
-            .side-nav {
-                right: 15px;
-            }
-
-            .cards-2, .cards-3 {
-                grid-template-columns: 1fr;
-            }
-
-            .layer-section {
-                padding: 80px 24px;
-            }
-
-            .layer-section::before {
-                font-size: 6rem;
-                right: 20px;
-                top: 40px;
-            }
-
-            .relation-flow {
-                flex-direction: column;
-            }
-
-            .relation-arrow {
-                transform: rotate(90deg);
-            }
-        }
-
-        /* 滚动动画 */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
 
         /* 返回顶部按钮 */
         .back-to-top {
@@ -584,15 +587,35 @@
             border: none;
         }
 
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-4px); background: var(--coral); }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .side-nav { right: 15px; }
+            .cards-2, .cards-3 { grid-template-columns: 1fr; }
+            .layer-section { padding: 60px 24px; }
+            .layer-section::before { font-size: 5rem; right: 20px; top: 30px; }
+            .relation-flow { flex-direction: column; }
+            .relation-arrow { transform: rotate(90deg); }
+            .hero-stats { gap: 24px; }
+            .stat-num { font-size: 1.8rem; }
         }
 
-        .back-to-top:hover {
-            transform: translateY(-4px);
-            background: var(--coral);
+        /* 滚动动画 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
     </style>
 </head>
 <body>
@@ -619,23 +642,88 @@
     <!-- Hero -->
     <section class="hero" id="hero">
         <div class="hero-number">01</div>
+        
+        <!-- Hero 视觉锚点：大脑+神经网络 SVG -->
+        <div class="hero-visual">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 大脑轮廓 -->
+                <ellipse cx="100" cy="95" rx="55" ry="50" stroke="#e85d4a" stroke-width="2.5" fill="rgba(232, 93, 74, 0.05)"/>
+                <!-- 神经网络节点 -->
+                <circle cx="75" cy="80" r="5" fill="#e85d4a"/>
+                <circle cx="120" cy="70" r="5" fill="#2a9d8f"/>
+                <circle cx="90" cy="110" r="5" fill="#e9c46a"/>
+                <circle cx="130" cy="105" r="5" fill="#9b8de3"/>
+                <circle cx="70" cy="115" r="4" fill="#f4a6b8"/>
+                <!-- 连线 -->
+                <line x1="75" y1="80" x2="120" y2="70" stroke="#e85d4a" stroke-width="1.5" opacity="0.5"/>
+                <line x1="75" y1="80" x2="90" y2="110" stroke="#2a9d8f" stroke-width="1.5" opacity="0.5"/>
+                <line x1="120" y1="70" x2="130" y2="105" stroke="#9b8de3" stroke-width="1.5" opacity="0.5"/>
+                <line x1="90" y1="110" x2="130" y2="105" stroke="#e9c46a" stroke-width="1.5" opacity="0.5"/>
+                <line x1="90" y1="110" x2="70" y2="115" stroke="#f4a6b8" stroke-width="1.5" opacity="0.5"/>
+                <line x1="75" y1="80" x2="130" y2="105" stroke="#1a1a2e" stroke-width="1" opacity="0.2"/>
+                <!-- 底部连线 -->
+                <line x1="100" y1="145" x2="100" y2="170" stroke="#1a1a2e" stroke-width="2"/>
+                <circle cx="100" cy="175" r="6" fill="#1a1a2e"/>
+            </svg>
+        </div>
+
         <h1>机器增强的<br><em>人机混合</em>神经系统</h1>
-        <p class="hero-subtitle">从生命维持到感知行动，从生物神经到机器增强——六层架构，层层拆解一个未来系统</p>
+        <p class="hero-sub">从生命维持到感知行动，从生物神经到机器增强——六层架构，层层拆解一个未来系统</p>
+        
+        <!-- 关键数字统计 -->
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-num">6</div>
+                <div class="stat-label">层级</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">18+</div>
+                <div class="stat-label">系统</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">40+</div>
+                <div class="stat-label">模块</div>
+            </div>
+        </div>
+
         <div class="hero-arrow">↓</div>
     </section>
 
     <!-- 层级总览 -->
-    <section class="layer-section" id="overview">
+    <section class="layer-section tight" id="overview">
         <div class="layer-container reveal">
             <div class="hierarchy-visual">
                 <div class="hierarchy-title">六层架构 · 从宏观到微观</div>
                 <div class="hierarchy-stack">
-                    <div class="hier-item h1" data-target="layer1">任务 Mission →</div>
-                    <div class="hier-item h2" data-target="layer2">体系 SoS →</div>
-                    <div class="hier-item h3" data-target="layer3">整机 Vehicles →</div>
-                    <div class="hier-item h4" data-target="layer4">系统 Systems →</div>
-                    <div class="hier-item h5" data-target="layer5">子系统 Sub-systems →</div>
-                    <div class="hier-item h6" data-target="layer6">模块 Modules →</div>
+                    <div class="hier-item h1" data-target="layer1">
+                        <span><span class="hier-icon">🎯</span> 任务 Mission</span>
+                        <span>→</span>
+                    </div>
+                    <div class="hier-arrow">↓</div>
+                    <div class="hier-item h2" data-target="layer2">
+                        <span><span class="hier-icon">🌐</span> 体系 SoS</span>
+                        <span>→</span>
+                    </div>
+                    <div class="hier-arrow">↓</div>
+                    <div class="hier-item h3" data-target="layer3">
+                        <span><span class="hier-icon">🧍</span> 整机 Vehicles</span>
+                        <span>→</span>
+                    </div>
+                    <div class="hier-arrow">↓</div>
+                    <div class="hier-item h4" data-target="layer4">
+                        <span><span class="hier-icon">⚙️</span> 系统 Systems</span>
+                        <span>→</span>
+                    </div>
+                    <div class="hier-arrow">↓</div>
+                    <div class="hier-item h5" data-target="layer5">
+                        <span><span class="hier-icon">🔧</span> 子系统 Sub-systems</span>
+                        <span>→</span>
+                    </div>
+                    <div class="hier-arrow">↓</div>
+                    <div class="hier-item h6" data-target="layer6">
+                        <span><span class="hier-icon">🧩</span> 模块 Modules</span>
+                        <span>→</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -644,7 +732,10 @@
     <!-- 第1层：任务 -->
     <section class="layer-section layer-1" id="layer1" data-number="01">
         <div class="layer-container reveal">
-            <div class="layer-number">第 1 层</div>
+            <div class="layer-header">
+                <div class="layer-icon">🎯</div>
+                <div class="layer-number">第 1 层</div>
+            </div>
             <h2 class="layer-title">任务 Mission</h2>
             <p class="layer-desc">系统存在的根本理由——维持生命，扩展能力。</p>
             
@@ -694,18 +785,21 @@
     <!-- 第2层：体系 -->
     <section class="layer-section layer-2" id="layer2" data-number="02">
         <div class="layer-container reveal">
-            <div class="layer-number">第 2 层</div>
+            <div class="layer-header">
+                <div class="layer-icon">🌐</div>
+                <div class="layer-number">第 2 层</div>
+            </div>
             <h2 class="layer-title">体系 SoS</h2>
             <p class="layer-desc">外部环境 + 人体 + 机器增强设备，三者耦合形成的大系统。</p>
             
             <div class="relation-diagram">
                 <div class="relation-title">体系构成关系</div>
                 <div class="relation-flow">
-                    <div class="relation-node env">外部环境</div>
+                    <div class="relation-node env">🌍 外部环境</div>
                     <div class="relation-arrow">⇄</div>
-                    <div class="relation-node body">人体系统</div>
+                    <div class="relation-node body">🧍 人体系统</div>
                     <div class="relation-arrow">⇄</div>
-                    <div class="relation-node machine">机器增强系统</div>
+                    <div class="relation-node machine">🤖 机器增强系统</div>
                 </div>
             </div>
             
@@ -763,13 +857,16 @@
     <!-- 第3层：整机 -->
     <section class="layer-section layer-3" id="layer3" data-number="03">
         <div class="layer-container reveal">
-            <div class="layer-number">第 3 层</div>
+            <div class="layer-header">
+                <div class="layer-icon">🧍</div>
+                <div class="layer-number">第 3 层</div>
+            </div>
             <h2 class="layer-title">整机 Vehicles</h2>
             <p class="layer-desc">人体 + 机器增强设备的完整组合体。</p>
             
             <div class="cards-grid cards-2">
                 <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
-                    <div class="card-title">生物整机</div>
+                    <div class="card-title">🧬 生物整机</div>
                     <div class="card-content">
                         <p class="card-text">人体本身就是最精密的整机：</p>
                         <ul class="card-list">
@@ -783,7 +880,7 @@
                 </div>
                 
                 <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42, 157, 143, 0.1);">
-                    <div class="card-title">可穿戴增强整机</div>
+                    <div class="card-title">⌚ 可穿戴增强整机</div>
                     <div class="card-content">
                         <p class="card-text">根据任务需求灵活配置的设备组合：</p>
                         <ul class="card-list">
@@ -802,13 +899,16 @@
     <!-- 第4层：系统 -->
     <section class="layer-section layer-4" id="layer4" data-number="04">
         <div class="layer-container reveal">
-            <div class="layer-number">第 4 层</div>
+            <div class="layer-header">
+                <div class="layer-icon">⚙️</div>
+                <div class="layer-number">第 4 层</div>
+            </div>
             <h2 class="layer-title">系统 Systems</h2>
             <p class="layer-desc">整机下的大系统，生物系统与人工系统并列融合。</p>
             
             <div class="cards-grid cards-2">
                 <div class="interactive-card" style="--card-accent: var(--lavender); --card-bg: rgba(155, 141, 227, 0.1);">
-                    <div class="card-title">感知系统</div>
+                    <div class="card-title">👁️ 感知系统</div>
                     <div class="card-content">
                         <ul class="card-list">
                             <li>生物感知：眼、耳、鼻、舌、皮肤本体感受器</li>
@@ -819,7 +919,7 @@
                 </div>
                 
                 <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233, 196, 106, 0.15);">
-                    <div class="card-title">信息传输系统</div>
+                    <div class="card-title">📡 信息传输系统</div>
                     <div class="card-content">
                         <ul class="card-list">
                             <li>生物传输：传入神经、传出神经</li>
@@ -830,7 +930,7 @@
                 </div>
                 
                 <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
-                    <div class="card-title">决策与控制系统</div>
+                    <div class="card-title">🧠 决策与控制系统</div>
                     <div class="card-content">
                         <ul class="card-list">
                             <li>生物决策：大脑皮层、脊髓反射</li>
@@ -841,7 +941,7 @@
                 </div>
                 
                 <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42, 157, 143, 0.1);">
-                    <div class="card-title">执行与运动系统</div>
+                    <div class="card-title">🦾 执行与运动系统</div>
                     <div class="card-content">
                         <ul class="card-list">
                             <li>生物执行：骨骼肌、关节</li>
@@ -852,7 +952,7 @@
                 </div>
                 
                 <div class="interactive-card" style="--card-accent: var(--rose); --card-bg: rgba(244, 166, 184, 0.15);">
-                    <div class="card-title">能源与代谢系统</div>
+                    <div class="card-title">⚡ 能源与代谢系统</div>
                     <div class="card-content">
                         <ul class="card-list">
                             <li>生物能源：消化系统、循环系统、ATP代谢</li>
@@ -863,7 +963,7 @@
                 </div>
                 
                 <div class="interactive-card" style="--card-accent: #d4708a; --card-bg: rgba(212, 112, 138, 0.1);">
-                    <div class="card-title">安全与监护系统</div>
+                    <div class="card-title">🛡️ 安全与监护系统</div>
                     <div class="card-content">
                         <ul class="card-list">
                             <li>生物安全：免疫系统、疼痛反射、自稳态调节</li>
@@ -879,7 +979,10 @@
     <!-- 第5层：子系统 -->
     <section class="layer-section layer-5" id="layer5" data-number="05">
         <div class="layer-container reveal">
-            <div class="layer-number">第 5 层</div>
+            <div class="layer-header">
+                <div class="layer-icon">🔧</div>
+                <div class="layer-number">第 5 层</div>
+            </div>
             <h2 class="layer-title">子系统 Sub-systems</h2>
             <p class="layer-desc">每个大系统再往下拆一层，功能更具体。</p>
             
@@ -963,13 +1066,16 @@
     <!-- 第6层：模块 -->
     <section class="layer-section layer-6" id="layer6" data-number="06">
         <div class="layer-container reveal">
-            <div class="layer-number">第 6 层</div>
+            <div class="layer-header">
+                <div class="layer-icon">🧩</div>
+                <div class="layer-number">第 6 层</div>
+            </div>
             <h2 class="layer-title">模块 Modules</h2>
             <p class="layer-desc">最底层的硬件与软件单元，系统的基本积木。</p>
             
             <div class="cards-grid cards-2">
                 <div class="interactive-card" style="--card-accent: var(--ink); --card-bg: rgba(26, 26, 46, 0.08);">
-                    <div class="card-title">硬件模块</div>
+                    <div class="card-title">🔌 硬件模块</div>
                     <div class="card-content">
                         <ul class="card-list">
                             <li>信号采集模块：干电极/湿电极阵列、仪表放大器、ADC采样芯片</li>
@@ -985,7 +1091,7 @@
                 </div>
                 
                 <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232, 93, 74, 0.1);">
-                    <div class="card-title">软件/算法模块</div>
+                    <div class="card-title">💻 软件/算法模块</div>
                     <div class="card-content">
                         <ul class="card-list">
                             <li>信号预处理模块：降噪、滤波、伪迹去除</li>
