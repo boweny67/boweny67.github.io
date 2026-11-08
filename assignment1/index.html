@@ -171,16 +171,6 @@
             z-index: -1;
         }
 
-        .hero-eyebrow {
-            font-family: sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--coral);
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-
         .hero h1 {
             font-size: clamp(2.5rem, 8vw, 5.5rem);
             font-weight: 700;
@@ -570,6 +560,39 @@
 
         .reveal-delay-1 { transition-delay: 0.1s; }
         .reveal-delay-2 { transition-delay: 0.2s; }
+
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+            box-shadow: 0 4px 20px rgba(26, 26, 46, 0.2);
+            border: none;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            background: var(--coral);
+        }
     </style>
 </head>
 <body>
@@ -596,7 +619,6 @@
     <!-- Hero -->
     <section class="hero" id="hero">
         <div class="hero-number">01</div>
-        <div class="hero-eyebrow">系统工程 · 小组作业 1</div>
         <h1>机器增强的<br><em>人机混合</em>神经系统</h1>
         <p class="hero-subtitle">从生命维持到感知行动，从生物神经到机器增强——六层架构，层层拆解一个未来系统</p>
         <div class="hero-arrow">↓</div>
@@ -608,12 +630,12 @@
             <div class="hierarchy-visual">
                 <div class="hierarchy-title">六层架构 · 从宏观到微观</div>
                 <div class="hierarchy-stack">
-                    <div class="hier-item h1">任务 Mission</div>
-                    <div class="hier-item h2">体系 SoS</div>
-                    <div class="hier-item h3">整机 Vehicles</div>
-                    <div class="hier-item h4">系统 Systems</div>
-                    <div class="hier-item h5">子系统 Sub-systems</div>
-                    <div class="hier-item h6">模块 Modules</div>
+                    <div class="hier-item h1" data-target="layer1">任务 Mission →</div>
+                    <div class="hier-item h2" data-target="layer2">体系 SoS →</div>
+                    <div class="hier-item h3" data-target="layer3">整机 Vehicles →</div>
+                    <div class="hier-item h4" data-target="layer4">系统 Systems →</div>
+                    <div class="hier-item h5" data-target="layer5">子系统 Sub-systems →</div>
+                    <div class="hier-item h6" data-target="layer6">模块 Modules →</div>
                 </div>
             </div>
         </div>
@@ -984,8 +1006,11 @@
         <div class="footer-quote reveal">
             从生命维持的顶层任务，到最底层的芯片模块——<br>六层架构，层层嵌套，生物与机器深度融合。
         </div>
-        <div class="footer-author reveal reveal-delay-1">—— 机器增强的人机混合神经系统 · 小组作业 1</div>
+        <div class="footer-author reveal reveal-delay-1">—— 机器增强的人机混合神经系统</div>
     </section>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 
     <script>
         // 进度条
@@ -1059,6 +1084,29 @@
                 dot.classList.remove('active');
                 if (dot.dataset.target === current) {
                     dot.classList.add('active');
+                }
+            });
+
+            // 返回顶部按钮显示/隐藏
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // 返回顶部
+        document.getElementById('backToTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 层级总览点击跳转
+        document.querySelectorAll('.hier-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const target = document.getElementById(item.dataset.target);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
                 }
             });
         });
