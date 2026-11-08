@@ -118,59 +118,6 @@
         }
         .nav-dot:hover::after { opacity: 1; }
 
-        /* 系统状态 widget */
-        .system-widget {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 16px 20px;
-            box-shadow: 0 8px 32px rgba(26,26,46,0.12);
-            z-index: 98;
-            font-family: sans-serif;
-            width: 180px;
-            border: 1px solid rgba(26,26,46,0.06);
-        }
-        .widget-title {
-            font-size: 0.65rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: rgba(26,26,46,0.4);
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        .widget-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.78rem;
-        }
-        .widget-label { color: rgba(26,26,46,0.5); }
-        .widget-value { font-weight: 700; color: var(--ink); }
-        .widget-value.teal { color: var(--teal); }
-        .widget-value.coral { color: var(--coral); }
-        .waveform {
-            width: 100%;
-            height: 24px;
-            margin-top: 6px;
-        }
-        .waveform path {
-            stroke: var(--accent);
-            stroke-width: 1.5;
-            fill: none;
-            transition: stroke 0.5s ease;
-            animation: wave 2s ease-in-out infinite;
-        }
-        @keyframes wave {
-            0%, 100% { d: path("M0,12 Q5,6 10,12 T20,12 T30,12 T40,12 T50,12 T60,12 T70,12 T80,12 T90,12 T100,12"); }
-            25% { d: path("M0,12 Q5,2 10,12 T20,18 T30,8 T40,14 T50,6 T60,16 T70,10 T80,14 T90,12 T100,12"); }
-            50% { d: path("M0,12 Q5,18 10,12 T20,6 T30,16 T40,8 T50,18 T60,4 T70,16 T80,8 T90,14 T100,12"); }
-            75% { d: path("M0,12 Q5,8 10,12 T20,14 T30,10 T40,16 T50,8 T60,14 T70,6 T80,16 T90,10 T100,12"); }
-        }
-
         /* Hero */
         .hero {
             min-height: 200vh;
@@ -461,10 +408,6 @@
             padding: 120px 40px;
             position: relative;
         }
-        .layer-section.dark {
-            background: var(--ink);
-            color: white;
-        }
         .layer-section::before {
             content: attr(data-number);
             position: absolute;
@@ -479,27 +422,12 @@
             font-family: sans-serif;
             transition: -webkit-text-stroke 0.5s ease;
         }
-        .layer-section.dark::before {
-            -webkit-text-stroke: 1.5px rgba(255,255,255,0.06);
-        }
         .layer-container {
             max-width: 1000px;
             margin: 0 auto;
             width: 100%;
             position: relative;
             z-index: 1;
-        }
-        /* 交替布局 */
-        .layer-section.align-right .layer-container {
-            margin-left: auto;
-            margin-right: 0;
-            text-align: left;
-        }
-        .layer-section.align-right .layer-desc {
-            margin-left: auto;
-        }
-        .layer-section.align-right .cards-grid {
-            direction: ltr;
         }
 
         .layer-header {
@@ -519,9 +447,6 @@
         .layer-breadcrumb .crumb-arrow {
             color: var(--accent);
             margin-right: 6px;
-        }
-        .layer-section.dark .layer-breadcrumb {
-            color: rgba(255,255,255,0.4);
         }
         .layer-icon {
             width: 52px;
@@ -555,10 +480,9 @@
         .layer-3 .layer-number { background: rgba(42,157,143,0.12); color: var(--teal); }
         .layer-3 .layer-icon { background: rgba(42,157,143,0.12); }
 
-        .layer-4.dark { --layer-color: rgba(155,141,227,0.15); }
-        .layer-4.dark .layer-number { background: rgba(155,141,227,0.2); color: var(--lavender); }
-        .layer-4.dark .layer-icon { background: rgba(155,141,227,0.2); }
-        .layer-4.dark .layer-desc { color: rgba(255,255,255,0.6); }
+        .layer-4 { --layer-color: rgba(155,141,227,0.1); --layer-stroke: rgba(155,141,227,0.12); }
+        .layer-4 .layer-number { background: rgba(155,141,227,0.15); color: var(--lavender); }
+        .layer-4 .layer-icon { background: rgba(155,141,227,0.15); }
 
         .layer-5 { --layer-color: rgba(244,166,184,0.1); --layer-stroke: rgba(212,112,138,0.12); }
         .layer-5 .layer-number { background: rgba(244,166,184,0.18); color: #d4708a; }
@@ -601,12 +525,6 @@
             overflow: hidden;
             border: 1px solid rgba(26,26,46,0.04);
         }
-        .layer-section.dark .interactive-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: none;
-            backdrop-filter: blur(10px);
-        }
         .interactive-card::before {
             content: '';
             position: absolute;
@@ -630,9 +548,6 @@
             transform: translateY(-6px);
             box-shadow: 0 16px 48px rgba(26,26,46,0.12);
         }
-        .layer-section.dark .interactive-card:hover {
-            background: rgba(255,255,255,0.1);
-        }
         .interactive-card:hover::before { transform: scaleX(1); }
 
         .card-title {
@@ -655,10 +570,6 @@
             font-size: 0.95rem;
             line-height: 1.7;
             margin-bottom: 12px;
-        }
-        .layer-section.dark .card-text,
-        .layer-section.dark .card-list li {
-            color: rgba(255,255,255,0.7);
         }
         .card-list {
             list-style: none;
@@ -695,10 +606,6 @@
             box-shadow: 0 4px 24px rgba(26,26,46,0.06);
             margin: 40px 0;
         }
-        .layer-section.dark .relation-diagram {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
         .relation-title {
             font-family: sans-serif;
             font-size: 0.78rem;
@@ -709,7 +616,6 @@
             margin-bottom: 30px;
             font-weight: 600;
         }
-        .layer-section.dark .relation-title { color: rgba(255,255,255,0.4); }
         .relation-flow {
             display: flex;
             justify-content: space-between;
@@ -812,11 +718,9 @@
             .relation-arrow { transform: rotate(90deg); }
             .hero-stats { gap: 24px; }
             .stat-num { font-size: 1.8rem; }
-            .system-widget { display: none; }
             .flowchart { flex-direction: column; align-items: center; }
             .flow-arrow { transform: rotate(90deg); padding: 8px 0; }
             .flow-node { width: 100%; max-width: 280px; }
-            .layer-section.align-right .layer-container { margin: 0 auto; }
             .hero-number-outline { font-size: 10rem; }
         }
     </style>
@@ -840,22 +744,6 @@
         <div class="nav-dot" data-target="layer5" data-label="子系统"></div>
         <div class="nav-dot" data-target="layer6" data-label="模块"></div>
     </nav>
-
-    <!-- 系统状态 widget -->
-    <div class="system-widget">
-        <div class="widget-title">System Monitor</div>
-        <div class="widget-row">
-            <span class="widget-label">Neural</span>
-            <span class="widget-value coral">ACTIVE</span>
-        </div>
-        <div class="widget-row">
-            <span class="widget-label">Heart Rate</span>
-            <span class="widget-value teal" id="heartRate">72 BPM</span>
-        </div>
-        <svg class="waveform" viewBox="0 0 100 24" preserveAspectRatio="none">
-            <path d="M0,12 Q5,6 10,12 T20,12 T30,12 T40,12 T50,12 T60,12 T70,12 T80,12 T90,12 T100,12"/>
-        </svg>
-    </div>
 
     <!-- Hero -->
     <section class="hero" id="hero">
@@ -1042,8 +930,8 @@
         </div>
     </section>
 
-    <!-- 第2层：体系 (右对齐) -->
-    <section class="layer-section layer-2 align-right" id="layer2" data-number="02" data-accent="sun">
+    <!-- 第2层：体系 -->
+    <section class="layer-section layer-2" id="layer2" data-number="02" data-accent="sun">
         <div class="layer-container reveal">
             <div class="layer-breadcrumb"><span class="crumb-arrow">↑</span>拆解自：任务 Mission</div>
             <div class="layer-header">
@@ -1155,8 +1043,8 @@
         </div>
     </section>
 
-    <!-- 第4层：系统 (深色反白) -->
-    <section class="layer-section layer-4 dark" id="layer4" data-number="04" data-accent="lavender">
+    <!-- 第4层：系统 -->
+    <section class="layer-section layer-4" id="layer4" data-number="04" data-accent="lavender">
         <div class="layer-container reveal">
             <div class="layer-breadcrumb"><span class="crumb-arrow">↑</span>拆解自：整机 Vehicles</div>
             <div class="layer-header">
@@ -1167,7 +1055,7 @@
             <p class="layer-desc">整机下的大系统，生物系统与人工系统并列融合。</p>
             
             <div class="cards-grid cards-2">
-                <div class="interactive-card" style="--card-accent: var(--lavender); --card-bg: rgba(155,141,227,0.15);">
+                <div class="interactive-card" style="--card-accent: var(--lavender); --card-bg: rgba(155,141,227,0.1);">
                     <div class="card-title">👁️ 感知系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1177,7 +1065,7 @@
                     </div>
                     <div class="card-hint">点击展开 →</div>
                 </div>
-                <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233,196,106,0.15);">
+                <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233,196,106,0.1);">
                     <div class="card-title">📡 信息传输系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1187,7 +1075,7 @@
                     </div>
                     <div class="card-hint">点击展开 →</div>
                 </div>
-                <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232,93,74,0.15);">
+                <div class="interactive-card" style="--card-accent: var(--coral); --card-bg: rgba(232,93,74,0.1);">
                     <div class="card-title">🧠 决策与控制系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1197,7 +1085,7 @@
                     </div>
                     <div class="card-hint">点击展开 →</div>
                 </div>
-                <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42,157,143,0.15);">
+                <div class="interactive-card" style="--card-accent: var(--teal); --card-bg: rgba(42,157,143,0.1);">
                     <div class="card-title">🦾 执行与运动系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1207,7 +1095,7 @@
                     </div>
                     <div class="card-hint">点击展开 →</div>
                 </div>
-                <div class="interactive-card" style="--card-accent: var(--rose); --card-bg: rgba(244,166,184,0.15);">
+                <div class="interactive-card" style="--card-accent: var(--rose); --card-bg: rgba(244,166,184,0.1);">
                     <div class="card-title">⚡ 能源与代谢系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1217,7 +1105,7 @@
                     </div>
                     <div class="card-hint">点击展开 →</div>
                 </div>
-                <div class="interactive-card" style="--card-accent: #d4708a; --card-bg: rgba(212,112,138,0.15);">
+                <div class="interactive-card" style="--card-accent: #d4708a; --card-bg: rgba(212,112,138,0.1);">
                     <div class="card-title">🛡️ 安全与监护系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1231,8 +1119,8 @@
         </div>
     </section>
 
-    <!-- 第5层：子系统 (右对齐) -->
-    <section class="layer-section layer-5 align-right" id="layer5" data-number="05" data-accent="rose">
+    <!-- 第5层：子系统 -->
+    <section class="layer-section layer-5" id="layer5" data-number="05" data-accent="rose">
         <div class="layer-container reveal">
             <div class="layer-breadcrumb"><span class="crumb-arrow">↑</span>拆解自：系统 Systems</div>
             <div class="layer-header">
@@ -1255,7 +1143,7 @@
                     </div>
                     <div class="card-hint">点击展开 →</div>
                 </div>
-                <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233,196,106,0.12);">
+                <div class="interactive-card" style="--card-accent: var(--sun); --card-bg: rgba(233,196,106,0.1);">
                     <div class="card-title">信息传输系统 → 子系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1288,7 +1176,7 @@
                     </div>
                     <div class="card-hint">点击展开 →</div>
                 </div>
-                <div class="interactive-card" style="--card-accent: var(--rose); --card-bg: rgba(244,166,184,0.12);">
+                <div class="interactive-card" style="--card-accent: var(--rose); --card-bg: rgba(244,166,184,0.1);">
                     <div class="card-title">能源与代谢系统 → 子系统</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1326,7 +1214,7 @@
             <p class="layer-desc">最底层的硬件与软件单元，系统的基本积木。</p>
             
             <div class="cards-grid cards-2">
-                <div class="interactive-card" style="--card-accent: var(--ink); --card-bg: rgba(26,26,46,0.06);">
+                <div class="interactive-card" style="--card-accent: var(--ink); --card-bg: rgba(26,26,46,0.05);">
                     <div class="card-title">🔌 硬件模块</div>
                     <div class="card-content">
                         <ul class="card-list">
@@ -1369,7 +1257,7 @@
     <button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 
     <script>
-        // 进度条 + 侧边导航高亮 + 背景色切换
+        // 进度条 + 侧边导航高亮 + 强调色切换
         const accentMap = {
             hero: { accent: '#e85d4a', rgb: '232, 93, 74' },
             layer1: { accent: '#e85d4a', rgb: '232, 93, 74' },
@@ -1396,23 +1284,19 @@
                 }
             });
 
-            // 切换强调色
             const accent = accentMap[current];
             if (accent) {
                 document.documentElement.style.setProperty('--accent', accent.accent);
                 document.documentElement.style.setProperty('--accent-rgb', accent.rgb);
             }
 
-            // 导航高亮
             document.querySelectorAll('.nav-dot').forEach(dot => {
                 dot.classList.toggle('active', dot.dataset.target === current);
             });
 
-            // 返回顶部
             document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 500);
         });
 
-        // 滚动淡入
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -1420,7 +1304,6 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // 数字计数动画
         const countObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !entry.target.dataset.counted) {
@@ -1442,7 +1325,6 @@
         }, { threshold: 0.5 });
         document.querySelectorAll('.stat-num').forEach(el => countObserver.observe(el));
 
-        // 卡片展开
         document.querySelectorAll('.interactive-card').forEach(card => {
             card.addEventListener('click', () => {
                 card.classList.toggle('expanded');
@@ -1451,33 +1333,22 @@
             });
         });
 
-        // 侧边导航跳转
         document.querySelectorAll('.nav-dot').forEach(dot => {
             dot.addEventListener('click', () => {
                 document.getElementById(dot.dataset.target)?.scrollIntoView({ behavior: 'smooth' });
             });
         });
 
-        // 流程图节点跳转
         document.querySelectorAll('.flow-node').forEach(node => {
             node.addEventListener('click', () => {
                 document.getElementById(node.dataset.target)?.scrollIntoView({ behavior: 'smooth' });
             });
         });
 
-        // 返回顶部
         document.getElementById('backToTop').addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // 心率数字微动
-        setInterval(() => {
-            const base = 72;
-            const variation = Math.floor(Math.random() * 5) - 2;
-            document.getElementById('heartRate').textContent = (base + variation) + ' BPM';
-        }, 2000);
-
-        // 解剖动画：滚动逐步显示大脑→神经→脊髓→末梢
         const dissectBrain = document.getElementById('dissectBrain');
         const dissectNerve = document.getElementById('dissectNerve');
         const dissectSpine = document.getElementById('dissectSpine');
