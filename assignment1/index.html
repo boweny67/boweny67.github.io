@@ -30,6 +30,7 @@
             transition: background 0.8s ease;
         }
 
+        /* 噪点颗粒层 */
         .grain {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -40,6 +41,7 @@
             background-size: 256px 256px;
         }
 
+        /* 背景网格 */
         body::before {
             content: '';
             position: fixed;
@@ -51,6 +53,7 @@
             z-index: -2;
         }
 
+        /* 背景 blob */
         .bg-blob {
             position: fixed;
             border-radius: 50%;
@@ -64,6 +67,7 @@
         .blob-3 { width: 550px; height: 550px; background: var(--teal); bottom: -150px; left: 20%; }
         .blob-4 { width: 400px; height: 400px; background: var(--lavender); top: 60%; right: 10%; }
 
+        /* 进度条 */
         .progress-bar {
             position: fixed;
             top: 0; left: 0;
@@ -74,6 +78,7 @@
             transition: width 0.1s ease, background 0.5s ease;
         }
 
+        /* 侧边导航 */
         .side-nav {
             position: fixed;
             right: 30px;
@@ -114,6 +119,7 @@
         }
         .nav-dot:hover::after { opacity: 1; }
 
+        /* 系统状态 widget */
         .system-widget {
             position: fixed;
             bottom: 30px;
@@ -166,7 +172,15 @@
             75% { d: path("M0,12 Q5,8 10,12 T20,14 T30,10 T40,16 T50,8 T60,14 T70,6 T80,16 T90,10 T100,12"); }
         }
 
+        /* Hero */
         .hero {
+            min-height: 200vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .hero-top {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -174,9 +188,52 @@
             align-items: center;
             text-align: center;
             padding: 40px 20px;
-            position: relative;
         }
 
+        /* 解剖层 */
+        .hero-dissect {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: sticky;
+            top: 0;
+        }
+        .dissect-stage {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+        }
+        .dissect-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .dissect-label {
+            position: absolute;
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            color: rgba(26,26,46,0.5);
+            letter-spacing: 0.05em;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .dissect-label.visible { opacity: 1; }
+        .dissect-label.l1 { top: 10%; left: 10%; }
+        .dissect-label.l2 { top: 35%; right: 10%; }
+        .dissect-label.l3 { bottom: 20%; left: 15%; }
+
+        /* 解剖各层 */
+        .dissect-brain, .dissect-nerve, .dissect-spine, .dissect-limb {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .dissect-brain.visible, .dissect-nerve.visible, .dissect-spine.visible, .dissect-limb.visible {
+            opacity: 1;
+        }
+
+        /* 描边空心大字 */
         .hero-number-outline {
             position: absolute;
             font-size: 22rem;
@@ -198,6 +255,7 @@
             height: 160px;
         }
 
+        /* 神经网络动画 */
         .neural-node {
             fill: var(--coral);
             opacity: 0;
@@ -308,6 +366,27 @@
             60% { transform: translateY(-7px); }
         }
 
+        /* 导言 */
+        .intro-section {
+            padding: 120px 40px;
+            text-align: center;
+        }
+        .intro-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .intro-text {
+            font-size: 1.6rem;
+            line-height: 1.8;
+            color: rgba(26,26,46,0.7);
+            font-style: italic;
+        }
+        .intro-text em {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* 层级总览 - 横向流程图 */
         .overview-section {
             padding: 80px 40px;
             position: relative;
@@ -378,6 +457,7 @@
         .flow-node.h5 { background: rgba(244,166,184,0.15); color: #d4708a; }
         .flow-node.h6 { background: rgba(26,26,46,0.06); color: var(--ink); }
 
+        /* 通用 layer section */
         .layer-section {
             padding: 120px 40px;
             position: relative;
@@ -410,6 +490,7 @@
             position: relative;
             z-index: 1;
         }
+        /* 交替布局 */
         .layer-section.align-right .layer-container {
             margin-left: auto;
             margin-right: 0;
@@ -426,7 +507,22 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
+        }
+
+        .layer-breadcrumb {
+            font-family: sans-serif;
+            font-size: 0.78rem;
+            color: rgba(26,26,46,0.4);
+            margin-bottom: 16px;
+            letter-spacing: 0.03em;
+        }
+        .layer-breadcrumb .crumb-arrow {
+            color: var(--accent);
+            margin-right: 6px;
+        }
+        .layer-section.dark .layer-breadcrumb {
+            color: rgba(255,255,255,0.4);
         }
         .layer-icon {
             width: 52px;
@@ -487,6 +583,7 @@
             font-style: italic;
         }
 
+        /* 卡片 */
         .cards-grid {
             display: grid;
             gap: 24px;
@@ -591,6 +688,7 @@
             font-weight: 600;
         }
 
+        /* 关系图 */
         .relation-diagram {
             background: white;
             border-radius: 20px;
@@ -639,6 +737,7 @@
             color: rgba(26,26,46,0.25);
         }
 
+        /* 底部 */
         .footer {
             min-height: 60vh;
             display: flex;
@@ -670,6 +769,7 @@
             letter-spacing: 0.12em;
         }
 
+        /* 返回顶部 */
         .back-to-top {
             position: fixed;
             bottom: 30px;
@@ -694,6 +794,7 @@
         .back-to-top.visible { opacity: 1; visibility: visible; }
         .back-to-top:hover { transform: translateY(-4px); background: var(--accent); }
 
+        /* 滚动动画 */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -702,6 +803,7 @@
         .reveal.visible { opacity: 1; transform: translateY(0); }
         .reveal-delay-1 { transition-delay: 0.15s; }
 
+        /* 响应式 */
         @media (max-width: 900px) {
             .side-nav { right: 12px; }
             .cards-2, .cards-3 { grid-template-columns: 1fr; }
@@ -740,6 +842,7 @@
         <div class="nav-dot" data-target="layer6" data-label="模块"></div>
     </nav>
 
+    <!-- 系统状态 widget -->
     <div class="system-widget">
         <div class="widget-title">System Monitor</div>
         <div class="widget-row">
@@ -755,49 +858,97 @@
         </svg>
     </div>
 
+    <!-- Hero -->
     <section class="hero" id="hero">
-        <div class="hero-number-outline">01</div>
-        
-        <div class="hero-visual">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="100" cy="90" rx="55" ry="48" stroke="#e85d4a" stroke-width="2" fill="rgba(232,93,74,0.04)"/>
-                <line class="neural-line" x1="75" y1="75" x2="120" y2="65" stroke="#e85d4a" stroke-width="1.5"/>
-                <line class="neural-line" x1="75" y1="75" x2="90" y2="105" stroke="#2a9d8f" stroke-width="1.5"/>
-                <line class="neural-line" x1="120" y1="65" x2="130" y2="100" stroke="#9b8de3" stroke-width="1.5"/>
-                <line class="neural-line" x1="90" y1="105" x2="130" y2="100" stroke="#e9c46a" stroke-width="1.5"/>
-                <line class="neural-line" x1="90" y1="105" x2="70" y2="110" stroke="#f4a6b8" stroke-width="1.5"/>
-                <circle class="neural-node" cx="75" cy="75" r="5" fill="#e85d4a"/>
-                <circle class="neural-node" cx="120" cy="65" r="5" fill="#2a9d8f"/>
-                <circle class="neural-node" cx="90" cy="105" r="5" fill="#e9c46a"/>
-                <circle class="neural-node" cx="130" cy="100" r="5" fill="#9b8de3"/>
-                <circle class="neural-node" cx="70" cy="110" r="4" fill="#f4a6b8"/>
-                <line x1="100" y1="138" x2="100" y2="165" stroke="#1a1a2e" stroke-width="2"/>
-                <circle class="signal-pulse animate" cx="100" cy="140" r="4" fill="#e85d4a"/>
-                <circle cx="100" cy="170" r="6" fill="#1a1a2e"/>
-            </svg>
+        <div class="hero-top">
+            <div class="hero-number-outline">01</div>
+            
+            <div class="hero-visual">
+                <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="100" cy="90" rx="55" ry="48" stroke="#e85d4a" stroke-width="2" fill="rgba(232,93,74,0.04)"/>
+                    <line class="neural-line" x1="75" y1="75" x2="120" y2="65" stroke="#e85d4a" stroke-width="1.5"/>
+                    <line class="neural-line" x1="75" y1="75" x2="90" y2="105" stroke="#2a9d8f" stroke-width="1.5"/>
+                    <line class="neural-line" x1="120" y1="65" x2="130" y2="100" stroke="#9b8de3" stroke-width="1.5"/>
+                    <line class="neural-line" x1="90" y1="105" x2="130" y2="100" stroke="#e9c46a" stroke-width="1.5"/>
+                    <line class="neural-line" x1="90" y1="105" x2="70" y2="110" stroke="#f4a6b8" stroke-width="1.5"/>
+                    <circle class="neural-node" cx="75" cy="75" r="5" fill="#e85d4a"/>
+                    <circle class="neural-node" cx="120" cy="65" r="5" fill="#2a9d8f"/>
+                    <circle class="neural-node" cx="90" cy="105" r="5" fill="#e9c46a"/>
+                    <circle class="neural-node" cx="130" cy="100" r="5" fill="#9b8de3"/>
+                    <circle class="neural-node" cx="70" cy="110" r="4" fill="#f4a6b8"/>
+                    <line x1="100" y1="138" x2="100" y2="165" stroke="#1a1a2e" stroke-width="2"/>
+                    <circle class="signal-pulse animate" cx="100" cy="140" r="4" fill="#e85d4a"/>
+                    <circle cx="100" cy="170" r="6" fill="#1a1a2e"/>
+                </svg>
+            </div>
+
+            <h1>机器增强的<br><em>人机混合</em>神经系统</h1>
+            <p class="hero-sub">从生命维持到感知行动，从生物神经到机器增强——六层架构，层层拆解一个未来系统</p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-num" data-count="6">0</div>
+                    <div class="stat-label">层级</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num" data-count="18" data-suffix="+">0</div>
+                    <div class="stat-label">系统</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num" data-count="40" data-suffix="+">0</div>
+                    <div class="stat-label">模块</div>
+                </div>
+            </div>
+
+            <div class="hero-arrow">↓</div>
         </div>
 
-        <h1>机器增强的<br><em>人机混合</em>神经系统</h1>
-        <p class="hero-sub">从生命维持到感知行动，从生物神经到机器增强——六层架构，层层拆解一个未来系统</p>
-        
-        <div class="hero-stats">
-            <div class="stat-item">
-                <div class="stat-num" data-count="6">0</div>
-                <div class="stat-label">层级</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-num" data-count="18" data-suffix="+">0</div>
-                <div class="stat-label">系统</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-num" data-count="40" data-suffix="+">0</div>
-                <div class="stat-label">模块</div>
+        <!-- 解剖层：滚动逐步展开 -->
+        <div class="hero-dissect">
+            <div class="dissect-stage">
+                <svg class="dissect-svg" viewBox="0 0 400 400" fill="none">
+                    <!-- 大脑 -->
+                    <g class="dissect-brain" id="dissectBrain">
+                        <ellipse cx="200" cy="100" rx="80" ry="65" stroke="#e85d4a" stroke-width="2.5" fill="rgba(232,93,74,0.06)"/>
+                        <text x="200" y="108" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#e85d4a" font-weight="600">大脑皮层</text>
+                    </g>
+                    <!-- 神经连线 -->
+                    <g class="dissect-nerve" id="dissectNerve">
+                        <path d="M160,140 Q140,180 120,200" stroke="#2a9d8f" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+                        <path d="M240,140 Q260,180 280,200" stroke="#9b8de3" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+                        <circle cx="120" cy="200" r="5" fill="#2a9d8f"/>
+                        <circle cx="280" cy="200" r="5" fill="#9b8de3"/>
+                    </g>
+                    <!-- 脊髓 -->
+                    <g class="dissect-spine" id="dissectSpine">
+                        <line x1="200" y1="165" x2="200" y2="280" stroke="#1a1a2e" stroke-width="3"/>
+                        <text x="215" y="225" font-family="sans-serif" font-size="12" fill="rgba(26,26,46,0.5)">脊髓</text>
+                    </g>
+                    <!-- 末梢/四肢 -->
+                    <g class="dissect-limb" id="dissectLimb">
+                        <path d="M120,200 Q100,260 80,320" stroke="#e9c46a" stroke-width="2" fill="none"/>
+                        <path d="M280,200 Q300,260 320,320" stroke="#e9c46a" stroke-width="2" fill="none"/>
+                        <circle cx="80" cy="325" r="6" fill="#e9c46a"/>
+                        <circle cx="320" cy="325" r="6" fill="#e9c46a"/>
+                        <text x="200" y="360" text-anchor="middle" font-family="sans-serif" font-size="12" fill="rgba(26,26,46,0.5)">末梢神经 → 执行</text>
+                    </g>
+                </svg>
             </div>
         </div>
-
-        <div class="hero-arrow">↓</div>
     </section>
 
+    <!-- 导言 -->
+    <section class="intro-section">
+        <div class="intro-container reveal">
+            <p class="intro-text">
+                一个人从睁眼到抬手，中间发生了什么？<br>
+                我们把这个过程拆成六层——<br>
+                <em>从生命维持的最顶层，到芯片级的最底层。</em>
+            </p>
+        </div>
+    </section>
+
+    <!-- 层级总览 - 横向流程图 -->
     <section class="overview-section" id="overview">
         <div class="overview-container reveal">
             <div class="overview-title">六层架构 · 从宏观到微观</div>
@@ -841,6 +992,7 @@
         </div>
     </section>
 
+    <!-- 第1层：任务 -->
     <section class="layer-section layer-1" id="layer1" data-number="01" data-accent="coral">
         <div class="layer-container reveal">
             <div class="layer-header">
@@ -891,8 +1043,10 @@
         </div>
     </section>
 
+    <!-- 第2层：体系 (右对齐) -->
     <section class="layer-section layer-2 align-right" id="layer2" data-number="02" data-accent="sun">
         <div class="layer-container reveal">
+            <div class="layer-breadcrumb"><span class="crumb-arrow">↑</span>拆解自：任务 Mission</div>
             <div class="layer-header">
                 <div class="layer-icon">🌐</div>
                 <div class="layer-number">第 2 层</div>
@@ -960,8 +1114,10 @@
         </div>
     </section>
 
+    <!-- 第3层：整机 -->
     <section class="layer-section layer-3" id="layer3" data-number="03" data-accent="teal">
         <div class="layer-container reveal">
+            <div class="layer-breadcrumb"><span class="crumb-arrow">↑</span>拆解自：体系 SoS</div>
             <div class="layer-header">
                 <div class="layer-icon">🧍</div>
                 <div class="layer-number">第 3 层</div>
@@ -1000,8 +1156,10 @@
         </div>
     </section>
 
+    <!-- 第4层：系统 (深色反白) -->
     <section class="layer-section layer-4 dark" id="layer4" data-number="04" data-accent="lavender">
         <div class="layer-container reveal">
+            <div class="layer-breadcrumb"><span class="crumb-arrow">↑</span>拆解自：整机 Vehicles</div>
             <div class="layer-header">
                 <div class="layer-icon">⚙️</div>
                 <div class="layer-number">第 4 层</div>
@@ -1074,8 +1232,10 @@
         </div>
     </section>
 
+    <!-- 第5层：子系统 (右对齐) -->
     <section class="layer-section layer-5 align-right" id="layer5" data-number="05" data-accent="rose">
         <div class="layer-container reveal">
+            <div class="layer-breadcrumb"><span class="crumb-arrow">↑</span>拆解自：系统 Systems</div>
             <div class="layer-header">
                 <div class="layer-icon">🔧</div>
                 <div class="layer-number">第 5 层</div>
@@ -1155,8 +1315,10 @@
         </div>
     </section>
 
+    <!-- 第6层：模块 -->
     <section class="layer-section layer-6" id="layer6" data-number="06" data-accent="ink">
         <div class="layer-container reveal">
+            <div class="layer-breadcrumb"><span class="crumb-arrow">↑</span>拆解自：子系统 Sub-systems</div>
             <div class="layer-header">
                 <div class="layer-icon">🧩</div>
                 <div class="layer-number">第 6 层</div>
@@ -1197,16 +1359,18 @@
         </div>
     </section>
 
+    <!-- 结尾 -->
     <section class="footer">
         <div class="footer-quote reveal">
             从生命维持的顶层任务，到最底层的芯片模块——<br>六层架构，层层嵌套，生物与机器深度融合。
         </div>
-        <div class="footer-author reveal reveal-delay-1">—— 机器增强的人机混合神经系统</div>
+        <div class="footer-author reveal reveal-delay-1">杨博文 · 吉林大学</div>
     </section>
 
     <button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 
     <script>
+        // 进度条 + 侧边导航高亮 + 背景色切换
         const accentMap = {
             hero: { accent: '#e85d4a', rgb: '232, 93, 74' },
             layer1: { accent: '#e85d4a', rgb: '232, 93, 74' },
@@ -1233,19 +1397,23 @@
                 }
             });
 
+            // 切换强调色
             const accent = accentMap[current];
             if (accent) {
                 document.documentElement.style.setProperty('--accent', accent.accent);
                 document.documentElement.style.setProperty('--accent-rgb', accent.rgb);
             }
 
+            // 导航高亮
             document.querySelectorAll('.nav-dot').forEach(dot => {
                 dot.classList.toggle('active', dot.dataset.target === current);
             });
 
+            // 返回顶部
             document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 500);
         });
 
+        // 背景 blob 跟随鼠标
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
@@ -1255,6 +1423,7 @@
             document.getElementById('blob4').style.transform = `translate(${x * -25}px, ${y * 25}px)`;
         });
 
+        // 滚动淡入
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -1262,6 +1431,7 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+        // 数字计数动画
         const countObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !entry.target.dataset.counted) {
@@ -1283,6 +1453,7 @@
         }, { threshold: 0.5 });
         document.querySelectorAll('.stat-num').forEach(el => countObserver.observe(el));
 
+        // 卡片展开
         document.querySelectorAll('.interactive-card').forEach(card => {
             card.addEventListener('click', () => {
                 card.classList.toggle('expanded');
@@ -1291,27 +1462,51 @@
             });
         });
 
+        // 侧边导航跳转
         document.querySelectorAll('.nav-dot').forEach(dot => {
             dot.addEventListener('click', () => {
                 document.getElementById(dot.dataset.target)?.scrollIntoView({ behavior: 'smooth' });
             });
         });
 
+        // 流程图节点跳转
         document.querySelectorAll('.flow-node').forEach(node => {
             node.addEventListener('click', () => {
                 document.getElementById(node.dataset.target)?.scrollIntoView({ behavior: 'smooth' });
             });
         });
 
+        // 返回顶部
         document.getElementById('backToTop').addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
+        // 心率数字微动
         setInterval(() => {
             const base = 72;
             const variation = Math.floor(Math.random() * 5) - 2;
             document.getElementById('heartRate').textContent = (base + variation) + ' BPM';
         }, 2000);
+
+        // 解剖动画：滚动逐步显示大脑→神经→脊髓→末梢
+        const dissectBrain = document.getElementById('dissectBrain');
+        const dissectNerve = document.getElementById('dissectNerve');
+        const dissectSpine = document.getElementById('dissectSpine');
+        const dissectLimb = document.getElementById('dissectLimb');
+
+        function updateDissect() {
+            const heroDissect = document.querySelector('.hero-dissect');
+            if (!heroDissect) return;
+            const rect = heroDissect.getBoundingClientRect();
+            const progress = 1 - (rect.top / window.innerHeight);
+            
+            dissectBrain.classList.toggle('visible', progress > 0.15);
+            dissectNerve.classList.toggle('visible', progress > 0.35);
+            dissectSpine.classList.toggle('visible', progress > 0.55);
+            dissectLimb.classList.toggle('visible', progress > 0.75);
+        }
+        window.addEventListener('scroll', updateDissect);
+        updateDissect();
     </script>
 </body>
 </html>
