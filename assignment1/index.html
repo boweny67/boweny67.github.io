@@ -53,14 +53,13 @@
             z-index: -2;
         }
 
-        /* 背景 blob */
+        /* 背景 blob - 极淡 */
         .bg-blob {
             position: fixed;
             border-radius: 50%;
             filter: blur(120px);
-            opacity: 0.25;
+            opacity: 0.06;
             z-index: -1;
-            transition: transform 0.5s ease, background 0.8s ease;
         }
         .blob-1 { width: 600px; height: 600px; background: var(--rose); top: -150px; left: -150px; }
         .blob-2 { width: 500px; height: 500px; background: var(--sun); top: 30%; right: -150px; }
@@ -1411,16 +1410,6 @@
 
             // 返回顶部
             document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 500);
-        });
-
-        // 背景 blob 跟随鼠标
-        document.addEventListener('mousemove', (e) => {
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            document.getElementById('blob1').style.transform = `translate(${x * 30}px, ${y * 30}px)`;
-            document.getElementById('blob2').style.transform = `translate(${x * -20}px, ${y * -20}px)`;
-            document.getElementById('blob3').style.transform = `translate(${x * 15}px, ${y * -15}px)`;
-            document.getElementById('blob4').style.transform = `translate(${x * -25}px, ${y * 25}px)`;
         });
 
         // 滚动淡入
