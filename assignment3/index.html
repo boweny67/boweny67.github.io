@@ -111,21 +111,21 @@ body{
 .deck-head,.lab-inner{max-width:1060px;margin:0 auto}
 .deck-sub{color:var(--ink-2);max-width:600px;margin:0 0 26px}
 
-.sec-head{display:flex;align-items:baseline;gap:12px;margin:52px 0 18px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:46px 0 16px}
 .sec-head .no{font-family:var(--mono);font-size:12px;color:var(--purple);letter-spacing:.1em;flex:none}
 .sec-head h3{font-family:var(--serif);font-size:clamp(20px,2.4vw,26px);font-weight:400;margin:0}
 .sec-note{color:var(--muted);font-size:13.5px;margin:4px 0 18px;font-family:var(--mono);letter-spacing:.02em}
-p.body{font-size:15.5px;color:var(--ink-2);margin-bottom:14px;max-width:74ch}
+p.body{font-size:15.5px;color:var(--ink-2);margin-bottom:14px;max-width:74ch;line-height:1.85}
 p.body strong{color:var(--ink);font-weight:700}
 
 /* ---------- TABLES ---------- */
-.req-table{width:100%;margin-top:8px;border-collapse:collapse;font-size:13.5px;line-height:1.7}
-.tbl-wrap{overflow-x:auto;background:var(--cream);border:1px solid var(--rule);border-radius:14px;box-shadow:0 24px 50px -34px rgba(22,20,15,.4);padding:18px 18px 6px}
+.req-table{width:100%;margin-top:8px;border-collapse:collapse;font-size:13.5px;line-height:1.65}
+.tbl-wrap{overflow-x:auto;background:var(--cream);border:1px solid var(--rule);border-radius:14px;box-shadow:0 24px 50px -34px rgba(22,20,15,.4);padding:20px 20px 8px}
 .req-table th{
   text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--purple);font-weight:600;padding:0 14px 10px 0;border-bottom:1px solid var(--ink);white-space:nowrap;
+  color:var(--purple);font-weight:600;padding:0 16px 10px 0;border-bottom:1px solid var(--ink);white-space:nowrap;
 }
-.req-table td{padding:11px 14px 11px 0;vertical-align:top;color:var(--ink-2);border-bottom:1px solid var(--rule)}
+.req-table td{padding:12px 16px 12px 0;vertical-align:top;color:var(--ink-2);border-bottom:1px solid var(--rule)}
 .req-table tr:last-child td{border-bottom:none}
 .req-table td:first-child{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
 .req-table td:nth-child(2){color:var(--ink);font-weight:600}
@@ -133,17 +133,17 @@ p.body strong{color:var(--ink);font-weight:700}
 /* ---------- CARDS ---------- */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
 .card{
-  background:var(--cream);border:1px solid var(--rule);border-radius:14px;padding:22px 22px 20px;
+  background:var(--cream);border:1px solid var(--rule);border-radius:14px;padding:24px 22px 22px;
   border-left:3px solid var(--card-c,var(--purple));
 }
 .card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--card-c,var(--purple));display:block;margin-bottom:10px}
-.card h4{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:10px}
-.card p{font-size:14.5px;color:var(--ink-2);line-height:1.72}
+.card h4{font-family:var(--serif);font-size:19px;font-weight:400;margin-bottom:10px}
+.card p{font-size:14.5px;color:var(--ink-2);line-height:1.75}
 
 /* ---------- DIAGRAM PANEL ---------- */
 .lab-panel{
-  margin-top:34px;display:grid;gap:28px;background:var(--cream);
-  border:1px solid var(--rule);border-radius:16px;padding:24px;
+  margin-top:34px;display:grid;gap:24px;background:var(--cream);
+  border:1px solid var(--rule);border-radius:16px;padding:26px;
   box-shadow:0 24px 50px -34px rgba(22,20,15,.4);
 }
 .arch-diagram{margin:0}
@@ -152,8 +152,8 @@ p.body strong{color:var(--ink);font-weight:700}
 .diagram-legend span{display:flex;align-items:center;gap:7px}
 .swatch{width:8px;height:8px;border-radius:50%;display:inline-block}
 .flow-box{fill:#fdfaf2;stroke:#c9bfa9;stroke-width:1}
-.flow-title{font-family:var(--sans);font-size:14px;font-weight:600;fill:#16140f}
-.flow-sub{font-family:var(--mono);font-size:10px;letter-spacing:.04em;fill:#8b8272}
+.flow-title{font-family:var(--sans);font-size:14.5px;font-weight:600;fill:#16140f}
+.flow-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;fill:#8b8272}
 
 /* ---------- TRACE ---------- */
 .trace{display:grid;gap:14px;margin-top:10px;padding:26px 22px;background:var(--cream);border:1px solid var(--rule);border-radius:14px}
@@ -440,7 +440,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
         <p class="deck-sub">前向链路、反馈回路、旁路安全监护与人在环干预，画在同一张控制结构里。</p>
 
         <div class="lab-panel arch-diagram">
-            <svg viewBox="0 0 960 400" role="img" aria-label="人机混合神经系统控制框图">
+            <svg viewBox="0 0 1000 430" role="img" aria-label="人机混合神经系统控制框图">
                 <defs>
                     <marker id="arrowInk" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
                         <path d="M0,0 L9,4.5 L0,9 z" fill="#16140f"/>
@@ -456,68 +456,73 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                     </marker>
                 </defs>
 
+                <!-- 前向链路方框（上行） -->
                 <g>
-                    <rect class="flow-box" x="40" y="66" width="130" height="74" rx="8"/>
+                    <rect class="flow-box" x="40" y="64" width="130" height="80" rx="10"/>
                     <text class="flow-title" x="105" y="98" text-anchor="middle">外部环境</text>
                     <text class="flow-sub" x="105" y="118" text-anchor="middle">光 / 声 / 力 / 距离</text>
 
-                    <rect class="flow-box" x="210" y="66" width="140" height="74" rx="8"/>
-                    <text class="flow-title" x="280" y="98" text-anchor="middle">双轨感知</text>
-                    <text class="flow-sub" x="280" y="118" text-anchor="middle">原生感官 + 机器传感</text>
+                    <rect class="flow-box" x="215" y="64" width="140" height="80" rx="10"/>
+                    <text class="flow-title" x="285" y="98" text-anchor="middle">双轨感知</text>
+                    <text class="flow-sub" x="285" y="118" text-anchor="middle">原生感官 + 机器传感</text>
 
-                    <rect x="390" y="66" width="140" height="74" rx="8" fill="rgba(99,56,138,.07)" stroke="rgba(99,56,138,.45)"/>
-                    <text class="flow-title" x="460" y="98" text-anchor="middle">混合决策</text>
-                    <text class="flow-sub" x="460" y="118" text-anchor="middle">融合 → 识别 → 仲裁</text>
+                    <rect x="400" y="64" width="140" height="80" rx="10" fill="rgba(99,56,138,.07)" stroke="rgba(99,56,138,.45)"/>
+                    <text class="flow-title" x="470" y="98" text-anchor="middle">混合决策</text>
+                    <text class="flow-sub" x="470" y="118" text-anchor="middle">融合 → 识别 → 仲裁</text>
 
-                    <rect class="flow-box" x="570" y="66" width="140" height="74" rx="8"/>
-                    <text class="flow-title" x="640" y="98" text-anchor="middle">双路执行</text>
-                    <text class="flow-sub" x="640" y="118" text-anchor="middle">人体通路 + 机器执行</text>
+                    <rect class="flow-box" x="585" y="64" width="140" height="80" rx="10"/>
+                    <text class="flow-title" x="655" y="98" text-anchor="middle">双路执行</text>
+                    <text class="flow-sub" x="655" y="118" text-anchor="middle">人体通路 + 机器执行</text>
 
-                    <rect class="flow-box" x="750" y="66" width="130" height="74" rx="8"/>
-                    <text class="flow-title" x="815" y="98" text-anchor="middle">人体</text>
-                    <text class="flow-sub" x="815" y="118" text-anchor="middle">反作用于环境</text>
+                    <rect class="flow-box" x="770" y="64" width="130" height="80" rx="10"/>
+                    <text class="flow-title" x="835" y="98" text-anchor="middle">人体</text>
+                    <text class="flow-sub" x="835" y="118" text-anchor="middle">反作用于环境</text>
                 </g>
 
+                <!-- 前向箭头（墨色，水平同层） -->
                 <g stroke="#16140f" stroke-width="1.3" fill="none">
-                    <line x1="170" y1="103" x2="206" y2="103" marker-end="url(#arrowInk)"/>
-                    <line x1="350" y1="103" x2="386" y2="103" marker-end="url(#arrowInk)"/>
-                    <line x1="530" y1="103" x2="566" y2="103" marker-end="url(#arrowInk)"/>
-                    <line x1="710" y1="103" x2="746" y2="103" marker-end="url(#arrowInk)"/>
+                    <line x1="170" y1="104" x2="211" y2="104" marker-end="url(#arrowInk)"/>
+                    <line x1="355" y1="104" x2="396" y2="104" marker-end="url(#arrowInk)"/>
+                    <line x1="540" y1="104" x2="581" y2="104" marker-end="url(#arrowInk)"/>
+                    <line x1="725" y1="104" x2="766" y2="104" marker-end="url(#arrowInk)"/>
                 </g>
 
+                <!-- 反馈回采（下行中） -->
                 <g>
-                    <rect x="360" y="248" width="150" height="66" rx="8" fill="rgba(44,106,88,.06)" stroke="rgba(44,106,88,.35)"/>
-                    <text class="flow-title" x="435" y="274" text-anchor="middle">反馈回采</text>
-                    <text class="flow-sub" x="435" y="293" text-anchor="middle">本体感觉 / IMU / 力反馈</text>
+                    <rect x="380" y="262" width="150" height="66" rx="10" fill="rgba(44,106,88,.06)" stroke="rgba(44,106,88,.35)"/>
+                    <text class="flow-title" x="455" y="289" text-anchor="middle">反馈回采</text>
+                    <text class="flow-sub" x="455" y="308" text-anchor="middle">本体感觉 / IMU / 力反馈</text>
                 </g>
                 <g stroke="#2c6a58" stroke-width="1.4" fill="none">
-                    <path d="M815,140 L815,281 L512,281" marker-end="url(#arrowGreen)"/>
-                    <path d="M360,281 L280,281 L280,144" marker-end="url(#arrowGreen)"/>
+                    <path d="M835,144 L835,295 L534,295" marker-end="url(#arrowGreen)"/>
+                    <path d="M380,295 L285,295 L285,148" marker-end="url(#arrowGreen)"/>
                 </g>
 
+                <!-- 安全监护 · 旁路（下行右） -->
                 <g>
-                    <rect x="590" y="248" width="170" height="66" rx="8" fill="rgba(99,56,138,.06)" stroke="rgba(99,56,138,.35)"/>
-                    <text class="flow-title" x="675" y="274" text-anchor="middle">安全监护 · 旁路</text>
-                    <text class="flow-sub" x="675" y="293" text-anchor="middle">阈值比对 / 降级切断</text>
+                    <rect x="620" y="262" width="170" height="66" rx="10" fill="rgba(99,56,138,.06)" stroke="rgba(99,56,138,.35)"/>
+                    <text class="flow-title" x="705" y="289" text-anchor="middle">安全监护 · 旁路</text>
+                    <text class="flow-sub" x="705" y="308" text-anchor="middle">阈值比对 / 降级切断</text>
                 </g>
                 <g stroke="#63388a" stroke-width="1.3" fill="none">
-                    <path d="M675,140 L675,246" marker-end="url(#arrowPurple)"/>
+                    <path d="M630,144 L630,260" marker-end="url(#arrowPurple)"/>
                 </g>
                 <g stroke="#63388a" stroke-width="1.3" fill="none" stroke-dasharray="5 4">
-                    <path d="M620,248 L620,144" marker-end="url(#arrowPurple)"/>
-                    <path d="M600,248 L600,196 L460,196 L460,144" marker-end="url(#arrowPurple)"/>
+                    <path d="M680,262 L680,148" marker-end="url(#arrowPurple)"/>
+                    <path d="M660,262 L660,214 L430,214 L430,148" marker-end="url(#arrowPurple)"/>
                 </g>
 
+                <!-- 人在环（下行左，干预走线走顶部外侧通道） -->
                 <g>
-                    <rect x="40" y="248" width="160" height="66" rx="8" fill="rgba(194,101,33,.06)" stroke="rgba(194,101,33,.35)"/>
-                    <text class="flow-title" x="120" y="274" text-anchor="middle">人在环</text>
-                    <text class="flow-sub" x="120" y="293" text-anchor="middle">使用者 / 医师 / 安全员</text>
+                    <rect x="40" y="262" width="170" height="66" rx="10" fill="rgba(194,101,33,.06)" stroke="rgba(194,101,33,.35)"/>
+                    <text class="flow-title" x="125" y="289" text-anchor="middle">人在环</text>
+                    <text class="flow-sub" x="125" y="308" text-anchor="middle">使用者 / 医师 / 安全员</text>
                 </g>
                 <g stroke="#c26521" stroke-width="1.3" fill="none">
-                    <path d="M120,248 L120,176 L460,176 L460,144" marker-end="url(#arrowOrange)"/>
-                    <path d="M150,248 L150,160 L640,160 L640,144" marker-end="url(#arrowOrange)"/>
+                    <path d="M100,262 L100,34 L510,34 L510,64" marker-end="url(#arrowOrange)"/>
+                    <path d="M150,262 L150,18 L700,18 L700,64" marker-end="url(#arrowOrange)"/>
                 </g>
-                <text x="96" y="234" font-family="'SFMono-Regular',Consolas,monospace" font-size="10" letter-spacing=".04em" fill="rgba(194,101,33,.85)">模式 / 阈值 / 物理急停</text>
+                <text x="224" y="289" font-family="'SFMono-Regular',Consolas,monospace" font-size="10" letter-spacing=".04em" fill="rgba(194,101,33,.85)">模式 / 阈值 / 物理急停</text>
             </svg>
             <div class="diagram-legend">
                 <span><i class="swatch" style="background:#16140f"></i>前向控制链路</span>
