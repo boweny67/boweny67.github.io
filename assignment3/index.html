@@ -257,7 +257,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             <span class="meta-chip">12 条安全需求</span>
         </div>
 
-        <p class="hero-note">需求说清「做成什么样」，架构说清「由谁分工」，安全分析说清「坏了怎么不坏到人」。</p>
+        <p class="hero-note">需求说明系统要做成什么样，架构说明由谁分工，安全分析说明失效时如何避免伤到使用者。</p>
         <p class="signature">杨博文 · 吉林大学 · 2026</p>
     </div>
 </header>
@@ -380,8 +380,8 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 <colgroup><col style="width:22%"><col style="width:48%"><col style="width:30%"></colgroup>
                 <thead><tr><th>层级</th><th>本系统内容</th><th>架构关注点</th></tr></thead>
                 <tbody>
-                    <tr><td>L1 任务 Mission</td><td>维持生命稳态、感知—行动闭环、突破生理边界</td><td>任务成功判据：可用性 × 精度 × 时间</td></tr>
-                    <tr><td>L2 体系 SoS</td><td>物理环境、信息网络（云）、社会协同方与人体、机器咬合成环</td><td>闭环增益：环境、人、机器三者同步</td></tr>
+                    <tr><td>L1 任务 Mission</td><td>维持生命稳态、跑通感知—行动回路、代偿上肢运动缺失</td><td>任务成功判据：可用性 × 精度 × 时间</td></tr>
+                    <tr><td>L2 体系 SoS</td><td>训练环境、信息网络、患者与机器配合成闭环</td><td>闭环增益：环境、人、机器三者同步</td></tr>
                     <tr><td>L3 整机 Vehicle</td><td>人体 + 穿戴设备，生物件与机器件首次装到一起</td><td>穿戴时间 × 重量 × 自由度</td></tr>
                     <tr><td>L4 系统 System</td><td>六大功能系统，每个系统生物/人工双轨</td><td>系统之间不抢占同一执行器</td></tr>
                     <tr><td>L5 子系统 Subsystem</td><td>拆到可画接口图的程度</td><td>每个子系统可独立测试</td></tr>
@@ -407,7 +407,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
         </div>
 
         <div class="sec-head"><span class="no">2.3</span><h3>通道、计算分区与权衡</h3></div>
-        <p class="body"><strong>双轨并行</strong>：生物与人工通道在感知、决策、执行三段并列；任一通道降级，另一通道仍维持基础功能。增强是叠加项，不是替代项。</p>
+        <p class="body"><strong>双轨并行</strong>：生物与人工通道在感知、决策、执行三段并列；任一通道降级，另一通道仍维持基础功能。辅助只叠加在患者主动发力之上，不替代残存通路。</p>
         <p class="body"><strong>计算分区</strong>：反射级闭环（滤波、意图分类、安全规则、关节控制）在本地边缘单元；云端只承担日志汇总、模型更新、策略下发与远程复盘，不进入实时控制链路。</p>
         <div class="tbl-wrap">
             <table class="req-table">

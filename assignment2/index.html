@@ -197,8 +197,8 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
 <header class="hero" id="top">
     <div class="hero-inner">
         <p class="eyebrow">系统工程小组作业 2 · 需求规范</p>
-        <h1 class="serif">业务说清为什么做，<br><em>系统说清做到什么程度</em></h1>
-        <p class="lede">以「上肢康复混合辅助训练系统」为实例：先写 BRS 业务需求规范，再写 StRS 系统需求规范，两种验收口径逐条对照并给出追溯关系。</p>
+        <h1 class="serif">业务需求与系统需求<br><em>BRS &amp; StRS 对照</em></h1>
+        <p class="lede">以「上肢康复混合辅助训练系统」为实例：先写 BRS 业务需求规范，再写 StRS 系统需求规范，两类需求逐条对照并给出追溯关系。</p>
 
         <div class="hero-path">
             <div class="path-step"><span class="idx">01</span><span class="name">BRS 业务口径</span><span class="note">使命 · 约束 · 业务性能 · 相关方</span></div>
@@ -213,7 +213,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             <span class="meta-chip">12 条安全与约束</span>
         </div>
 
-        <p class="hero-note">BRS 的验收标准是「这个系统值不值得被做出来」，StRS 的验收标准是「这一版实现能不能被测试通过」。</p>
+        <p class="hero-note">BRS 判断这个系统值不值得做，StRS 判断这一版实现能不能通过测试。</p>
         <p class="signature">杨博文 · 吉林大学 · 2026</p>
     </div>
 </header>
@@ -221,10 +221,9 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
 <div class="chapter rv" id="abstract">
     <p class="eyebrow">Abstract · 摘要</p>
     <h2 class="serif">这份文档要解决什么<span class="em">Business &amp; System Requirements</span></h2>
-    <p class="prose">本作业承接<a class="lnk" href="https://boweny67.github.io/assignment1/">作业 1 的六层架构</a>，落到一个具体整机实例：<strong>面向脑卒中后上肢运动功能障碍患者的混合辅助训练系统</strong>——生物通道保留患者残存的神经控制与本体感觉，人工通道由肌电采集、边缘决策、外骨骼/功能电刺激执行与触觉反馈构成。</p>
-    <p class="prose">BRS 从使命、业务约束、运营概念（ConOps）、运行概念（OpsCon）出发，把患者的康复诉求、治疗师的临床约束、监管方的合规要求，收敛成<strong>业务层面就该说清楚的需求</strong>；StRS 再把这些需求向下分解为<strong>可设计、可测试、可追溯</strong>的条目，覆盖功能、性能、接口、安全与设计约束。</p>
-    <p class="prose">两层文档的关系不是「摘要与细节」，而是<strong>两种不同的验收口径</strong>：前者回答值不值得做，后者回答做完能不能测过。</p>
-    <p class="pull serif">人体的原生神经活动不能为增强功能让路——所有机器辅助都是叠加在原有训练活动之上的，而不是替换它。</p>
+    <p class="prose">本作业承接<a class="lnk" href="https://boweny67.github.io/assignment1/">作业 1 的六层架构</a>，落到一个具体整机实例：<strong>面向脑卒中后上肢运动功能障碍患者的混合辅助训练系统</strong>。生物通道保留患者残存的神经控制与本体感觉，人工通道由肌电采集、边缘决策、外骨骼/功能电刺激执行与触觉反馈构成。</p>
+    <p class="prose">BRS 从使命、业务约束、运营概念（ConOps）、运行概念（OpsCon）出发，把患者的康复诉求、治疗师的临床约束、监管方的合规要求整理成业务层面需要明确的需求；StRS 再把这些需求拆成可设计、可测试、可追溯的条目，覆盖功能、性能、接口、安全与设计约束。</p>
+    <p class="prose">两层文档对应两种验收口径：BRS 判断系统值不值得做，StRS 判断实现能不能测过。</p>
 </div>
 
 <div class="deck" id="brs">
@@ -235,14 +234,14 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     </div>
     <div class="lab-inner">
         <div class="sec-head"><span class="no">1.1</span><h3>业务使命与顶层任务</h3></div>
-        <p class="sec-note">系统为什么存在——三句话讲清楚，下面再展开。</p>
-        <p class="body">本系统的核心使命，是<strong>在维持患者生命稳态的前提下，闭环完成「感知—决策—行动」的训练回路</strong>：用机器单元代偿偏瘫侧缺失的运动输出，辅助患者完成抓握、伸展与日常取物，所有辅助功能均可启停、可降级，患者保留最高否决权。</p>
+        <p class="sec-note">先说明系统存在的理由，再展开约束与指标。</p>
+        <p class="body">系统的任务是：在维持患者生命稳态的前提下跑通感知—决策—行动回路；用机器单元代偿偏瘫侧缺失的运动输出，辅助患者完成抓握、伸展与日常取物。辅助功能均可启停、可降级，患者保留最高否决权。</p>
 
         <div class="cards">
             <div class="card" style="--card-c:var(--purple)">
                 <span class="tag">基础业务</span>
                 <h4>守住生命底线</h4>
-                <p>训练全过程保障心率、血压、呼吸、体温等基础体征稳定。这一层不追求辅助，只追求「不出事」——它是所有辅助功能的前置条件。</p>
+                <p>训练全过程保障心率、血压、呼吸、体温等基础体征稳定。这一层不追求辅助效果，只保证不发生安全问题，是其余辅助功能的前置条件。</p>
             </div>
             <div class="card" style="--card-c:var(--green)">
                 <span class="tag">原生业务</span>
@@ -316,11 +315,11 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             <h4>对照 · 能力增强场景</h4>
             <div class="who">使用者 = 健康人员，处于特殊作业环境</div>
             <p>作为对照边界：健康人员在高危、狭窄、弱光或高负载环境中作业（如消防救援、精密检修、重物搬运）时，同类机器单元可承担<strong>扩展</strong>职责，拓宽感知通道、放大体力上限。此场景下系统不介入医疗判断。</p>
-            <p>该场景与康复代偿共用底层硬件架构，但<strong>业务目标、主导方与安全责任归属完全不同</strong>——后续需求不得把医疗场景的安全约束错误施加到工业场景上（或相反）。</p>
+            <p>该场景与康复代偿共用底层硬件架构，但业务目标、主导方与安全责任归属不同，后续需求不能把医疗场景的安全约束套到工业场景上，反之亦然。</p>
             <div class="meter"><span>目标：扩展作业能力</span><span>主导方：使用者本人</span><span>监督方：现场安全员</span></div>
         </div>
         <p class="body" style="margin-top:26px">两个场景共用同一套架构，但业务目标、主导方与安全责任不同；本作业后续条目以康复代偿场景为主例展开。</p>
-        <p class="pull serif">ConOps 只描述「此类场景的运营构想」，不描述某一次具体使用的时间线。后者属于 OpsCon。</p>
+        <p class="body">ConOps 只写某类场景的运营构想，不写单次使用的时间线；单次时序归 OpsCon。</p>
     </div>
 </div>
 
@@ -343,7 +342,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             </div>
             <div class="step" data-i="4">
                 <h4>执行反作用于环境</h4>
-                <p>动作改变了环境状态，产生新的感知信号回到第 1 步。闭环由此成立——这正是「感知—决策—行动」在运行时层面的具体形态。</p>
+                <p>动作改变环境状态，新的感知信号回到第 1 步，闭环形成。</p>
             </div>
             <div class="step" data-i="5">
                 <h4>安全监控持续校验</h4>
@@ -354,7 +353,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 <p>运行日志持续记录信号质量、辅助强度、越界事件与人工干预。日志供治疗师复盘康复进程，也供工程师定位算法缺陷。</p>
             </div>
         </div>
-        <p class="pull serif">运行概念的关键在于「旁路安全」：监护不在主链路串联等待，而是并行监视，因此它失效不会拖垮主链路，主链路失效它也仍能切断输出。</p>
+        <p class="body">旁路安全指监护不串在主链路里等待执行，而是并行监视：监护失效不拖垮主链路，主链路失效时它仍能切断输出。</p>
     </div>
 </div>
 
@@ -381,7 +380,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 </tbody>
             </table>
         </div>
-        <p class="body" style="margin-top:18px">态度口径：<strong>+1 支持</strong>指该相关方从系统获益、倾向推动；<strong>−1 约束</strong>指其职责天然是限制与审查，诉求以「不得」「必须」形式出现。监管与伦理两家并不反对系统本身，但表述方式与患者截然不同。</p>
+        <p class="body" style="margin-top:18px">态度口径：<strong>+1 支持</strong>指该相关方从系统获益、倾向推动；<strong>−1 约束</strong>指其职责是限制与审查，诉求多以"不得""必须"形式出现。</p>
 
         <div class="sec-head"><span class="no">4.1</span><h3>相关方业务需求</h3></div>
         <p class="sec-note">只写「他们要什么」，不写「用什么技术满足」。每条都可以回溯到上面表格里的某一方。</p>
@@ -443,7 +442,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     </div>
 
     <div class="sec-head"><span class="no">5.1</span><h3>功能需求 FR</h3></div>
-    <p class="sec-note">系统必须「做什么」。检验方式：逐条问「这一版实现里，哪段代码／哪个部件对应它」。</p>
+    <p class="sec-note">说明系统必须做什么。验收时逐条对应到具体代码或部件。</p>
     <div class="req-list" data-group="FR">
         <div class="req" data-id="FR-1" data-cat="FR"><div class="req-id">FR-1</div><div class="req-txt">采集患者表面肌电（<a class="lnk" href="https://en.wikipedia.org/wiki/Electromyography">EMG</a>）与关节角度，以及心率、皮温等基础生命体征。</div></div>
         <div class="req" data-id="FR-2" data-cat="FR"><div class="req-id">FR-2</div><div class="req-txt">采集训练环境的多模态传感信号，至少覆盖接触力、距离、姿态与声响四类。</div></div>
@@ -456,7 +455,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     </div>
 
     <div class="sec-head"><span class="no">5.2</span><h3>性能需求 PR</h3></div>
-    <p class="sec-note">每条都附带数值与验证口径——「可量化」是性能需求和普通功能需求的唯一区别。</p>
+    <p class="sec-note">每条都附带数值与验证口径；可量化是性能需求和普通功能需求的主要区别。</p>
     <div class="req-list" data-group="PR">
         <div class="req" data-id="PR-1" data-cat="PR"><div class="req-id">PR-1</div><div class="req-txt"><b>意图识别端到端延迟 ≤ 200 ms。</b>从信号进入决策单元到输出执行指令的时间，不含机械机构动作时间。</div></div>
         <div class="req" data-id="PR-2" data-cat="PR"><div class="req-id">PR-2</div><div class="req-txt"><b>体征采集精度满足临床监测要求。</b>以同款医用监护仪为基准做对比标定，误差须落在其允许区间内。</div></div>
@@ -467,27 +466,27 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     </div>
 
     <div class="sec-head"><span class="no">5.3</span><h3>接口需求 IR</h3></div>
-    <p class="sec-note">接口是「系统与外部世界握手的地方」，也是故障与安全风险最集中的地方。</p>
+    <p class="sec-note">接口是系统与外部连接的位置，也是故障和安全风险最集中的位置。</p>
     <div class="req-list" data-group="IR">
         <div class="req" data-id="IR-1" data-cat="IR"><div class="req-id">IR-1</div><div class="req-txt"><b>生物采集接口。</b>干／湿电极接入，肌电与体征共用采集前端，接触面须为医用级设计。</div></div>
         <div class="req" data-id="IR-2" data-cat="IR"><div class="req-id">IR-2</div><div class="req-txt"><b>机器执行接口。</b>外骨骼动力单元、功能电刺激器、触觉反馈模块采用统一的通信协议与供电规范。</div></div>
-        <div class="req" data-id="IR-3" data-cat="IR"><div class="req-id">IR-3</div><div class="req-txt"><b>人机交互接口。</b>提供触控终端，并保留独立的物理急停按钮——后者不依赖软件栈。</div></div>
+        <div class="req" data-id="IR-3" data-cat="IR"><div class="req-id">IR-3</div><div class="req-txt"><b>人机交互接口。</b>提供触控终端，并保留独立的物理急停按钮，后者不依赖软件栈。</div></div>
         <div class="req" data-id="IR-4" data-cat="IR"><div class="req-id">IR-4</div><div class="req-txt"><b>数据接口。</b>日志以通用格式导出，可在治疗师端软件中直接读取分析，不依赖专用上位机。</div></div>
         <div class="req" data-id="IR-5" data-cat="IR"><div class="req-id">IR-5</div><div class="req-txt"><b>供电接口。</b>可充电电池供电，电源与人体之间须做电气隔离，防漏电与反向电流。</div></div>
     </div>
 
     <div class="sec-head"><span class="no">5.4</span><h3>安全需求 SR</h3></div>
-    <p class="sec-note">安全需求的写法特点：<strong>失效即默认安全</strong>，也就是「坏了就停」，而不是「坏了还在跑」。</p>
+    <p class="sec-note">安全需求按失效即默认安全设计：坏了就停，而不是坏了还在跑。</p>
     <div class="req-list" data-group="SR">
         <div class="req" data-id="SR-1" data-cat="SR"><div class="req-id">SR-1</div><div class="req-txt"><b>随时可切断。</b>患者可通过原生动作或物理急停，在任意时刻切断辅助输出，此路径优先级高于一切。</div></div>
         <div class="req" data-id="SR-2" data-cat="SR"><div class="req-id">SR-2</div><div class="req-txt"><b>双重故障安全。</b>软硬件各设一层保护，任一模块失效时系统默认回到无辅助状态。</div></div>
         <div class="req" data-id="SR-3" data-cat="SR"><div class="req-id">SR-3</div><div class="req-txt"><b>电气隔离。</b>防止漏电与电刺激损伤神经组织，接触部位须限制输出电流上限。</div></div>
-        <div class="req" data-id="SR-4" data-cat="SR"><div class="req-id">SR-4</div><div class="req-txt"><b>分级告警。</b>信号异常或生命体征超标时，按「提示 → 限制增强 → 强制停机」三级递进响应。</div></div>
+        <div class="req" data-id="SR-4" data-cat="SR"><div class="req-id">SR-4</div><div class="req-txt"><b>分级告警。</b>信号异常或生命体征超标时，按「提示 → 限制助力 → 强制停机」三级递进响应。</div></div>
         <div class="req" data-id="SR-5" data-cat="SR"><div class="req-id">SR-5</div><div class="req-txt"><b>数据安全。</b>存储的神经信号与健康数据须加密，访问须授权并留痕，满足<a class="lnk" href="https://flk.npc.gov.cn/">隐私保护要求</a>。</div></div>
     </div>
 
     <div class="sec-head"><span class="no">5.5</span><h3>设计约束 DR</h3></div>
-    <p class="sec-note">这些不是「需求」，而是「先天地限定了方案空间」的条件，通常来自标准、法规或既有架构。</p>
+    <p class="sec-note">这些不属于功能需求，而是先限定方案空间的条件，通常来自标准、法规或既有架构。</p>
     <div class="req-list" data-group="DR">
         <div class="req" data-id="DR-1" data-cat="DR"><div class="req-id">DR-1</div><div class="req-txt">所有接触人体的材料须满足医用生物相容性要求。</div></div>
         <div class="req" data-id="DR-2" data-cat="DR"><div class="req-id">DR-2</div><div class="req-txt">设备须电磁兼容，不干扰心脏起搏器等其他植入式医疗设备。</div></div>
@@ -501,7 +500,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     <div class="deck-head">
         <p class="eyebrow">Part Ⅵ · Traceability</p>
         <h2 class="serif">追溯关系<span class="em">业务需求如何落到系统条目上</span></h2>
-        <p class="deck-sub">这一节最能体现「系统工程」的地方——需求之间要有据可查的对应关系。</p>
+        <p class="deck-sub">下面把业务需求和系统条目逐条对应起来，便于核查。</p>
     </div>
     <div class="lab-inner">
         <div class="trace">
@@ -512,7 +511,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             <div class="trace-row"><div class="trace-from">治疗师：日志可导出可回放</div><div class="trace-arrow">分解为 →</div><div class="trace-to"><span>FR-7</span><span>FR-8</span><span>IR-4</span></div></div>
             <div class="trace-row"><div class="trace-from">监管与伦理：可追溯、故障安全</div><div class="trace-arrow">分解为 →</div><div class="trace-to"><span>FR-7</span><span>SR-2</span><span>SR-5</span><span>DR-1</span></div></div>
         </div>
-        <p class="body" style="margin-top:22px">需要留意：追溯表的<strong>反向阅读</strong>同样重要。从任一条 StRS 需求往回看，如果找不到对应的 BRS 条目或相关方诉求，那它很可能是一条「工程师自己想加的功能」，而不是「系统真正需要的功能」。</p>
+        <p class="body" style="margin-top:22px">反向追溯同样要看：任一条 StRS 需求如果找不到对应的 BRS 条目或相关方诉求，就可能是多余实现，而不是系统真正需要的功能。</p>
     </div>
 </div>
 
@@ -532,7 +531,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
 <footer class="foot">
     <div class="foot-grid">
         <div><h5>关于这份作业</h5><p>系统工程课程小组作业 2：以上肢康复混合辅助训练系统为实例的 BRS 与 StRS 对照，含业务约束、运营概念、相关方与可追溯需求条目。</p></div>
-        <div><h5>方法与口径</h5><p>BRS 回答「为什么做」，StRS 回答「做到什么程度算做完」；需求条目按功能、性能、接口、安全与设计约束分类组织。</p></div>
+        <div><h5>方法与口径</h5><p>BRS 说明为什么做，StRS 说明做到什么程度算完成；需求条目按功能、性能、接口、安全与设计约束分类组织。</p></div>
         <div><h5>参考</h5><p>需求分类与追溯口径参照 ISO/IEC/IEEE 29148 需求工程大纲；生物相容与电气安全分别对应 ISO 10993、IEC 60601。</p></div>
     </div>
     <p class="foot-sig serif">杨博文 · 吉林大学 · 2026</p>
