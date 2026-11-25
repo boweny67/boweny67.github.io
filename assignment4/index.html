@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>场景分层与运行设计条件｜上肢康复混合辅助训练系统</title>
+<meta name="description" content="小组作业 4：以上肢康复混合辅助训练系统为具体实例，进行场景分层、场景要素梳理、运行设计条件设定，选取典型场景详述，并完成风险场景分析。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23faf6ec'/%3E%3Cpath d='M9 21V11h5a4 4 0 0 1 0 8h-2' stroke='%2363388a' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='23' cy='21' r='2.4' fill='%232c6a58'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#f3eee4;
+  --paper2:#eae3d5;
+  --ink:#16140f;
+  --ink-2:#4b453a;
+  --muted:#8b8272;
+  --rule:#d9d0bd;
+  --purple:#63388a;
+  --purple-soft:#ac8cc6;
+  --green:#2c6a58;
+  --green-soft:#8ab3a4;
+  --orange:#c26521;
+  --cream:#faf6ec;
+  --dark:#131109;
+  --serif:"Songti SC","SimSun","STSong","Source Han Serif SC","Noto Serif SC",serif;
+  --sans:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans SC",system-ui,sans-serif;
+  --mono:"SFMono-Regular","Cascadia Mono","Consolas","Menlo",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:17px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.noise{
+  position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:.24;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.36'/%3E%3C/svg%3E");
+}
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--purple);z-index:1000;transition:width .1s linear}
+
+.side-nav{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:13px;z-index:100}
+.nav-dot{width:9px;height:9px;border-radius:50%;background:rgba(22,20,15,.14);cursor:pointer;position:relative;transition:all .3s}
+.nav-dot.active,.nav-dot:hover{background:var(--purple);transform:scale(1.7)}
+.nav-dot::after{
+  content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:11px;white-space:nowrap;
+  background:var(--ink);color:var(--cream);padding:3px 9px;border-radius:3px;opacity:0;transition:opacity .25s;
+}
+.nav-dot:hover::after{opacity:1}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;min-height:100vh;background:var(--dark);color:var(--cream);
+  display:flex;align-items:center;justify-content:center;padding:70px 24px 40px;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(70% 55% at 50% 8%,rgba(99,56,138,.30),transparent 70%),
+    radial-gradient(60% 40% at 80% 100%,rgba(194,101,33,.14),transparent 70%);
+}
+.hero-inner{position:relative;width:100%;max-width:880px;margin:0 auto;text-align:left}
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 18px;
+}
+.hero .eyebrow{color:rgba(250,246,236,.55)}
+.hero h1{
+  font-family:var(--serif);font-size:clamp(38px,6.2vw,74px);line-height:1.14;
+  margin:0 0 26px;letter-spacing:.01em;font-weight:400;
+}
+.hero h1 em{font-style:normal;color:#c8a7e6;display:inline-block}
+.lede{
+  font-size:clamp(15px,1.5vw,18px);color:rgba(250,246,236,.72);max-width:620px;
+  margin:0 0 40px;line-height:1.9;
+}
+.hero-path{display:flex;flex-direction:column;border-top:1px solid rgba(250,246,236,.14)}
+.path-step{
+  display:grid;grid-template-columns:56px 1fr auto;align-items:baseline;gap:16px;
+  padding:17px 4px;border-bottom:1px solid rgba(250,246,236,.14);
+}
+.path-step .idx{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--purple-soft)}
+.path-step .name{font-family:var(--sans);font-size:17px;color:#f6ecda;letter-spacing:.02em}
+.path-step .note{font-family:var(--mono);font-size:11.5px;color:rgba(250,246,236,.5);letter-spacing:.04em}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.meta-chip{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:rgba(250,246,236,.72);
+  border:1px solid rgba(250,246,236,.18);border-radius:999px;padding:6px 13px;
+}
+.hero-note{margin:30px 0 0;font-size:14px;line-height:1.8;color:rgba(250,246,236,.62);max-width:620px}
+.signature{margin:30px 0 0;font-size:12px;letter-spacing:.18em;color:rgba(250,246,236,.38)}
+
+/* ---------- CHAPTER / DECK ---------- */
+.chapter{max-width:1060px;margin:0 auto;padding:120px 24px 40px}
+.chapter h2,.deck-head h2,.lab h2{
+  font-family:var(--serif);font-size:clamp(28px,3.9vw,44px);line-height:1.35;
+  margin:0 0 34px;letter-spacing:.01em;font-weight:400;
+}
+.prose{margin:0 0 20px;color:var(--ink-2);font-size:17.5px;line-height:1.95}
+.prose p{margin:0 0 20px;color:var(--ink-2);font-size:17.5px;line-height:1.95}
+.prose strong{color:var(--ink);font-weight:700}
+.em{color:var(--purple);font-style:normal}
+
+.deck,.lab{padding:110px 24px 40px;border-top:1px solid var(--rule);margin-top:60px}
+.deck-head,.lab-inner{max-width:1060px;margin:0 auto}
+.deck-sub{color:var(--ink-2);max-width:600px;margin:0 0 26px}
+
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:46px 0 16px}
+.sec-head .no{font-family:var(--mono);font-size:12px;color:var(--purple);letter-spacing:.1em;flex:none}
+.sec-head h3{font-family:var(--serif);font-size:clamp(20px,2.4vw,26px);font-weight:400;margin:0}
+.sec-note{color:var(--muted);font-size:13.5px;margin:4px 0 18px;font-family:var(--mono);letter-spacing:.02em}
+p.body{font-size:15.5px;color:var(--ink-2);margin-bottom:14px;max-width:74ch;line-height:1.85}
+p.body strong{color:var(--ink);font-weight:700}
+.deck .sec-head,.lab .sec-head,.deck .sec-note,.lab .sec-note,
+.deck .body,.lab .body{padding-left:20px;padding-right:20px}
+.deck .body,.lab .body{max-width:72ch}
+.chapter .body{max-width:82ch}
+
+/* ---------- TABLES ---------- */
+.req-table{width:100%;margin-top:8px;border-collapse:collapse;font-size:13.5px;line-height:1.65}
+.tbl-wrap{overflow-x:auto;background:var(--cream);border:1px solid var(--rule);border-radius:14px;box-shadow:0 24px 50px -34px rgba(22,20,15,.4);padding:20px 20px 8px}
+.req-table th{
+  text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--purple);font-weight:600;padding:0 16px 10px 0;border-bottom:1px solid var(--ink);white-space:nowrap;
+}
+.req-table td{padding:12px 16px 12px 0;vertical-align:top;color:var(--ink-2);border-bottom:1px solid var(--rule)}
+.req-table tr:last-child td{border-bottom:none}
+.req-table td:first-child{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.req-table td:nth-child(2){color:var(--ink);font-weight:600}
+
+/* ---------- CARDS ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+.cards.two{grid-template-columns:repeat(2,1fr)}
+.card{
+  background:var(--cream);border:1px solid var(--rule);border-radius:14px;padding:24px 22px 22px;
+  border-left:3px solid var(--card-c,var(--purple));
+}
+.card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--card-c,var(--purple));display:block;margin-bottom:10px}
+.card h4{font-family:var(--serif);font-size:19px;font-weight:400;margin-bottom:10px}
+.card p{font-size:14.5px;color:var(--ink-2);line-height:1.75}
+.card ul{list-style:none;margin-top:8px}
+.card ul li{font-size:14px;color:var(--ink-2);padding:5px 0 5px 15px;position:relative;line-height:1.65}
+.card ul li::before{content:'';position:absolute;left:0;top:13px;width:4px;height:4px;border-radius:50%;background:var(--card-c,var(--purple))}
+
+/* ---------- LAYER DIAGRAM ---------- */
+.lab-panel{
+  margin-top:24px;display:grid;gap:24px;background:var(--cream);
+  border:1px solid var(--rule);border-radius:16px;padding:26px;
+  box-shadow:0 24px 50px -34px rgba(22,20,15,.4);
+}
+.layer-stack{display:grid;gap:12px}
+.layer-band{
+  display:grid;grid-template-columns:120px 1fr auto;gap:18px;align-items:center;
+  background:#fdfaf2;border:1px solid var(--rule);border-radius:12px;padding:18px 20px;
+}
+.layer-band .lno{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--l-c,var(--purple))}
+.layer-band .lname{font-family:var(--serif);font-size:18px}
+.layer-band .ldesc{font-size:13.5px;color:var(--ink-2);line-height:1.6}
+.layer-band .ltags{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.layer-band .ltags span{font-family:var(--mono);font-size:10.5px;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:3px 9px}
+.layer-arrow{text-align:center;color:var(--muted);font-family:var(--mono);font-size:14px;line-height:1}
+
+/* ---------- TIMELINE ---------- */
+.timeline{border-left:1px solid var(--rule);margin:18px 0 0 10px;display:grid;gap:0}
+.tl-step{position:relative;padding:0 0 26px 28px}
+.tl-step:last-child{padding-bottom:0}
+.tl-step::before{
+  content:attr(data-i);position:absolute;left:-12px;top:2px;width:23px;height:23px;border-radius:50%;
+  background:var(--cream);border:1px solid var(--purple-soft);color:var(--purple);
+  font-family:var(--mono);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
+.tl-step h4{font-size:15px;font-weight:700;margin-bottom:6px}
+.tl-step p{font-size:14.5px;color:var(--ink-2);line-height:1.72;max-width:70ch}
+.tl-step .tl-meta{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:6px}
+
+/* ---------- RISK SEVERITY ---------- */
+.sev{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;white-space:nowrap}
+.sev i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.sev.h i{background:var(--orange)}
+.sev.m i{background:#d4a045}
+.sev.l i{background:var(--green)}
+
+/* ---------- NOTES / FOOTER ---------- */
+.lab-notes{margin-top:24px;padding:0 26px;display:grid;gap:15px}
+.lab-notes .body{margin-bottom:0;max-width:66ch;padding:0}
+.foot{border-top:1px solid var(--rule);padding:70px 24px 80px;background:var(--paper)}
+.foot-grid{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.foot h5{margin:0 0 12px;font-size:11px;letter-spacing:.16em;color:var(--muted);font-weight:500;font-family:var(--mono)}
+.foot p{margin:0;font-size:13px;line-height:1.85;color:var(--ink-2)}
+.foot-sig{max-width:1060px;margin:56px auto 0;font-size:15px;color:var(--ink);letter-spacing:.06em;font-family:var(--serif)}
+.foot-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.foot-links a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--ink-2);text-decoration:none;border-bottom:1px solid rgba(22,20,15,.16);padding-bottom:2px}
+.foot-links a:hover{color:var(--purple);border-bottom-color:var(--purple)}
+
+.to-top{position:fixed;left:26px;bottom:26px;width:42px;height:42px;border-radius:50%;border:none;background:var(--ink);color:var(--cream);font-size:15px;cursor:pointer;box-shadow:0 4px 16px rgba(22,20,15,.22);opacity:0;visibility:hidden;transition:all .3s;z-index:97}
+.to-top.on{opacity:1;visibility:visible}
+.to-top:hover{background:var(--purple);transform:translateY(-3px)}
+.toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);background:var(--ink);color:var(--cream);font-family:var(--mono);font-size:12.5px;padding:10px 18px;border-radius:3px;opacity:0;pointer-events:none;transition:all .28s;z-index:200}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.on{opacity:1;transform:none}
+
+@media (min-width:720px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:980px){
+  .cards,.cards.two{grid-template-columns:1fr;gap:16px}
+  .foot-grid{grid-template-columns:1fr}
+  .layer-band{grid-template-columns:1fr;gap:8px}
+  .layer-band .ltags{justify-content:flex-start}
+}
+@media (max-width:719px){
+  .side-nav{display:none}
+  .chapter,.deck,.lab{padding-left:20px;padding-right:20px}
+  .deck .sec-head,.lab .sec-head,.deck .sec-note,.lab .sec-note,
+  .deck .body,.lab .body{padding-left:0;padding-right:0}
+  .path-step{grid-template-columns:40px 1fr;row-gap:4px}
+  .path-step .note{grid-column:2}
+  .hero{padding-top:64px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="progress" id="progress"></div>
+
+<nav class="side-nav">
+    <div class="nav-dot active" data-target="top" data-label="开头"></div>
+    <div class="nav-dot" data-target="scope" data-label="系统界定"></div>
+    <div class="nav-dot" data-target="layers" data-label="场景分层"></div>
+    <div class="nav-dot" data-target="elements" data-label="场景要素"></div>
+    <div class="nav-dot" data-target="odd" data-label="运行设计条件"></div>
+    <div class="nav-dot" data-target="scenario" data-label="典型场景"></div>
+    <div class="nav-dot" data-target="risks" data-label="风险场景"></div>
+</nav>
+
+<header class="hero" id="top">
+    <div class="hero-inner">
+        <p class="eyebrow">系统工程小组作业 4 · 场景分析与运行设计</p>
+        <h1 class="serif">从场景分层<br><em>到风险场景</em></h1>
+        <p class="lede">以「上肢康复混合辅助训练系统」为具体实例：先把使用环境分层、梳理各层场景要素，设定正常运行的设计条件，再选取一个典型训练回合详述，并据此列出风险场景清单。</p>
+
+        <div class="hero-path">
+            <div class="path-step"><span class="idx">01</span><span class="name">场景分层与要素</span><span class="note">使命层 · 环境层 · 任务层 · 交互层</span></div>
+            <div class="path-step"><span class="idx">02</span><span class="name">运行设计条件 ODD</span><span class="note">设计范围 · 系统状态 · 人员状态</span></div>
+            <div class="path-step"><span class="idx">03</span><span class="name">典型场景详述</span><span class="note">居家主动辅助抓握训练回合</span></div>
+            <div class="path-step"><span class="idx">04</span><span class="name">风险场景列表</span><span class="note">触发条件 · 后果 · 缓解措施</span></div>
+        </div>
+
+        <div class="hero-meta">
+            <span class="meta-chip">4 层场景</span>
+            <span class="meta-chip">3 类运行环境</span>
+            <span class="meta-chip">7 种系统状态</span>
+            <span class="meta-chip">8 条风险场景</span>
+        </div>
+
+        <p class="hero-note">场景回答「系统在什么情况下、由谁、做什么」；运行设计条件圈定「允许系统正常工作的边界」；风险场景则检查边界被突破时会发生什么。</p>
+        <p class="signature">杨博文 · 吉林大学 · 2026</p>
+    </div>
+</header>
+
+<!-- ============ 系统界定 ============ -->
+<section class="chapter rv" id="scope">
+    <p class="eyebrow">01 / System Instance</p>
+    <h2 class="serif">具体系统界定<br><em class="em">Arm-Rehab Mixed Assist System</em></h2>
+    <p class="prose">作业 1–3 的通用对象是「机器增强的人机混合神经系统」；本作业把它落到一个可描述、可验证的整机实例：<strong>面向脑卒中后上肢运动功能障碍患者的混合辅助训练系统</strong>。生物通道保留患者残存的神经控制与本体感觉，人工通道由肌电采集、边缘决策、外骨骼/电刺激执行与触觉反馈构成，两路在训练任务中并行融合。</p>
+
+    <div class="sec-head"><span class="no">1.1</span><h3>系统边界与组成</h3></div>
+    <div class="cards">
+        <div class="card" style="--card-c:var(--purple)">
+            <span class="tag">感知端</span>
+            <h4>肌电与体征采集</h4>
+            <p>臂环干/湿电极采集表面肌电，配合 IMU 关节角度、皮温与心率；识别患者运动意图与发力水平，信号质量实时自检。</p>
+        </div>
+        <div class="card" style="--card-c:var(--green)">
+            <span class="tag">决策端</span>
+            <h4>边缘混合决策</h4>
+            <p>本地完成意图分类、置信度评估与生物意图—机器建议仲裁；反射级闭环不依赖云端，模型更新与日志回传走非实时通道。</p>
+        </div>
+        <div class="card" style="--card-c:var(--orange)">
+            <span class="tag">执行端</span>
+            <h4>辅助出力与反馈</h4>
+            <p>上肢外骨骼提供助力力矩，功能电刺激补偿肌肉收缩，触觉/力反馈回传接触与阻力；独立安全监护旁路并行监视越界。</p>
+        </div>
+    </div>
+
+    <div class="sec-head"><span class="no">1.2</span><h3>与前序作业的衔接</h3></div>
+    <p class="body">本实例沿用作业 3 的双轨架构与 STPA 安全结论：意图识别端到端延迟 ≤200 ms，安全保护响应 ≤50 ms，单点失效默认回到无增强状态；本作业不再重复需求条目与控制框图，而是聚焦「它在哪些场景里、按什么条件运行、典型回合怎么走、会冒出哪些风险场景」。</p>
+</section>
+
+<!-- ============ 场景分层 ============ -->
+<section class="deck rv" id="layers">
+    <div class="deck-head">
+        <p class="eyebrow">02 / Scenario Layering</p>
+        <h2 class="serif">场景分层<br><em class="em">From Mission Environment to Interaction Turn</em></h2>
+        <p class="deck-sub">由粗到细分四层：上层约束下层的目标与边界，下层是上层目标在具体环境中的落点。</p>
+    </div>
+
+    <div class="lab-inner">
+        <div class="lab-panel">
+            <div class="layer-stack">
+                <div class="layer-band" style="--l-c:var(--purple)">
+                    <span class="lno">S1 使命层</span>
+                    <span class="lname">康复目标与社会环境</span>
+                    <span class="ltags"><span>功能恢复</span><span>生活回归</span><span>医疗体系</span></span>
+                </div>
+                <div class="layer-arrow">↓</div>
+                <div class="layer-band" style="--l-c:var(--purple-soft)">
+                    <span class="lno">S2 环境层</span>
+                    <span class="lname">运行场所与物理条件</span>
+                    <span class="ltags"><span>康复科诊室</span><span>社区康复站</span><span>家庭居所</span></span>
+                </div>
+                <div class="layer-arrow">↓</div>
+                <div class="layer-band" style="--l-c:var(--green)">
+                    <span class="lno">S3 任务层</span>
+                    <span class="lname">训练与代偿任务场景</span>
+                    <span class="ltags"><span>评估测量</span><span>被动助动</span><span>主动辅助</span><span>抗阻训练</span><span>日常代偿</span></span>
+                </div>
+                <div class="layer-arrow">↓</div>
+                <div class="layer-band" style="--l-c:var(--orange)">
+                    <span class="lno">S4 交互层</span>
+                    <span class="lname">单次训练回合内的人机交互</span>
+                    <span class="ltags"><span>佩戴自检</span><span>意图采集</span><span>辅助出力</span><span>反馈回采</span><span>记录结束</span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sec-head"><span class="no">2.1</span><h3>各层含义</h3></div>
+        <div class="cards two">
+            <div class="card" style="--card-c:var(--purple)">
+                <span class="tag">S1 · 使命层</span>
+                <p>定义系统存在的目的：改善患者上肢运动功能、提高日常生活独立性，并对接康复医疗流程与家庭支持环境。该层决定后面所有场景的成功判据。</p>
+            </div>
+            <div class="card" style="--card-c:var(--purple-soft)">
+                <span class="tag">S2 · 环境层</span>
+                <p>系统被使用的物理与社会场所：康复科诊室有治疗师在场，社区站有指导员，家庭居所为无人或家属在场的自主训练环境，三者的监督强度与冗余条件不同。</p>
+            </div>
+            <div class="card" style="--card-c:var(--green)">
+                <span class="tag">S3 · 任务层</span>
+                <p>患者在各环境中要完成的任务类型：功能评估、被动关节活动、主动辅助抓握/伸展、抗阻强化，以及进食、取物等生活动作代偿。</p>
+            </div>
+            <div class="card" style="--card-c:var(--orange)">
+                <span class="tag">S4 · 交互层</span>
+                <p>把一次任务拆成可观察的人机回合：从佩戴与自检开始，到意图采集、辅助出力、反馈回采，再到数据记录与安全退出，是风险最容易定位的一层。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 场景要素 ============ -->
+<section class="chapter rv" id="elements">
+    <p class="eyebrow">03 / Scenario Elements</p>
+    <h2 class="serif">各层场景要素<br><em class="em">Who · What · Where · Information</em></h2>
+    <p class="prose">对每一层从环境、人员、系统、任务与信息五个维度梳理要素，作为后面设定运行设计条件和识别风险场景的依据。</p>
+
+    <div class="tbl-wrap">
+        <table class="req-table">
+            <colgroup><col style="width:14%"><col style="width:22%"><col style="width:22%"><col style="width:22%"><col style="width:20%"></colgroup>
+            <thead><tr><th>场景层</th><th>环境要素</th><th>人员要素</th><th>系统要素</th><th>任务与信息要素</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>S1 使命层</td>
+                    <td>康复政策、医疗资源、家庭与社会预期</td>
+                    <td>患者、家属、治疗师、医师、医保与管理方</td>
+                    <td>混合辅助训练系统及其远期功能定位</td>
+                    <td>功能恢复目标、独立性指标、长期随访记录</td>
+                </tr>
+                <tr>
+                    <td>S2 环境层</td>
+                    <td>诊室/客厅/社区空间、桌椅与支撑、照明、地面、温湿度、网络条件</td>
+                    <td>在场监督人员、旁观者、可求助距离</td>
+                    <td>设备摆放、穿戴位置、供电与通信链路</td>
+                    <td>环境约束记录、场地安全检查结果</td>
+                </tr>
+                <tr>
+                    <td>S3 任务层</td>
+                    <td>任务台面、目标物体、阻力来源、训练时段与时长</td>
+                    <td>患者肌力与耐受力、治疗师处方、辅助等级</td>
+                    <td>感知阵列、决策策略、执行通道、监护旁路</td>
+                    <td>任务类型、目标动作、完成度与训练负荷</td>
+                </tr>
+                <tr>
+                    <td>S4 交互层</td>
+                    <td>单回合内的设备状态、即时体位与接触关系</td>
+                    <td>患者瞬时意图、疲劳与疼痛反应；监督者介入时机</td>
+                    <td>采样、意图分类、仲裁、助力/刺激输出、反馈回采</td>
+                    <td>肌电/角度/力反馈流、置信度、告警与操作日志</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ============ 运行设计条件 ============ -->
+<section class="lab rv" id="odd">
+    <div class="lab-inner">
+        <p class="eyebrow">04 / Operational Design Conditions</p>
+        <h2 class="serif">运行设计条件<br><em class="em">Operational Design Domain · System · Operator</em></h2>
+        <p class="deck-sub">圈定系统被设计为可正常运行的边界：在什么范围、处于什么系统状态、面对什么人员状态时，训练才允许开始与持续。</p>
+
+        <div class="sec-head"><span class="no">4.1</span><h3>运行设计范围（ODR）</h3></div>
+        <div class="cards">
+            <div class="card" style="--card-c:var(--purple)">
+                <span class="tag">适用人群</span>
+                <ul>
+                    <li>成年脑卒中后单侧上肢偏瘫，认知可配合指令</li>
+                    <li>无电极接触部位皮肤破损、无急性关节损伤</li>
+                    <li>血压、心率处于医师评估允许训练的区间</li>
+                </ul>
+            </div>
+            <div class="card" style="--card-c:var(--green)">
+                <span class="tag">场地与设备</span>
+                <ul>
+                    <li>平整防滑地面、稳固座椅、周边无尖锐障碍</li>
+                    <li>电极阻抗合格、传感器校准在有效期内</li>
+                    <li>电量满足本次训练时长，通信链路冗余有效</li>
+                </ul>
+            </div>
+            <div class="card" style="--card-c:var(--orange)">
+                <span class="tag">性能边界</span>
+                <ul>
+                    <li>助力力矩、关节角度与速度限在硬件安全限幅内</li>
+                    <li>意图识别延迟 ≤200 ms，保护响应 ≤50 ms</li>
+                    <li>单次训练 ≤30 min，超出即提示休息与降载</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="sec-head"><span class="no">4.2</span><h3>系统状态</h3></div>
+        <div class="tbl-wrap">
+            <table class="req-table">
+                <colgroup><col style="width:18%"><col style="width:34%"><col style="width:48%"></colgroup>
+                <thead><tr><th>状态</th><th>进入条件</th><th>系统行为</th></tr></thead>
+                <tbody>
+                    <tr><td>自检待机</td><td>佩戴完成、上电</td><td>检查电极阻抗、电量、传感器与链路；未通过不进入训练</td></tr>
+                    <tr><td>评估测量</td><td>自检通过、治疗师启动评估</td><td>采集被动活动度、肌力基线与信号质量，不输出主动助力</td></tr>
+                    <tr><td>被动助动</td><td>患者放松、治疗师设定轨迹</td><td>外骨骼带动肢体完成关节活动，患者不发力</td></tr>
+                    <tr><td>主动辅助</td><td>识别到主动意图且置信度达标</td><td>在患者发力基础上补足缺口力矩，主导权保留在人体</td></tr>
+                    <tr><td>抗阻训练</td><td>治疗师处方允许、肌力达标</td><td>按设定阻力提供对抗负荷，记录出力曲线</td></tr>
+                    <tr><td>告警降级</td><td>信号异常、体征越界、低电或温升越限</td><td>提示 → 限制增强 → 强制停机递进响应，等待人工确认</td></tr>
+                    <tr><td>故障安全</td><td>主链路失效、双通道丢失或看门狗复位</td><td>默认回无增强状态，执行器保持安全位姿并上报故障码</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sec-head"><span class="no">4.3</span><h3>人员状态</h3></div>
+        <div class="tbl-wrap">
+            <table class="req-table">
+                <colgroup><col style="width:18%"><col style="width:42%"><col style="width:40%"></colgroup>
+                <thead><tr><th>角色</th><th>正常状态要求</th><th>异常信号（暂停或退出）</th></tr></thead>
+                <tbody>
+                    <tr><td>患者</td><td>警觉可配合，疲劳度低，无明显疼痛或痉挛，理解本次动作要求</td><td>烦躁、嗜睡、疼痛评分升高、肌肉痉挛、出汗致电极滑脱</td></tr>
+                    <tr><td>治疗师 / 指导员</td><td>掌握处方与限幅，在场观察动作与体征，可随时接管或停机</td><td>离岗、无法判断动作质量、对告警未及时响应</td></tr>
+                    <tr><td>家属（居家）</td><td>了解急停位置与协助事项，不擅自调整阈值或模式</td><td>越权操作、遮挡急停、在患者不适时仍继续训练</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 典型场景 ============ -->
+<section class="deck rv" id="scenario">
+    <div class="deck-head">
+        <p class="eyebrow">05 · Typical Scenario</p>
+        <h2 class="serif">典型场景详述<br><em class="em">Home-Based Active-Assisted Grasp Training</em></h2>
+        <p class="deck-sub">选取居家环境下的「主动辅助上肢抓握训练」作为典型回合，按时间顺序展开。</p>
+    </div>
+
+    <div class="lab-inner">
+        <div class="cards two">
+            <div class="card" style="--card-c:var(--purple)">
+                <span class="tag">场景前提</span>
+                <ul>
+                    <li>患者：58 岁，右侧偏瘫约 3 个月，Brunnstrom Ⅳ 期，认知与配合度良好</li>
+                    <li>环境：家中客厅，稳固座椅与训练桌，日间，地面干燥无障碍</li>
+                    <li>人员：家属在旁；治疗师经上次评估给出辅助等级与限幅，可远程查看记录</li>
+                    <li>设备：臂环与外骨骼佩戴到位，电极阻抗合格，电量与链路正常</li>
+                </ul>
+            </div>
+            <div class="card" style="--card-c:var(--green)">
+                <span class="tag">成功判据</span>
+                <ul>
+                    <li>完成设定次数的抓握—放回动作，动作轨迹平稳无明显抖动</li>
+                    <li>助力随患者发力动态增减，未出现过冲、牵拉或痉挛</li>
+                    <li>全程体征与信号在限幅内，训练记录完整可回放</li>
+                    <li>结束后执行器退回安全位姿，患者无新增不适</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="sec-head"><span class="no">5.1</span><h3>回合动作流</h3></div>
+        <div class="timeline">
+            <div class="tl-step" data-i="01">
+                <h4>佩戴与自检</h4>
+                <p>患者就座，家属协助固定臂环与外骨骼；系统自检电极阻抗、电量、IMU 与通信链路，通过后进入待机。</p>
+                <p class="tl-meta">系统状态：自检待机 → 就绪</p>
+            </div>
+            <div class="tl-step" data-i="02">
+                <h4>意图采集与确认</h4>
+                <p>患者尝试抬手抓握，系统采集肌电与关节角度，输出动作意图与置信度；低于阈值时只给提示，不输出主动助力。</p>
+                <p class="tl-meta">关键指标：识别延迟 ≤200 ms</p>
+            </div>
+            <div class="tl-step" data-i="03">
+                <h4>混合仲裁与辅助出力</h4>
+                <p>决策单元比较生物意图、机器建议与安全约束，仲裁后外骨骼补足缺口力矩，必要时叠加电刺激；触觉反馈回传接触与阻力。</p>
+                <p class="tl-meta">通道：生物通道 + 人工通道双轨并行</p>
+            </div>
+            <div class="tl-step" data-i="04">
+                <h4>反馈回采与持续监视</h4>
+                <p>执行结果经本体感觉、IMU 与力反馈回采，与目标轨迹比对；安全监护旁路并行监视力矩、角度、体征与信号质量。</p>
+                <p class="tl-meta">监护不串联主链路，失效不拖垮训练</p>
+            </div>
+            <div class="tl-step" data-i="05">
+                <h4>回合结束与安全退出</h4>
+                <p>达到设定次数或患者疲劳/不适即停止；执行器退回安全位姿，系统生成本次训练记录，可导出供治疗师远程复盘。</p>
+                <p class="tl-meta">退出条件：完成目标 / 主动停机 / 告警降级 / 故障安全</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 风险场景 ============ -->
+<section class="chapter rv" id="risks">
+    <p class="eyebrow">06 / Risk Scenarios</p>
+    <h2 class="serif">风险场景列表<br><em class="em">Hazard Scenario Register</em></h2>
+    <p class="prose">围绕典型回合，列出边界被突破时可能出现的风险场景、诱因、后果与缓解措施；缓解措施与作业 3 派生的安全需求（SSR）对应。</p>
+
+    <div class="tbl-wrap">
+        <table class="req-table">
+            <colgroup><col style="width:10%"><col style="width:24%"><col style="width:24%"><col style="width:12%"><col style="width:30%"></colgroup>
+            <thead><tr><th>编号</th><th>触发场景 / 诱因</th><th>可能后果</th><th>风险等级</th><th>缓解措施 · 关联安全需求</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>RS-1</td>
+                    <td>肌力偏弱时意图被高估，助力力矩超过关节承受范围</td>
+                    <td>关节牵拉、软组织损伤或疼痛加重</td>
+                    <td><span class="sev h"><i></i>高</span></td>
+                    <td>硬件限幅 + 越限切断；低置信度转辅助/原生（SSR-1、SSR-2）</td>
+                </tr>
+                <tr>
+                    <td>RS-2</td>
+                    <td>出汗、电极滑动或肌电伪迹导致意图识别漂移</td>
+                    <td>输出非意图动作，动作方向或幅度错误</td>
+                    <td><span class="sev h"><i></i>高</span></td>
+                    <td>信号质量门控；双通道冗余与毫秒级切换（SSR-2、SSR-11）</td>
+                </tr>
+                <tr>
+                    <td>RS-3</td>
+                    <td>反馈缺失或超时，系统仍按有反馈状态继续出力</td>
+                    <td>动作过冲、振荡，偏离目标轨迹</td>
+                    <td><span class="sev m"><i></i>中</span></td>
+                    <td>反馈超时冻结输出，保持安全位姿（SSR-3）</td>
+                </tr>
+                <tr>
+                    <td>RS-4</td>
+                    <td>监护旁路失效且未被发现，越界后无保护介入</td>
+                    <td>危险输出持续到主链路察觉，伤害扩大</td>
+                    <td><span class="sev h"><i></i>高</span></td>
+                    <td>监护周期自检、失效显性告警，独立于主链路（SSR-4）</td>
+                </tr>
+                <tr>
+                    <td>RS-5</td>
+                    <td>低电量或温升越限，未及时降载与提示</td>
+                    <td>训练中途失效，支撑不足导致跌倒或脱手</td>
+                    <td><span class="sev m"><i></i>中</span></td>
+                    <td>分级降载并保留无源机械支撑（SSR-9）</td>
+                </tr>
+                <tr>
+                    <td>RS-6</td>
+                    <td>未授权人员修改阈值或控制模式</td>
+                    <td>人工否决权被绕过，增强等级超出处方</td>
+                    <td><span class="sev m"><i></i>中</span></td>
+                    <td>变更分级授权并留痕，自动模式不得绕过人工确认（SSR-10）</td>
+                </tr>
+                <tr>
+                    <td>RS-7</td>
+                    <td>急停请求被软件拦截或延迟执行</td>
+                    <td>紧急情况下无法立刻切断增强输出</td>
+                    <td><span class="sev h"><i></i>高</span></td>
+                    <td>物理急停硬线直达切断回路，不经软件与无线链路（SSR-6）</td>
+                </tr>
+                <tr>
+                    <td>RS-8</td>
+                    <td>居家环境存在障碍物或座椅不稳，训练中失去平衡</td>
+                    <td>跌倒、碰撞，连带损伤患侧与健侧</td>
+                    <td><span class="sev l"><i></i>低</span></td>
+                    <td>ODR 场地检查清单；无源支撑与跌倒保护设计（SSR-9、SSR-12）</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="sec-head"><span class="no">6.1</span><h3>风险场景与前序分析的衔接</h3></div>
+    <p class="body">上述 RS 条目可回溯到作业 3 的危险（H-1～H-7）与不安全控制动作（UCA-1～12）：RS-1/2 对应错误意图与越界出力，RS-3 对应反馈失控，RS-4/7 对应监护失效与人在环否决被延迟，RS-5/8 对应断电断链兜底；本作业不重复推导过程，只在具体场景中核对这些风险是否可被现有安全需求覆盖。</p>
+</section>
+
+<footer class="foot">
+    <div class="foot-grid">
+        <div>
+            <h5>关于这份作业</h5>
+            <p>系统工程课程小组作业 4：以上肢康复混合辅助训练系统为实例，完成场景分层、场景要素、运行设计条件、典型场景详述与风险场景列表。</p>
+        </div>
+        <div>
+            <h5>方法与口径</h5>
+            <p>场景按使命—环境—任务—交互四层分解；运行设计条件覆盖设计范围、系统状态与人员状态；风险等级结合后果严重度与发生可能性判定。</p>
+        </div>
+        <div>
+            <h5>前序衔接</h5>
+            <p>系统架构与需求见作业 1、2；SyRS、控制框图与 STPA 安全需求见作业 3；本作业聚焦场景与运行边界。</p>
+        </div>
+    </div>
+    <p class="foot-sig">杨博文 · 吉林大学 · 2026</p>
+    <div class="foot-links">
+        <a href="https://boweny67.github.io/assignment1/">作业 1 · 六层架构</a>
+        <a href="https://boweny67.github.io/assignment2/">作业 2 · BRS &amp; StRS</a>
+        <a href="https://boweny67.github.io/assignment3/">作业 3 · SyRS 与安全分析</a>
+        <a href="https://boweny67.github.io/">个人主页</a>
+    </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="返回顶部">↑</button>
+<div class="toast" id="toast">已复制编号</div>
+
+<script>
+    const secIds = ['top','scope','layers','elements','odd','scenario','risks'];
+    const bar = document.getElementById('progress');
+    const toTop = document.getElementById('toTop');
+
+    function onScroll(){
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+        let cur = 'top';
+        secIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.getBoundingClientRect().top <= window.innerHeight / 2) cur = id;
+        });
+        document.querySelectorAll('.nav-dot').forEach(d => d.classList.toggle('active', d.dataset.target === cur));
+        toTop.classList.toggle('on', window.scrollY > 500);
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+
+    const io = new IntersectionObserver(es => {
+        es.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+    }, {threshold:.12});
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+    document.querySelectorAll('.nav-dot').forEach(d => {
+        d.addEventListener('click', () => {
+            document.getElementById(d.dataset.target)?.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+    });
+    toTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+    const toast = document.getElementById('toast');
+    let toastTimer = null;
+    function showToast(text){
+        toast.textContent = text;
+        toast.classList.add('on');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('on'), 1600);
+    }
+    document.querySelectorAll('tbody td:first-child').forEach(cell => {
+        cell.style.cursor = 'pointer';
+        cell.addEventListener('click', () => {
+            const id = cell.textContent.trim();
+            if (navigator.clipboard && navigator.clipboard.writeText){
+                navigator.clipboard.writeText(id).catch(() => {});
+            }
+            showToast('已复制 ' + id);
+        });
+    });
+</script>
+</body>
+</html>

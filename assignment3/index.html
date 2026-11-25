@@ -272,7 +272,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     <p class="body"><strong>目的</strong>：在维持人体生命稳态的前提下，闭环完成「感知—决策—行动」神经活动；为神经功能受损人群提供感知/运动代偿，为特殊作业环境下的健康人员扩展能力。所有增强功能均可启停、可降级，使用者保留最高否决权。</p>
     <p class="body"><strong>系统包含</strong>：人体神经信号与体征采集前端、外部多模态传感阵列、边缘混合决策单元、机器执行单元、能源管理单元、旁路式安全监护子系统、参数配置与日志接口。</p>
     <p class="body"><strong>系统不包含</strong>：临床诊断与治疗决策（由医师在系统外完成）、云端长期健康档案管理、器件级 BOM 与机械结构详细图纸。</p>
-    <p class="body"><strong>系统概述</strong>：生物通道与人工通道双轨并行。环境信号同时进入人体原生感官与机器传感阵列；EEG/EMG 与机器信号在决策单元内同步、降噪、特征提取与意图识别；输出分两路，一路经人体神经通路驱动生物执行，一路送往机器执行单元；执行结果反作用于环境并回采，闭环成立。安全监护旁路监视，越界时分级降权，最终交还人体完全控制权。</p>
+    <p class="body"><strong>系统概述</strong>：系统由生物通道与人工通道双轨并行构成，在感知、决策、执行三段融合。信号流、控制结构与旁路安全机制见第 2 章初始架构与第 3 章控制框图，本节不再重复运行时序描述。</p>
 
     <div class="sec-head"><span class="no">1.2</span><h3>功能需求 FR</h3></div>
     <div class="tbl-wrap">
@@ -682,38 +682,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     <p class="prose">每条 SyRS 与安全需求都能反向回溯到业务需求、相关方诉求或某条危险/UCA；找不到上游来源的条目按多余实现剔除。</p>
 
     <div class="sec-head"><span class="no">5.1</span><h3>业务/相关方 → SyRS 条目</h3></div>
-    <div class="trace">
-        <div class="trace-row">
-            <div class="trace-from">BP-1 生命指标稳定可控</div>
-            <div class="trace-arrow">分解为 →</div>
-            <div class="trace-to"><span>FR-1</span><span>PR-2</span><span>SSR-4</span></div>
-        </div>
-        <div class="trace-row">
-            <div class="trace-from">BP-2 闭环延迟可接受</div>
-            <div class="trace-arrow">分解为 →</div>
-            <div class="trace-to"><span>FR-3</span><span>FR-4</span><span>PR-1</span><span>PR-4</span><span>PR-7</span></div>
-        </div>
-        <div class="trace-row">
-            <div class="trace-from">BP-3 增强可启停可降级</div>
-            <div class="trace-arrow">分解为 →</div>
-            <div class="trace-to"><span>FR-5</span><span>FR-6</span><span>SSR-7</span></div>
-        </div>
-        <div class="trace-row">
-            <div class="trace-from">BC-2 人拥有最高否决权</div>
-            <div class="trace-arrow">分解为 →</div>
-            <div class="trace-to"><span>IR-3</span><span>SSR-6</span><span>SSR-10</span></div>
-        </div>
-        <div class="trace-row">
-            <div class="trace-from">医师：日志可导出回放</div>
-            <div class="trace-arrow">分解为 →</div>
-            <div class="trace-to"><span>FR-7</span><span>FR-8</span><span>IR-4</span></div>
-        </div>
-        <div class="trace-row">
-            <div class="trace-from">监管伦理：可追溯、故障安全</div>
-            <div class="trace-arrow">分解为 →</div>
-            <div class="trace-to"><span>FR-7</span><span>SSR-8</span><span>SSR-12</span></div>
-        </div>
-    </div>
+    <p class="body">上游分解关系（BP/BC/相关方 → FR/PR/IR）与<a class="lnk" href="../assignment2/#trace">作业 2 追溯表</a>一致，本节不再重复列示；下表只保留 SyRS 向下到危险 / UCA / 安全需求 / 组件的追溯。</p>
 
     <div class="sec-head"><span class="no">5.2</span><h3>危险/UCA → 安全需求 → 组件</h3></div>
     <div class="tbl-wrap">
