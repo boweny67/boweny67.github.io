@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一次抬手，要经过六层 · 网页幻灯片</title>
+<meta name="description" content="作业1 的网页 PPT 版：把“抬手”按系统工程分层语法拆成六层，保留全部可操作交互——环路延迟、断链降级、系统配置。">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* 首屏读头：真实时长 + 慢放倍率标注 */
+  .foot-right{display:flex;align-items:baseline;gap:10px}
+  .slowtag{
+    font-family:SFMono-Regular,Consolas,monospace;font-size:10px;letter-spacing:.12em;
+    color:rgba(250,246,236,.55);border:1px solid rgba(250,246,236,.18);
+    padding:2px 6px;border-radius:3px;
+  }
+  @media (max-width:560px){ .slowtag{display:none} }
+
+  /* 每个实验开头：目的 / 玩法 / 它证明了什么 */
+  .purpose{
+    margin:34px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
+    padding-top:20px;border-top:1px solid var(--rule);
+  }
+  .p-item h5{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--purple);margin:0 0 9px;font-weight:600;
+  }
+  .p-item p{font-size:14px;line-height:1.9;color:var(--ink-2);margin:0}
+  .p-item:last-child{
+    background:rgba(99,56,138,.05);border-left:2px solid var(--purple-soft);
+    padding:14px 16px 16px;border-radius:0 8px 8px 0;
+  }
+  .p-item:last-child p{color:var(--ink)}
+  @media (max-width:980px){ .purpose{grid-template-columns:1fr;gap:16px} }
+
+  .hero-src{
+    max-width:640px;margin:14px auto 0;font-size:12px;line-height:1.85;
+    color:rgba(250,246,236,.52);letter-spacing:.01em;
+  }
+
+  /* 07 数据与来源 */
+  .src-table{
+    width:100%;margin-top:34px;border-collapse:collapse;
+    font-size:13px;line-height:1.7;
+  }
+  .src-table th{
+    text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--purple);font-weight:600;
+    padding:0 14px 10px 0;border-bottom:1px solid var(--ink);
+    white-space:nowrap;
+  }
+  .src-table td{
+    padding:11px 14px 11px 0;vertical-align:top;color:var(--ink-2);
+    border-bottom:1px solid var(--rule);
+  }
+  .src-table td:first-child{color:var(--ink);font-weight:600;width:24%}
+  .src-table td:last-child{color:var(--muted);font-size:12px;width:23%}
+  .src-note{
+    margin-top:26px;padding-left:16px;border-left:2px solid var(--purple-soft);
+    font-size:12.5px;line-height:1.9;color:var(--muted);max-width:760px;
+  }
+  @media (max-width:640px){
+    .src-table{font-size:12px}
+    .src-table td:first-child,.src-table td:last-child{width:auto}
+  }
+</style>
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<div class="deck-progress" id="deckProgress"></div>
+
+<div class="deck-stage">
+  <div class="deck-track" id="track">
+
+    <!-- ============ 00 封面 ============ -->
+    <section class="slide" data-title="封面">
+      <header class="hero" id="top">
+        <div class="hero-inner">
+          <p class="eyebrow">系统工程 · 结构拆解 · 01</p>
+          <h1 class="serif">一次抬手<br><em>要经过六层</em></h1>
+          <p class="lede">机器增强的人机混合神经系统：从“活下去”这个任务，一路拆到一枚 24 位 ADC 芯片。</p>
+
+          <div class="stage">
+            <div class="pipeline" id="pipeline">
+              <div class="stage-line" aria-hidden="true"></div>
+              <div class="pulse" id="pulse" aria-hidden="true"></div>
+              <div class="nodes" id="nodes"></div>
+            </div>
+            <div class="stage-foot">
+              <button class="btn" id="reachBtn" type="button">抬一次手</button>
+              <div class="foot-right">
+                <span class="clock" id="reachTime">0.180 s</span>
+                <span class="slowtag" id="slowTag">慢放 ×3</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="hero-note" id="heroNote">六层同时在工作，你却什么都感觉不到。</p>
+          <p class="hero-src">0.180 s 有出处：人体自然神经环路传导约 0.2 s（中科院 2025 年临床报道）；把采集、无线、推理、执行抠到本地后，文献实测的闭环 BCI 端到端在 90–131 ms。</p>
+          <p class="signature">杨博文 · 吉林大学 · 2026</p>
+        </div>
+      </header>
+    </section>
+
+    <!-- ============ 01 问题 ============ -->
+    <section class="slide" data-title="问题">
+      <div class="chapter">
+        <p class="eyebrow">01 / 问题</p>
+        <h2 class="serif">脑机接口不是一根线，<em>是一座六层的楼</em></h2>
+        <div class="prose">
+          <p>大多数人想象的脑机接口，是一根线插进大脑。真实的系统不长那样。</p>
+          <p>电极只是最底下的那一枚模块。它上面还压着子系统、系统、整机、体系，一路压到“这个系统到底为谁存在”。每一层都在替上一层承担一件事；任何一层塌了，上面那层就得改口。</p>
+          <p>所以这篇作业不做罗列，做拆解：把一个抬手的动作，按工程系统的分层语法重写一遍；再把机器增强件一层层塞回去，看它究竟在哪一层改写了原来的答案。</p>
+        </div>
+        <p class="pull serif">分层不是为了分类，<br>是为了定位故障。</p>
+      </div>
+    </section>
+
+    <!-- ============ 02 六层总览 ============ -->
+    <section class="slide" data-title="六层总览">
+      <div class="deck">
+        <div class="deck-head">
+          <p class="eyebrow">02 / 结构</p>
+          <h2 class="serif">六层，<em>逐层缩小</em></h2>
+          <p class="deck-sub">左边这张图对应的不是尺寸，是<em>责任的范围</em>：从一个人的一生，到一枚芯片的针脚。点任意一层，翻到那一页细看。</p>
+          <div class="stats" id="stats"></div>
+        </div>
+
+        <div class="deck-body">
+          <div class="deck-visual">
+            <div class="stack-wrap">
+              <svg class="stack" id="stack" viewBox="0 0 420 420" role="img" aria-label="六层嵌套结构示意图"></svg>
+              <div class="stack-caption">
+                <span class="l-num" id="stackNum">L1</span>
+                <span class="l-name" id="stackName">任务 Mission</span>
+                <span class="l-scale" id="stackScale">人生 · 年</span>
+              </div>
+            </div>
+            <div class="ruler" aria-hidden="true"><span>米</span><i></i><i></i><i></i><i></i><i></i><span>微米</span></div>
+          </div>
+          <div class="deck-text" id="overviewText">
+            <p class="prose narrow">下面六页，按从“为什么存在”到“可采购的积木”的顺序逐层拆开。每一层都给出生物原本的做法与机器接手的做法，以及这一层的约束或衡量指标。</p>
+            <p class="after">越往上，回答的是目的与环境；越往下，回答的是芯片与针脚。分层不是抽屉，是一条可以定位故障的线。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 03–08 六层（由 main.js 注入） ============ -->
+    <section class="slide layer-slide" data-title="L1 任务"><div class="chapter" id="layerSlot0"></div></section>
+    <section class="slide layer-slide" data-title="L2 体系"><div class="chapter" id="layerSlot1"></div></section>
+    <section class="slide layer-slide" data-title="L3 整机"><div class="chapter" id="layerSlot2"></div></section>
+    <section class="slide layer-slide" data-title="L4 系统"><div class="chapter" id="layerSlot3"></div></section>
+    <section class="slide layer-slide" data-title="L5 子系统"><div class="chapter" id="layerSlot4"></div></section>
+    <section class="slide layer-slide" data-title="L6 模块"><div class="chapter" id="layerSlot5"></div></section>
+
+    <!-- 隐藏的生成源：renderDeck 先写这里，再把 .layer 节点搬进上面的 slot -->
+    <div id="deckText" style="display:none"></div>
+
+    <!-- ============ 09 实验一 延迟 ============ -->
+    <section class="slide" data-title="实验一 · 环路延迟">
+      <div class="lab">
+        <div class="lab-inner">
+          <p class="eyebrow">03 / 实验一 · 环路延迟</p>
+          <h2 class="serif">把延迟调到 120 毫秒，<br><em>手开始不听话</em></h2>
+          <div class="prose narrow">
+            <p>人体的本体感觉闭环大约 20–40 毫秒。而任何一条“采集 → 无线 → 推理 → 驱动”的链路，都会把这个数字成倍放大。</p>
+            <p>不用相信我的话。拖一下滑块，看那只手追不追得上目标。</p>
+          </div>
+
+          <div class="purpose">
+            <div class="p-item">
+              <h5>这个实验想干什么</h5>
+              <p>把“延迟”这个抽象的毫秒数，变成眼睛能看见的失误。目标是量出人到底能容忍多少延迟，以及超过之后，身体先坏在哪一环。</p>
+            </div>
+            <div class="p-item">
+              <h5>怎么玩</h5>
+              <p>紫点是目标，墨绿指针是“你的手”，中间那根橙线是偏差。拖三根滑块改变采集、传输、推理的耗时，看右下角的状态在“跟随 / 滞后 / 过冲 / 振荡”之间怎么翻。</p>
+            </div>
+            <div class="p-item">
+              <h5>它证明了什么</h5>
+              <p>60 毫秒以内，机器的手和你的手差不多快；过了 100 毫秒，快速动作开始画弧；145 毫秒以上，环路自己开始振荡——你越纠正，它越抖。所以“反射”不能放在云端，必须留在本地。</p>
+            </div>
+          </div>
+
+          <div class="lab-panel">
+            <div class="lab-canvas-wrap">
+              <canvas id="labCanvas" aria-label="延迟跟踪实验：目标点左右往返，手按设定延迟跟随"></canvas>
+              <div class="lab-legend"><span class="lg-target">目标</span><span class="lg-hand">你的手</span><span class="lg-gap">偏差</span></div>
+            </div>
+            <div class="lab-side">
+              <div class="readout">
+                <div class="ro"><span class="ro-k">环路延迟</span><span class="ro-v"><b id="roLat">52</b><small>ms</small></span></div>
+                <div class="ro"><span class="ro-k">跟踪误差</span><span class="ro-v"><b id="roErr">20</b><small>mm</small></span></div>
+                <div class="ro"><span class="ro-k">状态</span><span class="ro-v"><b id="roState" class="state">跟随</b></span></div>
+              </div>
+              <div class="controls">
+                <label class="slider"><span>采集与滤波 <b id="v1">16</b> ms</span><input type="range" id="s1" min="2" max="40" step="2" value="16"></label>
+                <label class="slider"><span>无线 / 总线 <b id="v2">10</b> ms</span><input type="range" id="s2" min="0" max="60" step="2" value="10"></label>
+                <label class="slider"><span>边缘推理 <b id="v3">14</b> ms</span><input type="range" id="s3" min="2" max="90" step="2" value="14"></label>
+                <p class="fixed">执行反馈固定 12 ms（伺服响应 2 ms + 传感器回读 10 ms）。默认值：250 Hz 采样滑窗 4–8 ms + 滤波、BLE 连接间隔的一半（≈10 ms）、小模型推理 ≈14 ms。</p>
+                <p class="fixed">对照：36 通道 / 5 kHz 的实验室闭环系统实测端到端 90–131 ms；中科院 2025 年的临床系统压到了 100 ms 以内。</p>
+              </div>
+              <p class="verdict" id="labVerdict">和自己的身体差不多：你还没想，手已经到位。</p>
+            </div>
+          </div>
+
+          <p class="after">所以真实的增强系统会把“反射”下沉到本地——就像脊髓不等大脑批准。云端只负责慢的那部分：策略、地图、记忆。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 10 实验二 断链 ============ -->
+    <section class="slide" data-title="实验二 · 断链">
+      <div class="lab alt">
+        <div class="lab-inner">
+          <p class="eyebrow">04 / 实验二 · 断链</p>
+          <h2 class="serif">六层里，<br><em>最怕断的不是大脑</em></h2>
+          <div class="prose narrow">
+            <p>我们习惯以为最关键的是决策层。但真实的失效，多发生在连接处：电极脱落、线缆松脱、电池耗尽、无线丢包。</p>
+            <p>点一层，把它拆掉。看这套系统还剩下什么。</p>
+          </div>
+
+          <div class="purpose">
+            <div class="p-item">
+              <h5>这个实验想干什么</h5>
+              <p>检验分层设计最核心的那个承诺：故障会被关在一层里，不会顺着线传上去把整机拖垮。六个层一个个拔掉，看谁的窟窿能补、谁补不了。</p>
+            </div>
+            <div class="p-item">
+              <h5>怎么玩</h5>
+              <p>点上方 L1–L6 任意一层。卡片会给出这段断链的“症状 / 后果 / 谁接管”，以及剩余能力条——这条越短，说明这一层越没有下层兜底。</p>
+            </div>
+            <div class="p-item">
+              <h5>它证明了什么</h5>
+              <p>越往下断，越有人兜：模块死了重启，信号飘了就用缓存和阻抗监测。越往上断，越没人接管：体系断了退回纯生物，任务断了反而“一切正常、只剩方向错了”。最危险的失效不是停摆，是还在跑、但跑的不是这件事。</p>
+            </div>
+          </div>
+
+          <div class="break-wrap">
+            <div class="break-picker" id="breakPicker" role="tablist" aria-label="选择要断掉的一层"></div>
+            <div class="break-card">
+              <div class="break-head">
+                <span class="break-layer" id="bLayer">任务</span>
+                <span class="break-left">剩余能力 <b id="bLeft">100</b>%</span>
+              </div>
+              <div class="break-meter"><span id="bMeter"></span></div>
+              <div class="break-grid">
+                <div><h4>症状</h4><p id="bSymptom"></p></div>
+                <div><h4>后果</h4><p id="bEffect"></p></div>
+                <div><h4>谁接管</h4><p id="bTaker"></p></div>
+              </div>
+            </div>
+          </div>
+
+          <p class="after">这就是分层设计的意义：故障被关在一层里，上面五层还能继续工作。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 11 实验三 配置 ============ -->
+    <section class="slide" data-title="实验三 · 配置">
+      <div class="builder">
+        <div class="lab-inner">
+          <p class="eyebrow">05 / 实验三 · 配置</p>
+          <h2 class="serif">给自己<br><em>配一台</em></h2>
+          <div class="prose narrow">
+            <p>每一层其实只有一个旋钮是真的：你愿意用多少<em>侵入性</em>，换多少<em>实时性</em>。</p>
+            <p>下面三种组合是常见的原型。点一下，换成你自己的。</p>
+          </div>
+
+          <div class="purpose">
+            <div class="p-item">
+              <h5>这个实验想干什么</h5>
+              <p>把前面拆了半天的六层，重新压回一个人的身体上：不是问你“能做到多少”，而是问你“愿意付多少”。侵入性、实时性、续航、负重，这四样东西不可能同时拿满。</p>
+            </div>
+            <div class="p-item">
+              <h5>怎么玩</h5>
+              <p>五类各三个选项——接口、传输、决策、能源、执行。也可以直接点三个预设原型。每次改动，右边的延迟、带宽、续航、重量、功耗、侵入性和雷达形状都会立刻重算。</p>
+            </div>
+            <div class="p-item">
+              <h5>它证明了什么</h5>
+              <p>想要 20 毫秒的直觉级响应，就得准备开颅或背上两公斤；想要轻、安全、不开刀，就得接受延迟和带宽的折扣。每一种组合都有一句“代价”结语，因为系统工程的工作不是找最优解，而是把代价说清楚摆在台面上。</p>
+            </div>
+          </div>
+
+          <div class="presets" id="presets"></div>
+
+          <div class="build-grid">
+            <div class="build-choices" id="buildChoices"></div>
+            <div class="build-result">
+              <div class="radar-wrap"><svg class="radar" id="radar" viewBox="0 0 320 320" role="img" aria-label="配置方案的五维评分"></svg></div>
+              <div class="build-nums" id="buildNums"></div>
+              <p class="build-verdict" id="buildVerdict"></p>
+            </div>
+          </div>
+
+          <p class="after">没有最优解，只有配得上的代价。系统工程的工作，是把代价说清楚，而不是把它藏起来。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 12 收束 ============ -->
+    <section class="slide" data-title="收束">
+      <div class="chapter close">
+        <p class="eyebrow">06 / 收束</p>
+        <h2 class="serif">六层不是抽屉，<em>是一条线</em></h2>
+        <div class="prose">
+          <p>拆到最后会发现，生物与机器并不各占三层。它们共用同一条环路：你的视网膜和摄像头并排取样，你的脊髓和边缘芯片同时做短路判断，你的肌肉和外骨骼一起收缩。</p>
+          <p>分层只是为了让工程师能在图上指着一个方框说“问题在这里”。真正难的部分不在任何一层，而在层与层之间：信号要翻译、时钟要对齐、失效要隔离、人要能随时接管。</p>
+          <p>所以“增强”不是把机器装上人体，是把两套本来独立演化的系统，重新调成同一个节拍。</p>
+        </div>
+        <p class="pull serif">人不是被替换，<br>是被扩展——<br>前提是这条线不断。</p>
+      </div>
+    </section>
+
+    <!-- ============ 13 数据与来源 ============ -->
+    <section class="slide" data-title="数据与来源">
+      <div class="chapter src">
+        <p class="eyebrow">07 / 数据与来源</p>
+        <h2 class="serif">每个数字<br><em>都能对上一个型号</em></h2>
+        <div class="prose">
+          <p>这一节只有一个用途：让你能核对。页面里出现的功耗、重量、延迟、带宽、续航，逐条对应到下面某个器件的数据手册、厂商规格页，或一篇公开实测的论文与审评文件。对不上型号的数字，页面里不放。</p>
+        </div>
+
+        <table class="src-table">
+          <thead><tr><th>页面里的数字</th><th>依据</th><th>出处</th></tr></thead>
+          <tbody>
+            <tr><td>脑电前端 45 mW / 8 通道</td><td>ADS1299 每通道 5 mW 典型值，8 通道 40 mW，加外围与 LDO 取 45 mW</td><td>TI SBAS499 数据手册</td></tr>
+            <tr><td>无创 16 通道只有 0.05 Mbps</td><td>Cyton+Daisy 的 16 通道受无线带宽限制只能跑到 125 Hz（8 通道才是 250 Hz）；16 × 24 bit × 125 Hz ≈ 48 kbps</td><td>OpenBCI 官方文档与论坛</td></tr>
+            <tr><td>蓝牙 6 mW</td><td>nRF52840 在 BLE 1 Mbps 发射时 16.4 mA，连接态平均约 1.1 mA，按 3 V 折算约 3–6 mW</td><td>Nordic Semiconductor</td></tr>
+            <tr><td>FPGA 1.6 W / 26 g</td><td>XC7A35T 轻载设计 &lt;0.5 W，典型设计约 1.6 W，满载 2–3 W；取典型值</td><td>AMD Artix-7 / 第三方选型手册</td></tr>
+            <tr><td>IMU 3 mW</td><td>BMI270 满 ODR 功耗 685 µA，3 V 下约 2 mW，取 3 mW 含接口开销</td><td>Bosch Sensortec</td></tr>
+            <tr><td>植入 96 通道 46 Mbps</td><td>96 通道 × 30 kSPS × 16 bit ≈ 46 Mbps，对应 Utah / Blackrock 级皮层阵列的常规采样率</td><td>皮层阵列公开规格</td></tr>
+            <tr><td>外骨骼关节 25 W / 1.45 kg</td><td>实测：行走时每髋关节约 25 W、每膝关节约 27 W，四关节整机 117 W，整机 12 kg</td><td>Farris et al., 2011（下肢动力矫形器实测）</td></tr>
+            <tr><td>康复外骨骼续航 2.9 h</td><td>官方审评文件：主电池单次充电可连续行走 2 h 以上，另有备用电池 +15 min</td><td>FDA De Novo, ReWalk, DEN130034</td></tr>
+            <tr><td>小电池包 18.5 Wh / 190 g</td><td>21700 锂电芯约 250 Wh/kg：2 节 = 17.6 Wh / 140 g，加 BMS 与外壳取 190 g</td><td>电芯规格（能量密度量级）</td></tr>
+            <tr><td>固定 12 ms 执行反馈</td><td>外骨骼电机官方响应时间 2 ms + 传感器回读约 10 ms</td><td>Hypershell M-One 规格</td></tr>
+            <tr><td>实验室闭环 90–131 ms</td><td>36–72 通道、5–100 kHz 的实时脑电系统，实测系统延迟最低 90 ms、最高 131 ms</td><td>Closed-loop feedback system delay, 2021</td></tr>
+            <tr><td>100 ms 是“好用”的门槛</td><td>采集缓冲就要 20–30 ms；闭环 BCI 端到端应保持在 200 ms 以内，理想约 100 ms</td><td>Frontiers in Human Neuroscience, 2026</td></tr>
+            <tr><td>首屏 0.180 s</td><td>人体自然神经环路传导时间约 0.2 s；把链路压到本地的临床系统端到端可低于 100 ms</td><td>中国科学院 2025 年脑机接口临床进展报道</td></tr>
+            <tr><td>雷达的“带宽”轴按对数取分</td><td>0.04 Mbps（16 通道脑电的刚够）记 0 分，10 Mbps（植入级阵列的门槛）记满分，中间取对数；线性打分会让 0.04 与 1.4 看起来差不多</td><td>由上两行带宽数据推出</td></tr>
+            <tr><td>全部模块点亮 29.0 W / 2.43 kg</td><td>第 06 层 20 个硬件模块逐项相加，含外壳、线缆、关节与电池</td><td>本页数据层逐项求和</td></tr>
+          </tbody>
+        </table>
+
+        <p class="src-note">仍然要承认三件事：一、器件功耗是数据手册的典型值，真实板级功耗会高出 10–30%；二、外骨骼、刺激器这类执行部件的重量包含结构件分摊，不同产品差别很大；三、延迟实验是一个简化的一维跟踪模型，它演示的是相位滞后的后果，不是某个具体产品的实测曲线。</p>
+      </div>
+    </section>
+
+    <!-- ============ 14 结尾 ============ -->
+    <section class="slide" data-title="结尾">
+      <div class="chapter">
+        <p class="eyebrow">参考与说明</p>
+        <h2 class="serif">关于这份作业</h2>
+        <div class="prose">
+          <p>系统工程课程作业：机器增强的人机混合神经系统的分层结构拆解。六层命名为系统工程通用分层（Mission / SoS / Vehicle / System / Subsystem / Module）。</p>
+          <p>所有数字都对应到具体型号或公开实测，逐条列在「07 / 数据与来源」。功耗为典型工作功耗（非峰值），重量含外壳、线缆与紧固件分摊。延迟实验是简化的一维跟踪模型：手按设定延迟复现目标历史位置，演示的是相位滞后的后果，不代表某一具体产品的实测曲线。</p>
+          <p>叙事与交互结构参考 The Pudding《Why the super rich are inevitable》(2022)。分层尺度参照 INCOSE 系统工程分层习惯。</p>
+        </div>
+        <p class="pull serif">杨博文 · 吉林大学 · 2026</p>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- 导航 -->
+<nav class="deck-nav" aria-label="幻灯片导航">
+  <button class="nav-btn" id="prevBtn" type="button">← 上一页</button>
+  <span class="page-ind"><b id="curPage">1</b> / <span id="totalPage">15</span></span>
+  <button class="nav-btn" id="nextBtn" type="button">下一页 →</button>
+</nav>
+<div class="deck-dots" id="dots" aria-hidden="true"></div>
+
+<script src="data.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
