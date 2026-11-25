@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>从六层拆解到风险场景 · 小组系统工程作业串讲</title>
+<meta name="description" content="四份系统工程作业串讲：六层架构 → 需求规范 → 架构与安全分析 → 场景分层与风险。网页演示稿，内嵌可手动播放的无声动画。">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+
+<!-- 顶部状态条：进度 / 章节 / 全屏 -->
+<header class="hud">
+  <div class="hud-left">
+    <span class="hud-mark">Arm-Rehab</span>
+    <span class="hud-sub">系统工程小组作业 · 串讲演示</span>
+  </div>
+  <div class="hud-center">
+    <div class="progress"><span id="progressBar"></span></div>
+    <span id="pageLabel" class="page-label">01 / 18</span>
+  </div>
+  <div class="hud-right">
+    <button id="btnFull" class="hud-btn" title="全屏（F）">⛶ 全屏</button>
+  </div>
+</header>
+
+<!-- 翻页按钮 -->
+<button id="btnPrev" class="nav-arrow prev" title="上一页（←）">‹</button>
+<button id="btnNext" class="nav-arrow next" title="下一页（→）">›</button>
+
+<!-- 幻灯片画布 -->
+<main id="stage" class="stage">
+  <section class="slide dark" data-title="封面">
+    <div class="slide-inner center">
+      <p class="eyebrow light">Systems Engineering · Group Review · 2026</p>
+      <h1 class="serif big">从一次抬手，<br>到一套<span class="hl-purple">康复训练系统</span></h1>
+      <p class="lede light">四份作业串讲：六层架构 → 需求规范 → 架构与安全分析 → 场景分层与风险场景。<br>实例：面向脑卒中后上肢运动功能障碍患者的混合辅助训练系统（Arm-Rehab）。</p>
+      <div class="meta-row">
+        <span>杨博文 · 吉林大学</span>
+        <span class="dot-sep"></span>
+        <span>约 15 分钟</span>
+        <span class="dot-sep"></span>
+        <span>4 份作业 · 19 页</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="我们讲什么">
+    <div class="slide-inner">
+      <p class="eyebrow">Overview · 本次串讲的主线</p>
+      <h2 class="serif">四份作业，回答同一个系统的四个问题</h2>
+      <div class="grid four">
+        <div class="card">
+          <div class="card-no purple">作业 1</div>
+          <h3>系统怎么拆？</h3>
+          <p>机器增强的人机混合神经系统，按任务—体系—整机—系统—子系统—模块六层拆解。</p>
+        </div>
+        <div class="card">
+          <div class="card-no green">作业 2</div>
+          <h3>业务上要什么？</h3>
+          <p>BRS 业务需求与 StRS 系统需求对照：使命、约束、ConOps、OpsCon 与可测试条目。</p>
+        </div>
+        <div class="card">
+          <div class="card-no orange">作业 3</div>
+          <h3>由谁分工、怎么不出事？</h3>
+          <p>SyRS 系统需求、初始架构与控制框图，用 STPA 推出不安全控制动作与安全需求。</p>
+        </div>
+        <div class="card">
+          <div class="card-no purple">作业 4</div>
+          <h3>在什么条件下跑、会出什么险？</h3>
+          <p>场景分层、运行设计条件、典型训练回合与风险场景清单，回挂作业 3 的安全结论。</p>
+        </div>
+      </div>
+      <p class="foot-note">四份作业不是四份孤立文档：后一份以前一份的结论为输入，逐层把抽象系统落到可描述、可验证的整机实例。</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-title="系统实例">
+    <div class="slide-inner split">
+      <div class="col-text">
+        <p class="eyebrow light">System Instance · 贯穿四份作业的实例</p>
+        <h2 class="serif">上肢康复<br>混合辅助训练系统</h2>
+        <p class="lede light">患者为脑卒中后单侧上肢偏瘫。生物通道保留残存的神经控制与本体感觉；人工通道由肌电采集、边缘决策、外骨骼 / 功能电刺激执行与触觉反馈构成，两路在训练任务中并行融合。</p>
+        <ul class="ticks light">
+          <li>感知端：臂环干 / 湿电极采肌电，配 IMU 关节角度、皮温、心率</li>
+          <li>决策端：本地完成意图分类、置信度评估与生物—机器仲裁</li>
+          <li>执行端：外骨骼助力、电刺激补偿收缩、触觉 / 力反馈回传</li>
+          <li>监护端：独立旁路并行监视越界，不串联主链路</li>
+        </ul>
+      </div>
+      <div class="col-media">
+        <div class="anim-frame" data-anim="dual-track" data-caption="双轨并行：生物通道与人工通道在感知—决策—执行三段融合"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 作业 1 ============ -->
+  <section class="slide" data-title="作业1 · 问题">
+    <div class="slide-inner">
+      <p class="eyebrow">Assignment 1 · 结构拆解</p>
+      <h2 class="serif">脑机接口不是一根线，<br>是一座六层的楼</h2>
+      <div class="grid two">
+        <div class="prose">
+          <p>大多数人想象的脑机接口，是一根线插进大脑。真实的系统不长那样：电极只是最底下的一枚模块，它上面还压着子系统、系统、整机、体系，一路压到"这个系统到底为谁存在"。</p>
+          <p>作业 1 不做罗列，做拆解：把一个抬手动作按工程系统的分层语法重写一遍，再把机器增强件一层层塞回去，看它在哪一层改写了原来的答案。</p>
+        </div>
+        <div class="callout">
+          <h4>分层不是为了分类，是为了定位故障</h4>
+          <p>每一层都替上一层承担一件事；任何一层塌了，上面那层就得改口。拆到最底层，问题才能落到一枚可采购、可贴片、可烧固件的模块上。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业1 · 六层结构">
+    <div class="slide-inner split">
+      <div class="col-text narrow">
+        <p class="eyebrow">Six Layers · 逐层缩小的责任范围</p>
+        <h2 class="serif">六层，从一生到一枚芯片</h2>
+        <p class="prose">分层对应的不是尺寸，是责任范围：从一个人的一生，到一枚芯片的针脚。下面这张动画会按从粗到细的顺序把六层点亮。</p>
+      </div>
+      <div class="col-media">
+        <div class="anim-frame" data-anim="six-layers" data-caption="L1 任务 → L6 模块：责任范围逐层收窄"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业1 · 环路延迟实验">
+    <div class="slide-inner split">
+      <div class="col-text">
+        <p class="eyebrow">Experiment 1 · 环路延迟</p>
+        <h2 class="serif">把延迟调到 120 毫秒，<br>手开始不听话</h2>
+        <p class="prose">人体本体感觉闭环约 20–40 ms；任何一条"采集 → 无线 → 推理 → 驱动"链路都会把这个数字成倍放大。动画复现了目标、指针与偏差的跟随过程：观察延迟增大时状态如何从跟随滑向滞后、过冲、振荡。</p>
+        <ul class="ticks">
+          <li>60 ms 以内：机器的手和人体差不多快</li>
+          <li>超过 100 ms：快速动作开始画弧</li>
+          <li>145 ms 以上：环路自身振荡——越纠正越抖</li>
+        </ul>
+        <p class="foot-note">结论：反射必须下沉到本地；云端只负责慢的那部分——策略、地图、记忆。</p>
+      </div>
+      <div class="col-media">
+        <div class="anim-frame" data-anim="loop-delay" data-caption="闭环跟随动画：紫点为目标，墨绿指针为手，橙线为偏差"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业1 · 断链与配置">
+    <div class="slide-inner">
+      <p class="eyebrow">Experiment 2 & 3 · 断链与配置</p>
+      <h2 class="serif">最怕断的不是大脑；最优解不存在，只有配得上的代价</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>断链：故障要被关在一层里</h3>
+          <p>越往下断，越有人兜：模块死了重启，信号飘了用缓存和阻抗监测。越往上断，越没人接管：体系断了退回纯生物模式；任务断了反而"一切正常，只剩方向错了"。</p>
+          <p class="tag">最危险的失效不是停摆，是还在跑、但跑的不是这件事。</p>
+        </div>
+        <div class="card">
+          <h3>配置：一个真旋钮是侵入性换实时性</h3>
+          <p>接口、传输、决策、能源、执行五类各有取舍。想要 20 ms 直觉级响应，就得准备开颅或背上两公斤；想要轻、安全、不开刀，就得接受延迟与带宽的折扣。</p>
+          <p class="tag">系统工程的工作不是找最优解，而是把代价说清楚摆在台面上。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 作业 2 ============ -->
+  <section class="slide" data-title="作业2 · 需求总览">
+    <div class="slide-inner">
+      <p class="eyebrow">Assignment 2 · 需求规范 BRS & StRS</p>
+      <h2 class="serif">BRS 判断值不值得做，<br>StRS 判断这一版能不能测过</h2>
+      <div class="grid three">
+        <div class="card stat">
+          <div class="stat-num">4</div>
+          <div class="stat-label">条业务约束 BC</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-num">3</div>
+          <div class="stat-label">条业务性能 BP</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-num">8 + 12</div>
+          <div class="stat-label">条功能需求 / 安全与约束</div>
+        </div>
+      </div>
+      <p class="prose narrow">BRS 从使命、业务约束、运营概念（ConOps）、运行概念（OpsCon）出发，把患者诉求、治疗师临床约束、监管合规要求整理成业务层面的需求；StRS 再拆成可设计、可测试、可追溯的条目，覆盖功能、性能、接口、安全与设计约束。</p>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业2 · 业务使命与约束">
+    <div class="slide-inner split">
+      <div class="col-text">
+        <p class="eyebrow">BRS · 使命与硬边界</p>
+        <h2 class="serif">守住生命底线，<br>才谈得上辅助</h2>
+        <div class="stack">
+          <div class="mini"><span class="mini-k">基础业务</span>守住生命底线：训练全程保障心率、血压、呼吸、体温稳定，是其余辅助功能的前置条件。</div>
+          <div class="mini"><span class="mini-k">原生业务</span>延续残存感知—行动闭环：保护患者残存通路本身，而不是绕开它直接控制肢体。</div>
+          <div class="mini"><span class="mini-k">增强业务</span>代偿上肢功能缺失：补足抓握、伸展缺口；辅助是叠加项，不是替代项。</div>
+        </div>
+      </div>
+      <div class="col-media">
+        <div class="card">
+          <h4>四条业务硬边界 BC-1 ~ BC-4</h4>
+          <ul class="ticks">
+            <li>训练安全优先级最高</li>
+            <li>控制权可切换，人拥有最高否决权</li>
+            <li>满足医用生物相容性与电磁兼容规范</li>
+            <li>不破坏人体原有神经自主调节机制</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业2 · 运营与运行概念">
+    <div class="slide-inner split">
+      <div class="col-text">
+        <p class="eyebrow">ConOps / OpsCon · 业务怎么用</p>
+        <h2 class="serif">先讲场景构想，<br>再讲一回合时序</h2>
+        <p class="prose"><strong>ConOps</strong> 回答"在什么场景、由谁、为了什么目的使用"，不写单次时序；<strong>OpsCon</strong> 回答一次完整训练回合里信号从哪来、到哪去、谁兜底。</p>
+        <p class="prose">主例为康复代偿场景：治疗师设定安全边界与辅助参数，患者在诊室、社区站或居家日常使用，运维技师负责校准与故障处理；辅助等级随康复阶段调整。健康人员高危作业的能力增强场景作为对照边界，安全约束不可互相套用。</p>
+      </div>
+      <div class="col-media">
+        <div class="anim-frame" data-anim="opscon-loop" data-caption="OpsCon 一回合：感知采集 → 混合决策 → 双路输出 → 执行反作用 → 闭环回采，监护旁路并行"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 作业 3 ============ -->
+  <section class="slide" data-title="作业3 · SyRS 需求规格">
+    <div class="slide-inner">
+      <p class="eyebrow">Assignment 3 · 需求分析与架构定义</p>
+      <h2 class="serif">从系统需求，到安全架构</h2>
+      <div class="grid four small">
+        <div class="card stat"><div class="stat-num">10</div><div class="stat-label">功能需求 FR</div></div>
+        <div class="card stat"><div class="stat-num">7</div><div class="stat-label">性能需求 PR</div></div>
+        <div class="card stat"><div class="stat-num">7</div><div class="stat-label">接口需求 IR</div></div>
+        <div class="card stat"><div class="stat-num">12</div><div class="stat-label">安全需求 SSR</div></div>
+      </div>
+      <p class="prose narrow">SyRS 依据 ISO/IEC/IEEE 29148:2018 大纲组织：把作业 2 的 StRS 上升为系统级需求，补齐可用性、运行、模式状态、物理与法规条目。关键定量口径：意图识别端到端延迟 ≤ 200 ms；安全保护响应 ≤ 50 ms；连续工作 8 h 无单点失效。</p>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业3 · 模式与状态">
+    <div class="slide-inner split">
+      <div class="col-text">
+        <p class="eyebrow">Modes & States · 系统在什么状态下做什么</p>
+        <h2 class="serif">七种状态，<br>逐级降级到无增强</h2>
+        <ul class="ticks">
+          <li><strong>自检待机</strong>：上电佩戴后查阻抗、电量、传感器；未通过不进训练</li>
+          <li><strong>主动辅助</strong>：识别稳定后按意图输出助力，监护旁路监视</li>
+          <li><strong>有限辅助</strong>：置信度不足时只给提示与有限助力</li>
+          <li><strong>纯自主</strong>：执行输出全部断开，保留被动支撑与无源保护</li>
+          <li><strong>告警降级 / 故障安全 / 维护校准</strong>：递进响应，默认回无增强状态</li>
+        </ul>
+      </div>
+      <div class="col-media">
+        <div class="anim-frame" data-anim="state-flow" data-caption="状态流转：自检待机 → 主动辅助，异常时逐级降级到纯自主 / 故障安全"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业3 · 架构与 STPA">
+    <div class="slide-inner split">
+      <div class="col-text">
+        <p class="eyebrow">Architecture & STPA · 谁分工，失效时如何避免伤人</p>
+        <h2 class="serif">双轨并行的控制架构，<br>用 STPA 推出安全需求</h2>
+        <p class="prose">架构沿用作业 1 的六层分解，整机内部按六大功能系统分家：感知、信息传输、决策与控制、执行与运动、能源与代谢、安全与监护，每个系统都是"生物做法 + 机器做法"双轨。</p>
+        <p class="prose">STPA 先界定损失与危险，再识别不安全控制动作（UCA），反向派生安全需求（SSR）：硬件限幅、信号质量门控、反馈超时冻结、监护周期自检、物理急停硬线直达、变更分级授权留痕等。</p>
+      </div>
+      <div class="col-media">
+        <div class="anim-frame" data-anim="stpa-loop" data-caption="STPA 控制回路：控制器—执行器—被控对象—传感器，监护旁路独立于主链路"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 作业 4 ============ -->
+  <section class="slide" data-title="作业4 · 场景分层">
+    <div class="slide-inner split">
+      <div class="col-text">
+        <p class="eyebrow">Assignment 4 · 场景分析与运行设计</p>
+        <h2 class="serif">从使命层，<br>落到一次交互回合</h2>
+        <p class="prose">场景由粗到细分四层：上层约束下层的目标与边界，下层是上层目标在具体环境中的落点。</p>
+        <div class="stack compact">
+          <div class="mini"><span class="mini-k">S1 使命层</span>康复目标、生活回归与医疗体系</div>
+          <div class="mini"><span class="mini-k">S2 环境层</span>康复科诊室 · 社区康复站 · 家庭居所</div>
+          <div class="mini"><span class="mini-k">S3 任务层</span>评估测量 · 被动助动 · 主动辅助 · 抗阻训练 · 日常代偿</div>
+          <div class="mini"><span class="mini-k">S4 交互层</span>佩戴自检 · 意图采集 · 辅助出力 · 反馈回采 · 记录结束</div>
+        </div>
+      </div>
+      <div class="col-media">
+        <div class="anim-frame" data-anim="scenario-layers" data-caption="场景四层：S1 使命 → S2 环境 → S3 任务 → S4 交互"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业4 · 运行设计条件">
+    <div class="slide-inner">
+      <p class="eyebrow">ODD · 允许正常工作的边界</p>
+      <h2 class="serif">圈定边界：什么人、什么场地、什么性能条件下才允许开练</h2>
+      <div class="grid three">
+        <div class="card">
+          <h3>适用人群</h3>
+          <p>成年脑卒中后单侧上肢偏瘫，认知可配合；皮肤无破损、无急性关节损伤；血压心率在医师评估允许区间。</p>
+        </div>
+        <div class="card">
+          <h3>场地与设备</h3>
+          <p>平整防滑地面、稳固座椅、周边无尖锐障碍；电极阻抗合格、传感器在校准有效期内；电量与冗余链路满足本次训练。</p>
+        </div>
+        <div class="card">
+          <h3>性能边界</h3>
+          <p>助力力矩、角度与速度限在硬件安全限幅内；识别延迟 ≤ 200 ms，保护响应 ≤ 50 ms；单次训练 ≤ 30 min，超出即提示休息降载。</p>
+        </div>
+      </div>
+      <p class="foot-note">人员状态同样在边界内：患者须警觉可配合、无疼痛或痉挛；治疗师掌握处方与限幅；居家家属了解急停位置，不擅自调整阈值。</p>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业4 · 典型回合">
+    <div class="slide-inner">
+      <p class="eyebrow">Typical Scenario · 居家主动辅助抓握训练</p>
+      <h2 class="serif">一个训练回合，五步走完</h2>
+      <div class="anim-frame wide" data-anim="grasp-turn" data-caption="典型回合：佩戴自检 → 意图采集 → 混合仲裁出力 → 反馈回采监视 → 结束安全退出"></div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="作业4 · 风险场景">
+    <div class="slide-inner">
+      <p class="eyebrow">Hazard Register · 边界被突破后会发生什么</p>
+      <h2 class="serif">八条风险场景，回挂作业 3 的安全需求</h2>
+      <div class="risk-table">
+        <div class="risk-row head"><span>编号</span><span>触发场景 / 诱因</span><span>可能后果</span><span>等级</span><span>缓解措施 · 关联 SSR</span></div>
+        <div class="risk-row"><span>RS-1</span><span>肌力偏弱时意图被高估，助力超关节承受范围</span><span>牵拉、软组织损伤或疼痛加重</span><span class="lv high">高</span><span>硬件限幅 + 越限切断；低置信度转辅助 / 原生</span></div>
+        <div class="risk-row"><span>RS-2</span><span>出汗、电极滑动或肌电伪迹导致识别漂移</span><span>输出非意图动作，方向或幅度错误</span><span class="lv high">高</span><span>信号质量门控；双通道冗余与毫秒级切换</span></div>
+        <div class="risk-row"><span>RS-3</span><span>反馈缺失或超时，系统仍按有反馈状态出力</span><span>动作过冲、振荡，偏离目标轨迹</span><span class="lv mid">中</span><span>反馈超时冻结输出，保持安全位姿</span></div>
+        <div class="risk-row"><span>RS-4</span><span>监护旁路失效且未被发现，越界后无保护介入</span><span>危险输出持续到主链路察觉，伤害扩大</span><span class="lv high">高</span><span>监护周期自检、失效显性告警，独立于主链路</span></div>
+        <div class="risk-row"><span>RS-7</span><span>急停请求被软件拦截或延迟执行</span><span>紧急情况下无法立刻切断增强输出</span><span class="lv high">高</span><span>物理急停硬线直达切断回路，不经软件与无线</span></div>
+      </div>
+      <p class="foot-note">其余 RS-5（低电量 / 温升）、RS-6（未授权改阈值）、RS-8（居家障碍 / 座椅不稳）对应分级降载、分级授权留痕与场地检查清单。</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-title="串讲收束">
+    <div class="slide-inner center">
+      <p class="eyebrow light">Synthesis · 四份作业串成一条线</p>
+      <h2 class="serif big">分层只是为了在图上<br>指着一个方框说：<span class="hl-orange">问题在这里</span></h2>
+      <p class="lede light">作业 1 把系统拆到可定位故障的层级；作业 2 把业务诉求写成可追溯的需求；作业 3 定下分工架构并用 STPA 守住安全底线；作业 4 回到场景与边界，核对这些安全结论在真实回合里是否覆盖得住。</p>
+      <div class="chain">
+        <span>六层架构</span><i>→</i><span>需求规范</span><i>→</i><span>架构与安全</span><i>→</i><span>场景与风险</span>
+      </div>
+      <p class="lede light small">真正难的部分不在任何一层，而在层与层之间：信号要翻译、时钟要对齐、失效要隔离、人要能随时接管。</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-title="结束页">
+    <div class="slide-inner center">
+      <p class="eyebrow light">Thank You</p>
+      <h1 class="serif big">人不是被替换，<br>是被扩展——<span class="hl-purple">前提是这条线不断</span>。</h1>
+      <p class="lede light">杨博文 · 吉林大学 · 系统工程小组作业 1–4 串讲</p>
+      <div class="meta-row">
+        <span>作业 1 · 六层架构</span><span class="dot-sep"></span>
+        <span>作业 2 · BRS & StRS</span><span class="dot-sep"></span>
+        <span>作业 3 · SyRS 与安全分析</span><span class="dot-sep"></span>
+        <span>作业 4 · 场景与风险</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="hud-bottom">
+  <span id="chapterLabel">封面</span>
+  <span class="hint">← → 翻页 · 空格下一页 · F 全屏 · 点击动画下方播放键手动播放</span>
+</footer>
+
+<script src="deck.js"></script>
+</body>
+</html>
