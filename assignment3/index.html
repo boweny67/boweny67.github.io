@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>从系统需求到安全架构｜机器增强的人机混合神经系统</title>
-<meta name="description" content="小组作业 3：按 ISO/IEC/IEEE 29148:2018 给出系统需求规格书（SyRS）、初始系统架构与控制框图，并基于初始控制结构做 STPA 安全分析，得出安全需求与安全架构。">
+<title>从系统需求到安全架构｜上肢康复混合辅助训练系统</title>
+<meta name="description" content="小组作业 3：以上肢康复混合辅助训练系统为实例，按 ISO/IEC/IEEE 29148:2018 给出系统需求规格书（SyRS）、初始系统架构与控制框图，并基于初始控制结构做 STPA 安全分析，得出安全需求与安全架构。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23faf6ec'/%3E%3Cpath d='M9 21V11h5a4 4 0 0 1 0 8h-2' stroke='%2363388a' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='23' cy='21' r='2.4' fill='%232c6a58'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -242,7 +242,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     <div class="hero-inner">
         <p class="eyebrow">系统工程小组作业 3 · 需求分析与架构定义</p>
         <h1 class="serif">从系统需求<br><em>到安全架构</em></h1>
-        <p class="lede">同一套人机混合神经系统：先按 29148 写 SyRS，再定初始架构与控制框图，最后用 STPA 推出安全需求。</p>
+        <p class="lede">以上肢康复混合辅助训练系统为实例：先按 29148 写 SyRS，再定初始架构与控制框图，最后用 STPA 推出安全需求。</p>
 
         <div class="hero-path">
             <div class="path-step"><span class="idx">01</span><span class="name">SyRS 系统需求规格书</span><span class="note">FR · PR · IR · 模式状态</span></div>
@@ -269,8 +269,8 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     <p class="prose">把作业 2 的 StRS 条目上升为系统级需求，并补齐可用性、运行、模式状态、物理与法规等条目；依据 ISO/IEC/IEEE 29148:2018 的 SyRS 大纲组织。</p>
 
     <div class="sec-head"><span class="no">1.1</span><h3>目的、范围与系统概述</h3></div>
-    <p class="body"><strong>目的</strong>：在维持人体生命稳态的前提下，闭环完成「感知—决策—行动」神经活动；为神经功能受损人群提供感知/运动代偿，为特殊作业环境下的健康人员扩展能力。所有增强功能均可启停、可降级，使用者保留最高否决权。</p>
-    <p class="body"><strong>系统包含</strong>：人体神经信号与体征采集前端、外部多模态传感阵列、边缘混合决策单元、机器执行单元、能源管理单元、旁路式安全监护子系统、参数配置与日志接口。</p>
+    <p class="body"><strong>目的</strong>：在维持患者生命稳态的前提下，闭环完成「感知—决策—行动」训练回路；为上肢偏瘫患者提供运动代偿，辅助其恢复抓握、伸展等自主活动。所有辅助功能均可启停、可降级，患者保留最高否决权。</p>
+    <p class="body"><strong>系统包含</strong>：肌电与体征采集前端、训练环境传感阵列、边缘混合决策单元、外骨骼/电刺激/触觉反馈执行单元、能源管理单元、旁路式安全监护子系统、参数配置与日志接口。</p>
     <p class="body"><strong>系统不包含</strong>：临床诊断与治疗决策（由医师在系统外完成）、云端长期健康档案管理、器件级 BOM 与机械结构详细图纸。</p>
     <p class="body"><strong>系统概述</strong>：系统由生物通道与人工通道双轨并行构成，在感知、决策、执行三段融合。信号流、控制结构与旁路安全机制见第 2 章初始架构与第 3 章控制框图，本节不再重复运行时序描述。</p>
 
@@ -280,11 +280,11 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             <colgroup><col style="width:11%"><col style="width:63%"><col style="width:26%"></colgroup>
             <thead><tr><th>编号</th><th>需求描述</th><th>追溯来源</th></tr></thead>
             <tbody>
-                <tr><td>FR-1</td><td>采集人体原生神经信号（EEG、EMG）与基础生命体征（心率、血氧、体温）</td><td>作业 2 FR-1</td></tr>
-                <tr><td>FR-2</td><td>采集外部环境多模态信号，至少覆盖视觉、听觉、压力与距离四类</td><td>作业 2 FR-2</td></tr>
-                <tr><td>FR-3</td><td>融合生物与机器信号，识别使用者运动意图</td><td>作业 2 FR-3</td></tr>
-                <tr><td>FR-4</td><td>驱动外骨骼、电刺激、触觉反馈等执行单元完成对应增强动作</td><td>作业 2 FR-4</td></tr>
-                <tr><td>FR-5</td><td>支持自动增强、辅助、纯人体原生三种控制模式切换</td><td>作业 2 FR-5</td></tr>
+                <tr><td>FR-1</td><td>采集患者表面肌电（EMG）、关节角度与心率、皮温等基础体征</td><td>作业 2 FR-1</td></tr>
+                <tr><td>FR-2</td><td>采集训练环境多模态信号，至少覆盖接触力、距离、姿态与声响四类</td><td>作业 2 FR-2</td></tr>
+                <tr><td>FR-3</td><td>融合生物与机器信号，识别患者上肢运动意图与发力水平</td><td>作业 2 FR-3</td></tr>
+                <tr><td>FR-4</td><td>驱动外骨骼、功能电刺激、触觉反馈等执行单元完成对应助动动作</td><td>作业 2 FR-4</td></tr>
+                <tr><td>FR-5</td><td>支持被动助动、主动辅助、纯自主三种控制模式切换</td><td>作业 2 FR-5</td></tr>
                 <tr><td>FR-6</td><td>实时监测信号质量与生理指标，越界时触发保护动作并降级</td><td>作业 2 FR-6</td></tr>
                 <tr><td>FR-7</td><td>存储运行日志，支持导出与可视化回放</td><td>作业 2 FR-7</td></tr>
                 <tr><td>FR-8</td><td>提供参数配置入口，阈值与安全边界变更留痕、分级授权</td><td>作业 2 FR-8</td></tr>
@@ -317,7 +317,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             <colgroup><col style="width:11%"><col style="width:22%"><col style="width:67%"></colgroup>
             <thead><tr><th>编号</th><th>接口</th><th>需求描述</th></tr></thead>
             <tbody>
-                <tr><td>IR-1</td><td>生物采集接口</td><td>干/湿电极接入，EEG 与 EMG 共用采集前端，接触面医用级设计</td></tr>
+                <tr><td>IR-1</td><td>生物采集接口</td><td>干/湿电极接入，肌电与体征共用采集前端，接触面医用级设计</td></tr>
                 <tr><td>IR-2</td><td>机器执行接口</td><td>外骨骼动力单元、声光提示、电刺激器采用统一通信协议与供电规范</td></tr>
                 <tr><td>IR-3</td><td>人机交互接口</td><td>触控终端 + 独立物理急停按钮，急停不依赖软件栈</td></tr>
                 <tr><td>IR-4</td><td>数据接口</td><td>日志通用格式导出，可在医师端软件直接读取，不依赖专用上位机</td></tr>
@@ -334,10 +334,10 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             <colgroup><col style="width:18%"><col style="width:30%"><col style="width:34%"><col style="width:18%"></colgroup>
             <thead><tr><th>状态</th><th>进入条件</th><th>系统行为</th><th>退出条件</th></tr></thead>
             <tbody>
-                <tr><td>初始化自检</td><td>上电/佩戴完成</td><td>检查电极阻抗、电量、传感器；未通过不得进入增强</td><td>通过 → 辅助/自动；未通过 → 维护</td></tr>
-                <tr><td>自动增强</td><td>自检通过、参数已配置、识别稳定</td><td>决策单元自动输出增强指令，监护旁路监视</td><td>人切模式 / 越界降级 / 故障</td></tr>
-                <tr><td>辅助</td><td>识别置信度不足或使用者选择</td><td>机器只给提示与有限助力，动作主导权在人体</td><td>回到自动或降为原生</td></tr>
-                <tr><td>纯人体原生</td><td>主动退出或安全切断</td><td>执行输出全部断开，保留被动支撑与无源保护</td><td>重新自检后进入其他模式</td></tr>
+                <tr><td>自检待机</td><td>上电/佩戴完成</td><td>检查电极阻抗、电量、传感器；未通过不得进入训练</td><td>通过 → 训练模式；未通过 → 维护</td></tr>
+                <tr><td>主动辅助</td><td>自检通过、参数已配置、识别稳定</td><td>决策单元按患者意图输出助力指令，监护旁路监视</td><td>人切模式 / 越界降级 / 故障</td></tr>
+                <tr><td>有限辅助</td><td>识别置信度不足或患者选择</td><td>机器只给提示与有限助力，动作主导权在患者</td><td>回到主动辅助或降为纯自主</td></tr>
+                <tr><td>纯自主</td><td>主动退出或安全切断</td><td>执行输出全部断开，保留被动支撑与无源保护</td><td>重新自检后进入其他模式</td></tr>
                 <tr><td>告警降级</td><td>信号异常、体征越界、低电或温升越限</td><td>提示 → 限制增强 → 强制停机递进响应</td><td>异常消除后人工确认恢复</td></tr>
                 <tr><td>故障安全</td><td>主链路失效、双通道丢失、看门狗复位</td><td>默认回无增强状态，执行器保持安全位姿，上报故障码</td><td>检修复位</td></tr>
                 <tr><td>维护/校准</td><td>技师接入</td><td>关闭执行输出，进入标定、模块更换与日志导出</td><td>退出维护并重新自检</td></tr>
@@ -396,7 +396,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 <colgroup><col style="width:16%"><col style="width:24%"><col style="width:28%"><col style="width:32%"></colgroup>
                 <thead><tr><th>系统</th><th>生物通道</th><th>人工通道</th><th>主要子系统</th></tr></thead>
                 <tbody>
-                    <tr><td>感知系统</td><td>眼耳口鼻、皮肤与本体感受器</td><td>红外相机、麦克风阵列、压力传感、IMU/GPS</td><td>视觉、听觉、触觉、本体感觉</td></tr>
+                    <tr><td>感知系统</td><td>皮肤、本体感受器与残存运动神经</td><td>肌电电极、IMU、接触力与姿态传感阵列</td><td>肌电、关节角度、触觉与本体感觉</td></tr>
                     <tr><td>信息传输系统</td><td>传入/传出神经</td><td>无线模块、植入导线、BLE/WiFi</td><td>神经接口、无线传输、有线植入</td></tr>
                     <tr><td>决策与控制系统</td><td>大脑皮层、脊髓反射</td><td>边缘计算单元、AI 推理、云端协同</td><td>信号解扣、混合决策、预测控制</td></tr>
                     <tr><td>执行与运动系统</td><td>骨骼肌、关节</td><td>外骨骼电机、机械驱动、功能电刺激</td><td>驱动、关节控制、多通道反馈</td></tr>
@@ -469,12 +469,12 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 <!-- 前向链路方框（上行） -->
                 <g>
                     <rect class="flow-box" x="40" y="64" width="130" height="80" rx="10"/>
-                    <text class="flow-title" x="105" y="98" text-anchor="middle">外部环境</text>
-                    <text class="flow-sub" x="105" y="118" text-anchor="middle">光 / 声 / 力 / 距离</text>
+                    <text class="flow-title" x="105" y="98" text-anchor="middle">训练环境</text>
+                    <text class="flow-sub" x="105" y="118" text-anchor="middle">台面 · 物体 · 阻力</text>
 
                     <rect class="flow-box" x="215" y="64" width="140" height="80" rx="10"/>
                     <text class="flow-title" x="285" y="98" text-anchor="middle">双轨感知</text>
-                    <text class="flow-sub" x="285" y="118" text-anchor="middle">原生感官 + 机器传感</text>
+                    <text class="flow-sub" x="285" y="118" text-anchor="middle">残存神经 + 传感阵列</text>
 
                     <rect x="400" y="64" width="140" height="80" rx="10" fill="rgba(99,56,138,.07)" stroke="rgba(99,56,138,.45)"/>
                     <text class="flow-title" x="470" y="98" text-anchor="middle">混合决策</text>
@@ -485,7 +485,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                     <text class="flow-sub" x="655" y="118" text-anchor="middle">人体通路 + 机器执行</text>
 
                     <rect class="flow-box" x="770" y="64" width="130" height="80" rx="10"/>
-                    <text class="flow-title" x="835" y="98" text-anchor="middle">人体</text>
+                    <text class="flow-title" x="835" y="98" text-anchor="middle">患者患肢</text>
                     <text class="flow-sub" x="835" y="118" text-anchor="middle">反作用于环境</text>
                 </g>
 
@@ -526,7 +526,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 <g>
                     <rect x="40" y="262" width="170" height="66" rx="10" fill="rgba(194,101,33,.06)" stroke="rgba(194,101,33,.35)"/>
                     <text class="flow-title" x="125" y="289" text-anchor="middle">人在环</text>
-                    <text class="flow-sub" x="125" y="308" text-anchor="middle">使用者 / 医师 / 安全员</text>
+                    <text class="flow-sub" x="125" y="308" text-anchor="middle">患者 / 治疗师 / 家属</text>
                 </g>
                 <g stroke="#c26521" stroke-width="1.3" fill="none">
                     <path d="M40,278 L24,278 L24,34 L470,34 L470,64" marker-end="url(#arrowOrange)"/>
@@ -580,7 +580,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 <colgroup><col style="width:14%"><col style="width:58%"><col style="width:28%"></colgroup>
                 <thead><tr><th>编号</th><th>危险状态</th><th>关联损失</th></tr></thead>
                 <tbody>
-                    <tr><td>H-1</td><td>执行器输出超出人体安全边界（力矩、角度、电流、温度）</td><td>L-1, L-3, L-4</td></tr>
+                    <tr><td>H-1</td><td>执行器输出超出患者安全边界（力矩、角度、电流、温度）</td><td>L-1, L-3, L-4</td></tr>
                     <tr><td>H-2</td><td>控制器基于错误意图或低置信度识别发出动作指令</td><td>L-3, L-1</td></tr>
                     <tr><td>H-3</td><td>反馈缺失、超时或失真，环路滞后、过冲或振荡</td><td>L-3, L-6</td></tr>
                     <tr><td>H-4</td><td>监护失效且未被发现，越界后无保护介入</td><td>L-1, L-2, L-3</td></tr>
@@ -598,8 +598,8 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 <colgroup><col style="width:11%"><col style="width:14%"><col style="width:30%"><col style="width:18%"><col style="width:27%"></colgroup>
                 <thead><tr><th>编号</th><th>控制器</th><th>不安全情形</th><th>类别</th><th>派生约束</th></tr></thead>
                 <tbody>
-                    <tr><td>UCA-1</td><td>决策</td><td>识别置信度不足仍输出主动增强</td><td>② 提供不当动作</td><td>低于阈值转辅助/原生</td></tr>
-                    <tr><td>UCA-2</td><td>执行</td><td>力矩/角度超出人体安全限幅</td><td>② 提供不当动作</td><td>硬件限幅，越限切断</td></tr>
+                    <tr><td>UCA-1</td><td>决策</td><td>识别置信度不足仍输出主动助力</td><td>② 提供不当动作</td><td>低于阈值转有限辅助/纯自主</td></tr>
+                    <tr><td>UCA-2</td><td>执行</td><td>力矩/角度超出患者安全限幅</td><td>② 提供不当动作</td><td>硬件限幅，越限切断</td></tr>
                     <tr><td>UCA-3</td><td>执行</td><td>刺激电流/脉宽超过组织安全上限</td><td>② 提供不当动作</td><td>硬件电流钳位 + 电气隔离</td></tr>
                     <tr><td>UCA-4</td><td>决策</td><td>意图未确认抢先输出，双路冲突未仲裁</td><td>③ 时序/顺序错误</td><td>指令须经仲裁确认</td></tr>
                     <tr><td>UCA-5</td><td>执行</td><td>动作完成后出力仍持续施加</td><td>④ 持续过久</td><td>完成判定/超时自动卸载</td></tr>
@@ -637,8 +637,8 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
                 <colgroup><col style="width:12%"><col style="width:46%"><col style="width:16%"><col style="width:26%"></colgroup>
                 <thead><tr><th>编号</th><th>安全需求</th><th>对应危险</th><th>落实组件</th></tr></thead>
                 <tbody>
-                    <tr><td>SSR-1</td><td>出力/角度/电流硬件限幅，越限即切断增强输出</td><td>H-1, H-5</td><td>执行驱动 + 硬件保护回路</td></tr>
-                    <tr><td>SSR-2</td><td>识别置信度低于阈值禁止主动增强，转入辅助/原生</td><td>H-2</td><td>决策单元 + 规则引擎</td></tr>
+                    <tr><td>SSR-1</td><td>出力/角度/电流硬件限幅，越限即切断助力输出</td><td>H-1, H-5</td><td>执行驱动 + 硬件保护回路</td></tr>
+                    <tr><td>SSR-2</td><td>识别置信度低于阈值禁止主动助力，转入有限辅助/纯自主</td><td>H-2</td><td>决策单元 + 规则引擎</td></tr>
                     <tr><td>SSR-3</td><td>反馈丢失超时冻结输出，保持安全位姿</td><td>H-3</td><td>决策单元 + 监护</td></tr>
                     <tr><td>SSR-4</td><td>监护独立于主链路，周期自检，失效显性告警并进入故障安全</td><td>H-4</td><td>安全监护子系统</td></tr>
                     <tr><td>SSR-5</td><td>接触回路电气隔离，电流硬件钳位，具备漏电检测</td><td>H-5</td><td>采集/刺激前端 + 电源</td></tr>
@@ -663,7 +663,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
             <div class="card" style="--card-c:var(--orange)">
                 <span class="tag">冗余与失效</span>
                 <h4>失效默认安全</h4>
-                <p>双链路物理独立；fail-safe；分级降级：提示 → 限制增强 → 强制停机 → 纯原生；断电时无源机械结构先保证人不摔倒。</p>
+                <p>双链路物理独立；fail-safe；分级降级：提示 → 限制助力 → 强制停机 → 纯自主；断电时无源机械结构先保证人不摔倒。</p>
             </div>
             <div class="card" style="--card-c:var(--green)">
                 <span class="tag">共因隔离</span>
@@ -721,7 +721,7 @@ a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
     <div class="foot-grid">
         <div>
             <h5>关于这份作业</h5>
-            <p>系统工程课程小组作业 3：机器增强的人机混合神经系统的 SyRS、初始架构、控制框图与 STPA 安全分析。需求条目依据 29148:2018 大纲组织。</p>
+            <p>系统工程课程小组作业 3：上肢康复混合辅助训练系统的 SyRS、初始架构、控制框图与 STPA 安全分析。需求条目依据 29148:2018 大纲组织。</p>
         </div>
         <div>
             <h5>方法与口径</h5>

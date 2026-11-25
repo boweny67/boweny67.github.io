@@ -3,294 +3,185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>需求规范 BRS &amp; StRS｜机器增强的人机混合神经系统</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23faf7f2'/%3E%3Cpath d='M9 21V11h5a4 4 0 0 1 0 8h-2' stroke='%23e85d4a' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='23' cy='21' r='2.4' fill='%232a9d8f'/%3E%3C/svg%3E">
+<title>需求规范 BRS &amp; StRS｜上肢康复混合辅助训练系统</title>
+<meta name="description" content="小组作业 2：以上肢康复混合辅助训练系统为实例，从业务使命、业务约束、ConOps/OpsCon 到功能、性能、接口、安全与设计约束，给出可追溯的 BRS 与 StRS 对照。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23faf6ec'/%3E%3Cpath d='M9 21V11h5a4 4 0 0 1 0 8h-2' stroke='%2363388a' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='23' cy='21' r='2.4' fill='%232c6a58'/%3E%3C/svg%3E">
 <style>
-    *{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#f3eee4; --paper2:#eae3d5; --cream:#faf6ec;
+  --ink:#16140f; --ink-2:#4b453a; --muted:#8b8272; --rule:#d9d0bd;
+  --purple:#63388a; --purple-soft:#ac8cc6;
+  --green:#2c6a58; --green-soft:#8ab3a4;
+  --orange:#c26521; --dark:#131109;
+  --serif:"Songti SC","SimSun","STSong","Source Han Serif SC","Noto Serif SC",serif;
+  --sans:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans SC",system-ui,sans-serif;
+  --mono:"SFMono-Regular","Cascadia Mono","Consolas","Menlo",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.noise{position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:.24;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.36'/%3E%3C/svg%3E")}
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--purple);z-index:1000;transition:width .1s linear}
 
-    :root{
-        --cream:#faf7f2;
-        --paper:#ffffff;
-        --ink:#1a1a2e;
-        --ink-70:rgba(26,26,46,.7);
-        --ink-55:rgba(26,26,46,.55);
-        --ink-40:rgba(26,26,46,.4);
-        --line:rgba(26,26,46,.1);
-        --coral:#e85d4a;
-        --sun:#d4a045;
-        --teal:#2a9d8f;
-        --lavender:#9b8de3;
-        --rose:#d4708a;
-        --accent:#e85d4a;
-    }
+.side-nav{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:13px;z-index:100}
+.nav-dot{width:9px;height:9px;border-radius:50%;background:rgba(22,20,15,.14);cursor:pointer;position:relative;transition:all .3s}
+.nav-dot.active,.nav-dot:hover{background:var(--purple);transform:scale(1.7)}
+.nav-dot::after{content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:11px;white-space:nowrap;background:var(--ink);color:var(--cream);padding:3px 9px;border-radius:3px;opacity:0;transition:opacity .25s}
+.nav-dot:hover::after{opacity:1}
 
-    html{scroll-behavior:smooth}
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100vh;background:var(--dark);color:var(--cream);display:flex;align-items:center;justify-content:center;padding:70px 24px 40px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 55% at 50% 8%,rgba(99,56,138,.30),transparent 70%),radial-gradient(60% 40% at 80% 100%,rgba(194,101,33,.14),transparent 70%)}
+.hero-inner{position:relative;width:100%;max-width:880px;margin:0 auto;text-align:left}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
+.hero .eyebrow{color:rgba(250,246,236,.55)}
+.hero h1{font-family:var(--serif);font-size:clamp(38px,6.2vw,74px);line-height:1.14;margin:0 0 26px;letter-spacing:.01em;font-weight:400}
+.hero h1 em{font-style:normal;color:#c8a7e6;display:inline-block}
+.lede{font-size:clamp(15px,1.5vw,18px);color:rgba(250,246,236,.72);max-width:620px;margin:0 0 40px;line-height:1.9}
+.hero-path{display:flex;flex-direction:column;border-top:1px solid rgba(250,246,236,.14)}
+.path-step{display:grid;grid-template-columns:56px 1fr auto;align-items:baseline;gap:16px;padding:17px 4px;border-bottom:1px solid rgba(250,246,236,.14)}
+.path-step .idx{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--purple-soft)}
+.path-step .name{font-family:var(--sans);font-size:17px;color:#f6ecda;letter-spacing:.02em}
+.path-step .note{font-family:var(--mono);font-size:11.5px;color:rgba(250,246,236,.5);letter-spacing:.04em}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.meta-chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:rgba(250,246,236,.72);border:1px solid rgba(250,246,236,.18);border-radius:999px;padding:6px 13px}
+.hero-note{margin:30px 0 0;font-size:14px;line-height:1.8;color:rgba(250,246,236,.62);max-width:620px}
+.signature{margin:30px 0 0;font-size:12px;letter-spacing:.18em;color:rgba(250,246,236,.38)}
 
-    body{
-        font-family:'Georgia','Source Han Serif SC','Noto Serif SC',serif;
-        background:var(--cream);
-        color:var(--ink);
-        line-height:1.75;
-        overflow-x:hidden;
-    }
+/* ---------- SECTIONS ---------- */
+.chapter{max-width:1060px;margin:0 auto;padding:120px 24px 40px}
+.deck,.lab{padding:110px 24px 40px;border-top:1px solid var(--rule);margin-top:60px}
+.deck.alt{background:linear-gradient(180deg,var(--paper),var(--paper2))}
+.deck-head,.lab-inner{max-width:1060px;margin:0 auto}
+h2.serif{font-family:var(--serif);font-size:clamp(28px,3.9vw,44px);line-height:1.35;margin:0 0 26px;letter-spacing:.01em;font-weight:400}
+.em{color:var(--purple);font-style:normal}
+.prose{margin:0 0 20px;color:var(--ink-2);font-size:17.5px;line-height:1.95}
+.prose strong{color:var(--ink);font-weight:700}
+.deck-sub{color:var(--ink-2);max-width:600px;margin:0 0 26px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:46px 0 16px}
+.sec-head .no{font-family:var(--mono);font-size:12px;color:var(--purple);letter-spacing:.1em;flex:none}
+.sec-head h3{font-family:var(--serif);font-size:clamp(20px,2.4vw,26px);font-weight:400;margin:0}
+.sec-note{color:var(--muted);font-size:13.5px;margin:4px 0 18px;font-family:var(--mono);letter-spacing:.02em}
+p.body{font-size:15.5px;color:var(--ink-2);margin-bottom:14px;max-width:74ch;line-height:1.85}
+p.body strong{color:var(--ink);font-weight:700}
+.pull{font-size:clamp(22px,3vw,30px);line-height:1.5;color:var(--ink);margin:64px 0 0;padding-left:22px;border-left:2px solid var(--purple);font-family:var(--serif)}
 
-    .grain{
-        position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.035;
-        background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        background-size:256px 256px;
-    }
-    body::before{
-        content:'';position:fixed;inset:0;z-index:-1;
-        background-image:
-            linear-gradient(rgba(26,26,46,.022) 1px,transparent 1px),
-            linear-gradient(90deg,rgba(26,26,46,.022) 1px,transparent 1px);
-        background-size:48px 48px;
-    }
+/* ---------- CARDS ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+.card{background:var(--cream);border:1px solid var(--rule);border-radius:14px;padding:24px 22px 22px;border-left:3px solid var(--card-c,var(--purple));transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -20px rgba(22,20,15,.35)}
+.card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--card-c,var(--purple));display:block;margin-bottom:10px}
+.card h4{font-family:var(--serif);font-size:19px;font-weight:400;margin-bottom:10px}
+.card p{font-size:14.5px;color:var(--ink-2);line-height:1.75}
+.card ul{list-style:none;margin-top:8px}
+.card ul li{font-size:14px;color:var(--ink-2);padding:5px 0 5px 15px;position:relative;line-height:1.65}
+.card ul li::before{content:'';position:absolute;left:0;top:13px;width:4px;height:4px;border-radius:50%;background:var(--card-c,var(--purple))}
 
-    .progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:1000;transition:width .1s linear}
+/* ---------- REQUIREMENT LIST ---------- */
+.req-list{display:flex;flex-direction:column;border-top:1px solid var(--rule)}
+.req{display:grid;grid-template-columns:84px 1fr;gap:16px;align-items:start;padding:15px 4px 15px 0;border-bottom:1px solid var(--rule);cursor:pointer;transition:background .2s,padding-left .2s}
+.req:hover{background:rgba(255,255,255,.6);padding-left:10px}
+.req-id{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.04em;color:var(--card-c,var(--purple));background:rgba(99,56,138,.07);border-radius:5px;padding:4px 0;text-align:center;margin-top:2px;white-space:nowrap}
+.req-txt{font-size:15px;color:var(--ink-2);line-height:1.72}
+.req-txt b{color:var(--ink);font-weight:700}
 
-    .side-nav{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:13px;z-index:100}
-    .nav-dot{width:9px;height:9px;border-radius:50%;background:rgba(26,26,46,.14);cursor:pointer;position:relative;transition:all .3s}
-    .nav-dot.active,.nav-dot:hover{background:var(--accent);transform:scale(1.7)}
-    .nav-dot::after{
-        content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%);
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;white-space:nowrap;
-        background:var(--ink);color:#fff;padding:3px 9px;border-radius:3px;opacity:0;transition:opacity .25s;
-    }
-    .nav-dot:hover::after{opacity:1}
+/* ---------- FILTER CHIPS ---------- */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 8px}
+.fchip{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;padding:7px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--cream);color:var(--ink-2);cursor:pointer;transition:.18s}
+.fchip:hover{border-color:var(--purple-soft)}
+.fchip.on{background:var(--ink);color:var(--cream);border-color:var(--ink)}
 
-    .hero{padding:120px 24px 70px;text-align:center;position:relative;overflow:hidden}
-    .hero-ghost{
-        position:absolute;left:50%;top:-40px;transform:translateX(-50%);
-        font-family:'Helvetica Neue',Arial,sans-serif;font-weight:900;font-size:clamp(9rem,30vw,22rem);
-        color:transparent;-webkit-text-stroke:1.5px rgba(232,93,74,.11);line-height:1;pointer-events:none;user-select:none;
-    }
-    .hero-inner{position:relative;z-index:1;max-width:860px;margin:0 auto}
-    .eyebrow{
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:.22em;
-        color:var(--ink-40);text-transform:uppercase;margin-bottom:22px;
-    }
-    .hero h1{font-size:clamp(2.1rem,6.2vw,3.9rem);font-weight:700;line-height:1.16;letter-spacing:-.01em}
-    .hero h1 em{font-style:italic;color:var(--coral)}
-    .hero-sub{margin-top:20px;font-size:16px;color:var(--ink-55);font-style:italic}
-    .hero-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:34px}
-    .chip{
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;letter-spacing:.08em;
-        padding:5px 12px;border-radius:2px;border:1px solid var(--line);background:rgba(255,255,255,.6);color:var(--ink-55)
-    }
-    .chip.k{color:var(--coral);border-color:rgba(232,93,74,.28);background:rgba(232,93,74,.05)}
-    .chip.t{color:var(--teal);border-color:rgba(42,157,143,.28);background:rgba(42,157,143,.05)}
+/* ---------- SCENE ---------- */
+.scene{background:var(--cream);border:1px solid var(--rule);border-radius:16px;padding:26px 26px 24px;box-shadow:0 24px 50px -34px rgba(22,20,15,.4);position:relative}
+.scene+.scene{margin-top:16px}
+.scene .letter{position:absolute;right:22px;top:12px;font-family:var(--mono);font-weight:900;font-size:3rem;color:transparent;-webkit-text-stroke:1.2px rgba(22,20,15,.1);line-height:1}
+.scene h4{font-family:var(--serif);font-size:1.15rem;font-weight:400;margin-bottom:4px}
+.scene .who{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:14px}
+.scene p{font-size:14.5px;color:var(--ink-2);line-height:1.75;margin-bottom:10px}
+.scene .meter{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.scene .meter span{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;background:rgba(22,20,15,.05);color:var(--ink-2)}
 
-    .doc{max-width:960px;margin:0 auto;padding:0 24px 60px}
-    .band{margin:0 0 4px;padding-top:26px}
-    .band-label{
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
-        color:var(--band-color,var(--coral));padding-bottom:8px;border-bottom:1px solid var(--band-line,rgba(232,93,74,.22));
-        display:inline-block;margin-bottom:14px;
-    }
-    .band h2{font-size:clamp(1.6rem,4vw,2.5rem);font-weight:700;line-height:1.2;letter-spacing:-.01em}
-    .band h2 span{font-family:'Helvetica Neue',Arial,sans-serif;font-weight:400;font-size:.5em;color:var(--ink-40);letter-spacing:.02em;display:block;margin-top:6px}
-    .band-lead{margin-top:14px;font-size:16px;color:var(--ink-55);font-style:italic;max-width:680px}
+/* ---------- STEPS ---------- */
+.steps{border-left:1px solid var(--rule);margin:18px 0 0 10px;display:grid;gap:0}
+.step{position:relative;padding:0 0 26px 28px}
+.step:last-child{padding-bottom:0}
+.step::before{content:attr(data-i);position:absolute;left:-12px;top:2px;width:23px;height:23px;border-radius:50%;background:var(--cream);border:1px solid var(--purple-soft);color:var(--purple);font-family:var(--mono);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step h4{font-size:15px;font-weight:700;margin-bottom:6px}
+.step p{font-size:14.5px;color:var(--ink-2);line-height:1.72;max-width:70ch}
 
-    .rule{height:1px;background:var(--line);margin:64px 0 0}
+/* ---------- STAKE TABLE ---------- */
+.tbl-wrap{overflow-x:auto;background:var(--cream);border:1px solid var(--rule);border-radius:14px;box-shadow:0 24px 50px -34px rgba(22,20,15,.4);padding:20px 20px 8px;margin-top:8px}
+table.req-table{border-collapse:collapse;width:100%;font-size:13.5px;line-height:1.65}
+.req-table th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);font-weight:600;padding:0 16px 10px 0;border-bottom:1px solid var(--ink);white-space:nowrap}
+.req-table td{padding:12px 16px 12px 0;vertical-align:top;color:var(--ink-2);border-bottom:1px solid var(--rule)}
+.req-table tr:last-child td{border-bottom:none}
+.req-table td:first-child{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.req-table td:nth-child(2){color:var(--ink);font-weight:600}
+.att{font-family:var(--mono);font-size:11.5px;font-weight:700;white-space:nowrap}
+.att.pos{color:var(--green)}.att.neg{color:var(--orange)}
+.lv{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-2);white-space:nowrap}
 
-    h3.sec{
-        font-size:1.22rem;font-weight:700;margin:52px 0 6px;display:flex;align-items:baseline;gap:10px;
-    }
-    h3.sec .no{
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;
-        color:var(--accent);padding:3px 7px;border:1px solid currentColor;border-radius:2px;flex:none;
-    }
-    .sec-note{color:var(--ink-55);font-size:14.5px;margin:4px 0 20px;font-style:italic}
+/* ---------- STAKE NEEDS ---------- */
+.stake-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:20px}
+.stake{background:var(--cream);border:1px solid var(--rule);border-radius:14px;padding:22px 22px 18px;position:relative;border-top:3px solid var(--sc,var(--purple))}
+.stake h4{font-size:15.5px;font-weight:700;margin-bottom:4px}
+.stake .role{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.stake ol{list-style:none;counter-reset:n}
+.stake ol li{counter-increment:n;font-size:14px;color:var(--ink-2);line-height:1.7;padding:3px 0 3px 24px;position:relative}
+.stake ol li::before{content:counter(n);position:absolute;left:0;top:6px;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--sc,var(--purple));width:16px}
 
-    p.body{font-size:15.5px;color:var(--ink-70);margin-bottom:14px;max-width:74ch}
-    p.body strong{color:var(--ink);font-weight:700}
+/* ---------- TRACE ---------- */
+.trace{display:grid;gap:14px;margin-top:10px;padding:26px 22px;background:var(--cream);border:1px solid var(--rule);border-radius:14px}
+.trace-row{display:grid;grid-template-columns:1fr auto 1.4fr;gap:16px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--rule)}
+.trace-row:last-child{border-bottom:none}
+.trace-from{font-size:14px;color:var(--ink);font-weight:700}
+.trace-arrow{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em}
+.trace-to{display:flex;flex-wrap:wrap;gap:6px}
+.trace-to span{font-family:var(--mono);font-size:11px;padding:3px 7px;border-radius:5px;background:rgba(44,106,88,.07);color:var(--green);border:1px solid rgba(44,106,88,.16)}
 
-    .req-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
-    .req{
-        display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:start;
-        padding:14px 4px 14px 0;border-bottom:1px solid var(--line);
-        cursor:pointer;transition:background .2s,padding-left .2s;
-    }
-    .req:hover{background:rgba(255,255,255,.72);padding-left:8px}
-    .req-id{
-        font-family:'SFMono-Regular',Consolas,monospace;font-size:11.5px;font-weight:700;letter-spacing:.04em;
-        color:var(--accent);background:var(--id-bg,rgba(232,93,74,.07));border-radius:2px;
-        padding:4px 0;text-align:center;margin-top:2px;
-    }
-    .req-txt{font-size:15.5px;color:var(--ink-70);line-height:1.72}
-    .req-txt b{color:var(--ink);font-weight:700}
+/* ---------- REFS ---------- */
+.refs{display:grid;gap:0;margin-top:26px;border-top:1px solid var(--rule)}
+.ref{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start;padding:14px 2px;border-bottom:1px solid var(--rule)}
+.ref .rn{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding-top:2px}
+.ref .rt{color:var(--ink);font-weight:700;font-size:14.5px}
+.ref .rd{font-size:13px;color:var(--ink-2);margin-top:4px;line-height:1.62;display:block}
+a.lnk{color:inherit;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(99,56,138,.42);padding-bottom:1px;transition:color .2s,border-color .2s}
+a.lnk:hover{color:var(--purple);border-bottom-color:var(--purple)}
 
-    .toast{
-        position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);
-        background:var(--ink);color:#fff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;
-        padding:10px 18px;border-radius:3px;opacity:0;pointer-events:none;transition:all .28s;z-index:200;
-    }
-    .toast.on{opacity:1;transform:translate(-50%,0)}
+/* ---------- FOOTER ---------- */
+.foot{border-top:1px solid var(--rule);padding:70px 24px 80px;background:var(--paper)}
+.foot-grid{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.foot h5{margin:0 0 12px;font-size:11px;letter-spacing:.16em;color:var(--muted);font-weight:500;font-family:var(--mono)}
+.foot p{margin:0;font-size:13px;line-height:1.85;color:var(--ink-2)}
+.foot-sig{max-width:1060px;margin:56px auto 0;font-size:15px;color:var(--ink);letter-spacing:.06em;font-family:var(--serif)}
+.foot-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.foot-links a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--ink-2);text-decoration:none;border-bottom:1px solid rgba(22,20,15,.16);padding-bottom:2px}
+.foot-links a:hover{color:var(--purple);border-bottom-color:var(--purple)}
 
-    .grid{display:grid;gap:18px}
-    .g2{grid-template-columns:1fr}
-    .g3{grid-template-columns:1fr}
-    .card{
-        background:var(--paper);border:1px solid rgba(26,26,46,.05);border-radius:3px;
-        padding:22px 22px 20px;position:relative;box-shadow:0 2px 14px rgba(26,26,46,.045);
-        transition:transform .25s,box-shadow .25s;
-    }
-    .card::before{content:'';position:absolute;left:0;top:0;height:3px;width:100%;background:var(--card-c,var(--coral))}
-    .card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(26,26,46,.09)}
-    .card h4{font-size:15.5px;font-weight:700;margin-bottom:10px;letter-spacing:.01em}
-    .card p{font-size:14.5px;color:var(--ink-70);line-height:1.72}
-    .card .tag{
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-        color:var(--card-c,var(--coral));display:block;margin-bottom:10px;
-    }
-    .card ul{list-style:none;margin-top:8px}
-    .card ul li{font-size:14px;color:var(--ink-70);padding:5px 0 5px 15px;position:relative;line-height:1.65}
-    .card ul li::before{
-        content:'';position:absolute;left:0;top:13px;width:4px;height:4px;border-radius:50%;background:var(--card-c,var(--coral))
-    }
+.to-top{position:fixed;left:26px;bottom:26px;width:42px;height:42px;border-radius:50%;border:none;background:var(--ink);color:var(--cream);font-size:15px;cursor:pointer;box-shadow:0 4px 16px rgba(22,20,15,.22);opacity:0;visibility:hidden;transition:all .3s;z-index:97}
+.to-top.on{opacity:1;visibility:visible}
+.to-top:hover{background:var(--purple);transform:translateY(-3px)}
+.toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);background:var(--ink);color:var(--cream);font-family:var(--mono);font-size:12.5px;padding:10px 18px;border-radius:3px;opacity:0;pointer-events:none;transition:all .28s;z-index:200}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.on{opacity:1;transform:none}
 
-    .quote{
-        border-left:2px solid var(--coral);padding:14px 0 14px 18px;margin:22px 0;
-        font-size:16px;font-style:italic;color:var(--ink-70);max-width:72ch;
-    }
-
-    .scene{background:var(--paper);border:1px solid rgba(26,26,46,.05);border-radius:3px;padding:26px 24px;box-shadow:0 2px 14px rgba(26,26,46,.045);position:relative}
-    .scene .letter{
-        position:absolute;right:18px;top:10px;font-family:'Helvetica Neue',Arial,sans-serif;font-weight:900;
-        font-size:3.4rem;color:transparent;-webkit-text-stroke:1.2px rgba(26,26,46,.09);line-height:1
-    }
-    .scene h4{font-size:1.02rem;font-weight:700;margin-bottom:4px}
-    .scene .who{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:.1em;color:var(--ink-40);margin-bottom:14px}
-    .scene p{font-size:14.5px;color:var(--ink-70);line-height:1.75;margin-bottom:10px}
-    .scene .meter{
-        display:flex;flex-wrap:wrap;gap:6px;margin-top:14px
-    }
-    .scene .meter span{
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;padding:4px 9px;border-radius:2px;
-        background:rgba(26,26,46,.045);color:var(--ink-55)
-    }
-
-    .steps{border-left:1px solid var(--line);margin:8px 0 0 10px;padding-left:0}
-    .step{position:relative;padding:0 0 26px 26px}
-    .step::before{
-        content:attr(data-i);position:absolute;left:-11px;top:1px;width:22px;height:22px;border-radius:50%;
-        background:var(--cream);border:1px solid rgba(155,141,227,.55);color:var(--lavender);
-        font-family:'SFMono-Regular',Consolas,monospace;font-size:10.5px;font-weight:700;
-        display:flex;align-items:center;justify-content:center
-    }
-    .step h4{font-size:15px;font-weight:700;margin-bottom:6px}
-    .step p{font-size:14.5px;color:var(--ink-70);line-height:1.72;max-width:68ch}
-
-    .tbl-wrap{overflow-x:auto;background:var(--paper);border:1px solid rgba(26,26,46,.07);border-radius:3px;box-shadow:0 2px 14px rgba(26,26,46,.045);margin-top:8px}
-    table{border-collapse:collapse;width:100%;min-width:720px;table-layout:fixed}
-    col.c1{width:6%}col.c2{width:19%}col.c3{width:18%}col.c4{width:17%}col.c5{width:15%}col.c6{width:8%}col.c7{width:9%}col.c8{width:8%}
-    thead th{
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
-        color:var(--ink-55);text-align:left;padding:12px 12px;border-bottom:1px solid var(--line);background:rgba(26,26,46,.018);white-space:nowrap
-    }
-    tbody td{padding:12px;font-size:13.5px;color:var(--ink-70);border-bottom:1px solid rgba(26,26,46,.055);vertical-align:top;line-height:1.62}
-    tbody tr:last-child td{border-bottom:none}
-    tbody td:first-child{font-family:'SFMono-Regular',Consolas,monospace;font-size:12px;color:var(--ink-40)}
-    tbody td:nth-child(2){color:var(--ink);font-weight:700}
-    .att{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;font-weight:700;white-space:nowrap}
-    .att.pos{color:var(--teal)}.att.mid{color:var(--sun)}.att.neg{color:var(--rose)}
-    .lv{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:.06em;color:var(--ink-55);white-space:nowrap}
-
-    .stake-grid{display:grid;gap:16px;margin-top:6px}
-    .stake{background:var(--paper);border:1px solid rgba(26,26,46,.05);border-radius:3px;padding:20px 20px 18px;position:relative;box-shadow:0 2px 14px rgba(26,26,46,.04)}
-    .stake::before{content:'';position:absolute;left:0;top:0;height:3px;width:100%;background:var(--sc,var(--coral))}
-    .stake h4{font-size:15px;font-weight:700;margin-bottom:4px}
-    .stake .role{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-40);margin-bottom:12px}
-    .stake ol{list-style:none;counter-reset:n}
-    .stake ol li{
-        counter-increment:n;font-size:14px;color:var(--ink-70);line-height:1.7;padding:3px 0 3px 22px;position:relative
-    }
-    .stake ol li::before{
-        content:counter(n);position:absolute;left:0;top:6px;font-family:'Helvetica Neue',Arial,sans-serif;
-        font-size:10.5px;font-weight:700;color:var(--sc,var(--coral));width:16px
-    }
-
-    .trace{
-        display:grid;gap:14px;margin-top:10px;padding:26px 22px;
-        background:var(--paper);border:1px solid rgba(26,26,46,.06);border-radius:3px;box-shadow:0 2px 14px rgba(26,26,46,.045)
-    }
-    .trace-row{display:grid;grid-template-columns:1fr;gap:10px;padding:12px 0;border-bottom:1px dashed rgba(26,26,46,.1)}
-    .trace-row:last-child{border-bottom:none}
-    .trace-from{font-size:14px;color:var(--ink-70);font-weight:700}
-    .trace-arrow{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:var(--ink-40);letter-spacing:.1em}
-    .trace-to{display:flex;flex-wrap:wrap;gap:6px}
-    .trace-to span{
-        font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;padding:3px 7px;border-radius:2px;
-        background:rgba(42,157,143,.07);color:var(--teal);border:1px solid rgba(42,157,143,.16)
-    }
-
-    .foot{padding:100px 24px 120px;text-align:center}
-    .foot-q{font-size:clamp(1.25rem,3vw,1.7rem);font-style:italic;max-width:640px;margin:0 auto 26px;line-height:1.5;color:var(--ink-70)}
-    .foot-q::before{content:'"';font-size:3rem;color:var(--coral);vertical-align:-14px;margin-right:6px;line-height:0}
-    .foot-a{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;letter-spacing:.16em;color:var(--ink-40)}
-
-    .to-top{
-        position:fixed;left:26px;bottom:26px;width:42px;height:42px;border-radius:50%;border:none;
-        background:var(--ink);color:#fff;font-size:15px;cursor:pointer;box-shadow:0 4px 16px rgba(26,26,46,.22);
-        opacity:0;visibility:hidden;transition:all .3s;z-index:97
-    }
-    .to-top.on{opacity:1;visibility:visible}
-    .to-top:hover{background:var(--accent);transform:translateY(-3px)}
-
-    .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
-    .rv.on{opacity:1;transform:none}
-
-    /* 行内链接 */
-    a.lnk{
-        color:inherit;font-weight:700;text-decoration:none;
-        border-bottom:1px solid rgba(232,93,74,.42);padding-bottom:1px;
-        transition:color .2s,border-color .2s;
-    }
-    a.lnk:hover{color:var(--coral);border-bottom-color:var(--coral)}
-
-    /* 参考资料 */
-    .refs{display:grid;gap:0;margin-top:26px;border-top:1px solid var(--line)}
-    .ref{
-        display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start;
-        padding:14px 2px;border-bottom:1px solid var(--line);
-    }
-    .ref .rn{font-family:'SFMono-Regular',Consolas,monospace;font-size:11.5px;color:var(--ink-40);padding-top:2px}
-    .ref a{
-        color:var(--ink);text-decoration:none;font-weight:700;font-size:14.5px;
-        border-bottom:1px solid rgba(26,26,46,.2);padding-bottom:1px;
-        transition:color .2s,border-color .2s;word-break:break-word;
-    }
-    .ref a:hover{color:var(--coral);border-bottom-color:var(--coral)}
-    .ref .rd{font-size:13px;color:var(--ink-55);margin-top:4px;line-height:1.62;display:block}
-
-    /* 页脚链接 */
-    .foot-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:24px}
-    .foot-links a{
-        font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;letter-spacing:.1em;
-        color:var(--ink-55);text-decoration:none;
-        border-bottom:1px solid rgba(26,26,46,.16);padding-bottom:2px;
-        transition:color .2s,border-color .2s;
-    }
-    .foot-links a:hover{color:var(--coral);border-bottom-color:var(--coral)}
-
-    @media (min-width:720px){
-        .g2{grid-template-columns:repeat(2,1fr)}
-        .g3{grid-template-columns:repeat(3,1fr)}
-        .stake-grid{grid-template-columns:repeat(2,1fr)}
-        .trace-row{grid-template-columns:1.1fr auto 1.4fr;align-items:center;gap:16px}
-    }
-    @media (max-width:719px){
-        .side-nav{display:none}
-        .req{grid-template-columns:64px 1fr}
-        .hero{padding-top:96px}
-        .doc{padding:0 18px 50px}
-    }
+@media (min-width:720px){.cards{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:980px){.cards,.stake-grid{grid-template-columns:1fr;gap:16px}.foot-grid{grid-template-columns:1fr}}
+@media (max-width:719px){
+  .side-nav{display:none}
+  .chapter,.deck,.lab{padding-left:20px;padding-right:20px}
+  .trace-row{grid-template-columns:1fr;gap:6px}
+  .path-step{grid-template-columns:40px 1fr;row-gap:4px}
+  .path-step .note{grid-column:2}
+  .hero{padding-top:64px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 
-<div class="grain"></div>
+<div class="noise"></div>
 <div class="progress" id="progress"></div>
 
 <nav class="side-nav">
@@ -304,87 +195,77 @@
 </nav>
 
 <header class="hero" id="top">
-    <div class="hero-ghost">02</div>
     <div class="hero-inner">
-        <div class="eyebrow">系统工程小组作业 2 · 需求规范</div>
-        <h1>机器增强的<br><em>人机混合</em>神经系统</h1>
-        <p class="hero-sub">从业务使命到可验证的系统需求——一份 BRS 与 StRS 的对照文档</p>
-        <div class="hero-chips">
-            <span class="chip k">BRS 业务需求规范</span>
-            <span class="chip t">StRS 系统需求规范</span>
-            <span class="chip">8 类相关方</span>
-            <span class="chip">5 类系统需求</span>
-            <span class="chip">29 条需求条目</span>
+        <p class="eyebrow">系统工程小组作业 2 · 需求规范</p>
+        <h1 class="serif">业务说清为什么做，<br><em>系统说清做到什么程度</em></h1>
+        <p class="lede">以「上肢康复混合辅助训练系统」为实例：先写 BRS 业务需求规范，再写 StRS 系统需求规范，两种验收口径逐条对照并给出追溯关系。</p>
+
+        <div class="hero-path">
+            <div class="path-step"><span class="idx">01</span><span class="name">BRS 业务口径</span><span class="note">使命 · 约束 · 业务性能 · 相关方</span></div>
+            <div class="path-step"><span class="idx">02</span><span class="name">ConOps / OpsCon</span><span class="note">运营构想 · 运行回合时序</span></div>
+            <div class="path-step"><span class="idx">03</span><span class="name">StRS 验收口径</span><span class="note">功能 · 性能 · 接口 · 安全 · 约束</span></div>
         </div>
+
+        <div class="hero-meta">
+            <span class="meta-chip">4 条业务约束</span>
+            <span class="meta-chip">3 条业务性能</span>
+            <span class="meta-chip">8 条功能需求</span>
+            <span class="meta-chip">12 条安全与约束</span>
+        </div>
+
+        <p class="hero-note">BRS 的验收标准是「这个系统值不值得被做出来」，StRS 的验收标准是「这一版实现能不能被测试通过」。</p>
+        <p class="signature">杨博文 · 吉林大学 · 2026</p>
     </div>
 </header>
 
-<div class="doc">
+<div class="chapter rv" id="abstract">
+    <p class="eyebrow">Abstract · 摘要</p>
+    <h2 class="serif">这份文档要解决什么<span class="em">Business &amp; System Requirements</span></h2>
+    <p class="prose">本作业承接<a class="lnk" href="https://boweny67.github.io/assignment1/">作业 1 的六层架构</a>，落到一个具体整机实例：<strong>面向脑卒中后上肢运动功能障碍患者的混合辅助训练系统</strong>——生物通道保留患者残存的神经控制与本体感觉，人工通道由肌电采集、边缘决策、外骨骼/功能电刺激执行与触觉反馈构成。</p>
+    <p class="prose">BRS 从使命、业务约束、运营概念（ConOps）、运行概念（OpsCon）出发，把患者的康复诉求、治疗师的临床约束、监管方的合规要求，收敛成<strong>业务层面就该说清楚的需求</strong>；StRS 再把这些需求向下分解为<strong>可设计、可测试、可追溯</strong>的条目，覆盖功能、性能、接口、安全与设计约束。</p>
+    <p class="prose">两层文档的关系不是「摘要与细节」，而是<strong>两种不同的验收口径</strong>：前者回答值不值得做，后者回答做完能不能测过。</p>
+    <p class="pull serif">人体的原生神经活动不能为增强功能让路——所有机器辅助都是叠加在原有训练活动之上的，而不是替换它。</p>
+</div>
 
-    <section class="band rv" style="--band-color:#1a1a2e;--band-line:rgba(26,26,46,.18)">
-        <div class="band-label">Abstract · 摘要</div>
-        <h2>这份文档要解决什么<span>Business &amp; System Requirements</span></h2>
-        <div class="band-lead">同一件事，用两种语言各说一遍：业务侧说"为什么值得做"，系统侧说"做成什么样才验收得过"。</div>
-
-        <p class="body" style="margin-top:26px">
-            本作业以<a class="lnk" href="https://boweny67.github.io/assignment1/">机器增强的人机混合神经系统</a>为对象。BRS 从使命、业务约束、运营概念（ConOps）、运行概念（OpsCon）出发，
-            把使用者的生理诉求、医师的临床约束、监管方的合规要求，收敛成一组<strong>业务层面就该说清楚的需求</strong>；
-            StRS 再把这些需求向下分解为<strong>可设计、可测试、可追溯</strong>的条目，覆盖功能、性能、接口、安全与设计约束。
-        </p>
-        <p class="body">
-            两层文档的关系不是"摘要与细节"，而是<strong>两种不同的验收口径</strong>：BRS 的验收标准是"这个系统值不值得被做出来"，
-            StRS 的验收标准是"这一版实现能不能被测试通过"。
-        </p>
-
-        <div class="quote">人体的原生神经活动不能为增强功能让路——所有机器增强都是叠加在原有生命活动之上的，而不是替换它。</div>
-    </section>
-
-    <div class="rule"></div>
-
-    <section class="band rv" id="brs" style="--band-color:#e85d4a;--band-line:rgba(232,93,74,.22)">
-        <div class="band-label">Part Ⅰ · BRS</div>
-        <h2>业务需求规范<span>Business Requirement Specification</span></h2>
-        <div class="band-lead">只回答"业务上要什么"，不回答"工程上怎么实现"。</div>
-
-        <h3 class="sec"><span class="no">1.1</span>业务使命与顶层任务</h3>
+<div class="deck" id="brs">
+    <div class="deck-head">
+        <p class="eyebrow">Part Ⅰ · BRS</p>
+        <h2 class="serif">业务需求规范<span class="em">Business Requirement Specification</span></h2>
+        <p class="deck-sub">只回答「业务上要什么」，不回答「工程上怎么实现」。</p>
+    </div>
+    <div class="lab-inner">
+        <div class="sec-head"><span class="no">1.1</span><h3>业务使命与顶层任务</h3></div>
         <p class="sec-note">系统为什么存在——三句话讲清楚，下面再展开。</p>
-        <p class="body">
-            本系统的核心使命，是<strong>在维持人体生命稳态的前提下，闭环完成"感知—决策—行动"的神经活动，
-            并由外部机器单元扩展人的感知边界、响应速度与运动能力</strong>。它不是"给人体外加一个设备"，
-            而是让人体生物神经与人工系统在同一闭环里并行工作。
-        </p>
+        <p class="body">本系统的核心使命，是<strong>在维持患者生命稳态的前提下，闭环完成「感知—决策—行动」的训练回路</strong>：用机器单元代偿偏瘫侧缺失的运动输出，辅助患者完成抓握、伸展与日常取物，所有辅助功能均可启停、可降级，患者保留最高否决权。</p>
 
-        <div class="grid g3" style="margin-top:20px">
-            <div class="card" style="--card-c:#e85d4a">
+        <div class="cards">
+            <div class="card" style="--card-c:var(--purple)">
                 <span class="tag">基础业务</span>
                 <h4>守住生命底线</h4>
-                <p>保障呼吸、循环、体温等生命体征稳定。这一层不追求增强，只追求"不出事"——它是所有增强功能的前置条件。</p>
+                <p>训练全过程保障心率、血压、呼吸、体温等基础体征稳定。这一层不追求辅助，只追求「不出事」——它是所有辅助功能的前置条件。</p>
             </div>
-            <div class="card" style="--card-c:#d4a045">
+            <div class="card" style="--card-c:var(--green)">
                 <span class="tag">原生业务</span>
-                <h4>完成感知—行动闭环</h4>
-                <p>人体感知环境信号，经神经中枢处理，由躯体产生行动响应。这条通路本身就是系统要保护与延续的主体。</p>
+                <h4>延续残存感知—行动闭环</h4>
+                <p>患者残存的神经通路仍感知环境、产生动作意图；系统要保护并延续这条通路本身，而不是绕开它直接控制肢体。</p>
             </div>
-            <div class="card" style="--card-c:#2a9d8f">
+            <div class="card" style="--card-c:var(--orange)">
                 <span class="tag">增强业务</span>
-                <h4>突破生理边界</h4>
-                <p>拓展可感知的频段（红外、超声），放大运动出力，代偿神经损伤造成的功能缺失。增强是附加项，不是替代项。</p>
+                <h4>代偿上肢功能缺失</h4>
+                <p>补足偏瘫侧抓握、伸展的运动缺口，配合电刺激与触觉反馈帮助恢复自主活动能力。辅助是叠加项，不是替代项。</p>
             </div>
         </div>
 
-        <h3 class="sec"><span class="no">1.2</span>业务约束</h3>
+        <div class="sec-head"><span class="no">1.2</span><h3>业务约束</h3></div>
         <p class="sec-note">这几条是硬边界，后面所有需求都不得违反。</p>
-        <p class="body">
-            约束的作用是<strong>提前砍掉不可行的方案分支</strong>。以下四条一旦违反，方案在设计阶段就应被否决，而不必等到测试阶段才发现。
-        </p>
         <div class="req-list">
             <div class="req" data-id="BC-1">
                 <div class="req-id">BC-1</div>
-                <div class="req-txt"><b>人体安全优先级最高。</b>任何机器增强动作，都不得威胁使用者的生命安全与基础生理稳态。</div>
+                <div class="req-txt"><b>训练安全优先级最高。</b>任何助力、刺激或触觉反馈，都不得威胁患者的生命安全与基础生理稳态。</div>
             </div>
             <div class="req" data-id="BC-2">
                 <div class="req-id">BC-2</div>
-                <div class="req-txt"><b>控制权可切换，人拥有最高否决权。</b>使用者可以在任意时刻收回控制权，机器不得拒绝这一请求。</div>
+                <div class="req-txt"><b>控制权可切换，人拥有最高否决权。</b>患者或治疗师可以在任意时刻收回控制权，机器不得拒绝这一请求。</div>
             </div>
             <div class="req" data-id="BC-3">
                 <div class="req-id">BC-3</div>
@@ -392,215 +273,139 @@
             </div>
             <div class="req" data-id="BC-4">
                 <div class="req-id">BC-4</div>
-                <div class="req-txt"><b>不破坏人体原有神经自主调节机制。</b>系统失效或关停时，人体应能独立维持基本生命活动。</div>
+                <div class="req-txt"><b>不破坏人体原有神经自主调节机制。</b>系统失效或关停时，患者应能独立维持基本生命活动与休息体位。</div>
             </div>
         </div>
 
-        <h3 class="sec"><span class="no">1.3</span>业务性能指标</h3>
-        <p class="sec-note">业务层面的"够不够用"，用定性口径描述；定量指标留给 StRS。</p>
+        <div class="sec-head"><span class="no">1.3</span><h3>业务性能指标</h3></div>
+        <p class="sec-note">业务层面的「够不够用」用定性口径描述；定量指标留给 StRS。</p>
         <div class="req-list">
             <div class="req" data-id="BP-1">
                 <div class="req-id">BP-1</div>
-                <div class="req-txt"><b>生命指标稳定可控。</b>系统运行时，人体基础生命指标应稳定维持在医学正常区间内，不因增强功能启停而显著波动。</div>
+                <div class="req-txt"><b>生命指标稳定可控。</b>系统运行时，患者基础生命指标应稳定维持在医学正常区间内，不因辅助功能启停而显著波动。</div>
             </div>
             <div class="req" data-id="BP-2">
                 <div class="req-id">BP-2</div>
-                <div class="req-txt"><b>闭环延迟处于人体可接受范围。</b>人机混合的感知—行动闭环，其延迟应不至于让使用者产生明显的动作滞后感。</div>
+                <div class="req-txt"><b>闭环延迟处于人体可接受范围。</b>人机混合的感知—行动闭环，其延迟应不至于让患者产生明显的动作滞后或脱节感。</div>
             </div>
             <div class="req" data-id="BP-3">
                 <div class="req-id">BP-3</div>
-                <div class="req-txt"><b>增强功能可启停、可降级。</b>支持一键退回纯人体原生模式，且降级过程不影响使用者的即时安全。</div>
+                <div class="req-txt"><b>辅助功能可启停、可降级。</b>支持一键退回纯自主模式，且降级过程不影响患者的即时安全。</div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <div class="rule"></div>
-
-    <section class="band rv" id="conops" style="--band-color:#d4a045;--band-line:rgba(212,160,69,.25)">
-        <div class="band-label">Part Ⅱ · ConOps</div>
-        <h2>运营概念<span>Concept of Operations · 业务层面怎么用</span></h2>
-        <div class="band-lead">ConOps 描述"在什么业务场景下、由谁、为了什么目的使用这个系统"，不是系统的运行时序。</div>
-
-        <div class="scene rv" style="margin-top:24px">
+<div class="deck alt" id="conops">
+    <div class="deck-head">
+        <p class="eyebrow">Part Ⅱ · ConOps</p>
+        <h2 class="serif">运营概念<span class="em">Concept of Operations · 业务层面怎么用</span></h2>
+        <p class="deck-sub">ConOps 描述「在什么业务场景下、由谁、为了什么目的使用这个系统」，不是系统的运行时序。</p>
+    </div>
+    <div class="lab-inner">
+        <div class="scene rv">
             <div class="letter">A</div>
-            <h4>康复代偿场景</h4>
-            <div class="who">使用者 = 神经功能受损人群</div>
-            <p>使用者因神经损伤，出现感知通路或运动通路的缺失。机器单元承担<strong>代偿</strong>职责：接管缺失的感知输入，或驱动缺失的运动输出，辅助其恢复自主生活能力。</p>
-            <p>运营模式为<strong>三方协同</strong>：医师设定安全边界与增强参数，使用者日常自主使用，运维技师负责校准与故障处理。增强策略随康复进程阶段性调整，而非一次设定终身不变。</p>
-            <div class="meter"><span>目标：恢复自主生活能力</span><span>主导方：临床医师</span><span>调整频率：按康复阶段</span></div>
+            <h4>康复代偿场景（主例）</h4>
+            <div class="who">使用者 = 脑卒中后单侧上肢偏瘫患者</div>
+            <p>患者因神经损伤出现上肢运动通路缺失，机器单元承担<strong>代偿</strong>职责：采集残存肌电与关节信号，驱动外骨骼与功能电刺激，辅助其完成抓握、伸展等训练动作，逐步恢复自主生活能力。</p>
+            <p>运营模式为<strong>三方协同</strong>：治疗师/医师设定安全边界与辅助参数，患者在诊室、社区站或居家环境日常使用，运维技师负责校准与故障处理；辅助等级随康复进程阶段性调整，而非一次设定终身不变。</p>
+            <div class="meter"><span>目标：恢复上肢自主活动能力</span><span>主导方：临床治疗师</span><span>调整频率：按康复阶段</span></div>
         </div>
-
-        <div class="scene rv" style="margin-top:16px">
+        <div class="scene rv">
             <div class="letter">B</div>
-            <h4>能力增强场景</h4>
+            <h4>对照 · 能力增强场景</h4>
             <div class="who">使用者 = 健康人员，处于特殊作业环境</div>
-            <p>使用者在高危、狭窄、弱光或高负载环境中作业（如消防救援、精密检修、重物搬运），机器单元承担<strong>扩展</strong>职责：拓宽可感知的信息通道，放大可输出的体力上限。</p>
-            <p>运营模式为<strong>使用者主导 + 安全员监督</strong>：使用者自主管控增强模块的开关与强度，安全员负责监督安全边界是否被突破。此场景下系统不介入医疗判断。</p>
+            <p>作为对照边界：健康人员在高危、狭窄、弱光或高负载环境中作业（如消防救援、精密检修、重物搬运）时，同类机器单元可承担<strong>扩展</strong>职责，拓宽感知通道、放大体力上限。此场景下系统不介入医疗判断。</p>
+            <p>该场景与康复代偿共用底层硬件架构，但<strong>业务目标、主导方与安全责任归属完全不同</strong>——后续需求不得把医疗场景的安全约束错误施加到工业场景上（或相反）。</p>
             <div class="meter"><span>目标：扩展作业能力</span><span>主导方：使用者本人</span><span>监督方：现场安全员</span></div>
         </div>
+        <p class="body" style="margin-top:26px">两个场景共用同一套架构，但业务目标、主导方与安全责任不同；本作业后续条目以康复代偿场景为主例展开。</p>
+        <p class="pull serif">ConOps 只描述「此类场景的运营构想」，不描述某一次具体使用的时间线。后者属于 OpsCon。</p>
+    </div>
+</div>
 
-        <p class="body" style="margin-top:26px">
-            两个场景共用同一套硬件架构，但<strong>业务目标、主导方与安全责任归属完全不同</strong>——这一点必须在 BRS 里说清，
-            否则后续会把医疗场景的安全约束，错误地施加到工业场景上（或相反）。
-        </p>
-        <div class="quote">ConOps 只描述"此类场景的运营构想"，不描述某一次具体使用的时间线。后者属于 OpsCon。</div>
-    </section>
-
-    <div class="rule"></div>
-
-    <section class="band rv" id="opscon" style="--band-color:#9b8de3;--band-line:rgba(155,141,227,.28)">
-        <div class="band-label">Part Ⅲ · OpsCon</div>
-        <h2>运行概念<span>Operational Concept · 系统跑起来是什么样</span></h2>
-        <div class="band-lead">一次完整的运行回合里，信号从哪来、到哪去、谁在兜底。</div>
-
-        <div class="steps" style="margin-top:26px">
+<div class="lab" id="opscon">
+    <div class="lab-inner">
+        <div class="sec-head"><span class="no">Part Ⅲ</span><h3>运行概念 · Operational Concept</h3></div>
+        <p class="sec-note">一次完整的训练回合里，信号从哪来、到哪去、谁在兜底。</p>
+        <div class="steps">
             <div class="step" data-i="1">
                 <h4>多源感知并行采集</h4>
-                <p>外部环境信号（光、声、压力、化学）同时进入两路：人体原生感官，以及机器传感阵列。两路互不替代，形成冗余的感知输入。</p>
+                <p>训练环境信号同时进入两路：患者原生感官，以及机器传感阵列（接触力、距离、姿态、声响）。两路互不替代，形成冗余的感知输入。</p>
             </div>
             <div class="step" data-i="2">
                 <h4>信号汇入混合决策单元</h4>
-                <p>生物神经信号（脑电、肌电）与机器传感信号在同一单元内完成同步、降噪与特征提取，为意图识别提供统一的时间基准。</p>
+                <p>表面肌电、关节角度与机器传感信号在本地单元内完成同步、降噪与特征提取，为意图识别提供统一的时间基准。</p>
             </div>
             <div class="step" data-i="3">
                 <h4>双路指令输出</h4>
-                <p>决策单元输出两路指令：一路经人体自身神经通路驱动生物执行（肌肉、关节）；一路送往外骨骼、辅助刺激器等机器执行单元。</p>
+                <p>决策单元输出两路指令：一路经患者自身神经通路驱动残存肌肉；一路送往外骨骼、功能电刺激等机器执行单元。</p>
             </div>
             <div class="step" data-i="4">
                 <h4>执行反作用于环境</h4>
-                <p>动作改变了环境状态，产生新的感知信号回到第 1 步。闭环由此成立——这正是"感知—决策—行动"在运行时层面的具体形态。</p>
+                <p>动作改变了环境状态，产生新的感知信号回到第 1 步。闭环由此成立——这正是「感知—决策—行动」在运行时层面的具体形态。</p>
             </div>
             <div class="step" data-i="5">
                 <h4>安全监控持续校验</h4>
-                <p>安全监控子系统全程旁路运行，持续比对实时信号与预设阈值。一旦越界，按"提示 → 限制增强 → 强制停机"分级降权，最终交还人体完全控制权。</p>
+                <p>安全监护子系统全程旁路运行，持续比对实时信号与预设阈值。一旦越界，按「提示 → 限制助力 → 强制停机」分级降权，最终交还患者完全控制权。</p>
             </div>
             <div class="step" data-i="6">
                 <h4>全程留痕</h4>
-                <p>运行日志持续记录信号质量、增强强度、越界事件与人工干预。日志供医师复盘康复进程，也供工程师定位算法缺陷。</p>
+                <p>运行日志持续记录信号质量、辅助强度、越界事件与人工干预。日志供治疗师复盘康复进程，也供工程师定位算法缺陷。</p>
             </div>
         </div>
+        <p class="pull serif">运行概念的关键在于「旁路安全」：监护不在主链路串联等待，而是并行监视，因此它失效不会拖垮主链路，主链路失效它也仍能切断输出。</p>
+    </div>
+</div>
 
-        <div class="quote">运行概念的关键在于"旁路安全"：安全监控不在主链路上串联等待，而是并行监视，因此它失效不会拖垮主链路，主链路失效它也仍能切断输出。</div>
-    </section>
-
-    <div class="rule"></div>
-
-    <section class="band rv" id="stake" style="--band-color:#2a9d8f;--band-line:rgba(42,157,143,.24)">
-        <div class="band-label">Part Ⅳ · Stakeholders</div>
-        <h2>相关方清单<span>谁被这套系统影响，谁又能影响它</span></h2>
-        <div class="band-lead">按"直接相关／有交互／施加影响或被影响"三类划分，再逐项标注关注点、权利、约束与态度。</div>
-
-        <div class="tbl-wrap rv" style="margin-top:26px">
-            <table>
-                <colgroup>
-                    <col class="c1"><col class="c2"><col class="c3"><col class="c4">
-                    <col class="c5"><col class="c6"><col class="c7"><col class="c8">
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>编号</th><th>相关方</th><th>关注点</th><th>权利</th>
-                        <th>约束</th><th>态度</th><th>影响力</th><th>重要性</th>
-                    </tr>
-                </thead>
+<div class="deck alt" id="stake">
+    <div class="deck-head">
+        <p class="eyebrow">Part Ⅳ · Stakeholders</p>
+        <h2 class="serif">相关方清单<span class="em">谁被这套系统影响，谁又能影响它</span></h2>
+        <p class="deck-sub">按「直接相关／有交互／施加影响或被影响」三类划分，再逐项标注关注点、权利、约束与态度。</p>
+    </div>
+    <div class="lab-inner">
+        <div class="tbl-wrap">
+            <table class="req-table">
+                <colgroup><col style="width:8%"><col style="width:18%"><col style="width:22%"><col style="width:18%"><col style="width:16%"><col style="width:9%"><col style="width:9%"><col style="width:9%"></colgroup>
+                <thead><tr><th>编号</th><th>相关方</th><th>关注点</th><th>权利</th><th>约束</th><th>态度</th><th>影响力</th><th>重要性</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>01</td><td>使用者（人体主体）</td>
-                        <td>安全、舒适、感知与运动能力的实际提升</td>
-                        <td>知情同意、随时终止使用、隐私保护</td>
-                        <td>身体耐受上限、生理风险</td>
-                        <td><span class="att pos">+1 支持</span></td>
-                        <td><span class="lv">高</span></td><td><span class="lv">高</span></td>
-                    </tr>
-                    <tr>
-                        <td>02</td><td>研发小组</td>
-                        <td>架构合理、需求可满足、方案可验证</td>
-                        <td>定义系统方案、开展迭代设计</td>
-                        <td>技术边界、伦理与法规</td>
-                        <td><span class="att pos">+1 支持</span></td>
-                        <td><span class="lv">高</span></td><td><span class="lv">高</span></td>
-                    </tr>
-                    <tr>
-                        <td>03</td><td>临床／康复医师</td>
-                        <td>康复效果、生命体征稳定、参数可调</td>
-                        <td>评估适配性、设定安全阈值</td>
-                        <td>临床诊疗规范</td>
-                        <td><span class="att pos">+1 支持</span></td>
-                        <td><span class="lv">中</span></td><td><span class="lv">高</span></td>
-                    </tr>
-                    <tr>
-                        <td>04</td><td><a class="lnk" href="https://www.nmpa.gov.cn/">医疗器械监管机构</a></td>
-                        <td>安全性、合规性、风险可控</td>
-                        <td>审批准入、叫停不合格方案</td>
-                        <td>强制性法规与标准</td>
-                        <td><span class="att neg">−1 约束</span></td>
-                        <td><span class="lv">高</span></td><td><span class="lv">高</span></td>
-                    </tr>
-                    <tr>
-                        <td>05</td><td>伦理审查委员会</td>
-                        <td>人机神经接口的伦理边界、风险收益平衡</td>
-                        <td>否决不符合伦理的方案</td>
-                        <td><a class="lnk" href="https://www.wma.net/policies-post/wma-declaration-of-helsinki/">伦理准则</a>、知情同意要求</td>
-                        <td><span class="att neg">−1 约束</span></td>
-                        <td><span class="lv">高</span></td><td><span class="lv">高</span></td>
-                    </tr>
-                    <tr>
-                        <td>06</td><td>生产与供应链厂商</td>
-                        <td>可制造性、成本、批次一致性</td>
-                        <td>按图纸生产、提出工艺限制</td>
-                        <td>材料生物相容性标准</td>
-                        <td><span class="att pos">+1 支持</span></td>
-                        <td><span class="lv">中</span></td><td><span class="lv">中</span></td>
-                    </tr>
-                    <tr>
-                        <td>07</td><td>数据安全管理方</td>
-                        <td>神经信号与健康数据不泄露、不滥用</td>
-                        <td>要求加密存储、权限管控、留痕审计</td>
-                        <td>个人信息保护相关法规</td>
-                        <td><span class="att neg">−1 约束</span></td>
-                        <td><span class="lv">中</span></td><td><span class="lv">中</span></td>
-                    </tr>
-                    <tr>
-                        <td>08</td><td>使用者家属</td>
-                        <td>使用者安全、异常时能及时介入</td>
-                        <td>知晓风险、紧急情况下协助处置</td>
-                        <td>不得干预核心控制逻辑</td>
-                        <td><span class="att pos">+1 支持</span></td>
-                        <td><span class="lv">低</span></td><td><span class="lv">中</span></td>
-                    </tr>
+                    <tr><td>01</td><td>使用者（偏瘫患者）</td><td>安全、舒适、上肢功能的实际提升</td><td>知情同意、随时终止使用、隐私保护</td><td>身体耐受上限、生理风险</td><td><span class="att pos">+1 支持</span></td><td><span class="lv">高</span></td><td><span class="lv">高</span></td></tr>
+                    <tr><td>02</td><td>研发小组</td><td>架构合理、需求可满足、方案可验证</td><td>定义系统方案、开展迭代设计</td><td>技术边界、伦理与法规</td><td><span class="att pos">+1 支持</span></td><td><span class="lv">高</span></td><td><span class="lv">高</span></td></tr>
+                    <tr><td>03</td><td>治疗师 / 康复医师</td><td>康复效果、体征稳定、参数可调</td><td>评估适配性、设定安全阈值</td><td>临床诊疗规范</td><td><span class="att pos">+1 支持</span></td><td><span class="lv">中</span></td><td><span class="lv">高</span></td></tr>
+                    <tr><td>04</td><td><a class="lnk" href="https://www.nmpa.gov.cn/">医疗器械监管机构</a></td><td>安全性、合规性、风险可控</td><td>审批准入、叫停不合格方案</td><td>强制性法规与标准</td><td><span class="att neg">−1 约束</span></td><td><span class="lv">高</span></td><td><span class="lv">高</span></td></tr>
+                    <tr><td>05</td><td>伦理审查委员会</td><td>人机接口的伦理边界、风险收益平衡</td><td>否决不符合伦理的方案</td><td><a class="lnk" href="https://www.wma.net/policies-post/wma-declaration-of-helsinki/">伦理准则</a>、知情同意要求</td><td><span class="att neg">−1 约束</span></td><td><span class="lv">高</span></td><td><span class="lv">高</span></td></tr>
+                    <tr><td>06</td><td>生产与供应链厂商</td><td>可制造性、成本、批次一致性</td><td>按图纸生产、提出工艺限制</td><td>材料生物相容性标准</td><td><span class="att pos">+1 支持</span></td><td><span class="lv">中</span></td><td><span class="lv">中</span></td></tr>
+                    <tr><td>07</td><td>数据安全管理方</td><td>神经信号与健康数据不泄露、不滥用</td><td>要求加密存储、权限管控、留痕审计</td><td>个人信息保护相关法规</td><td><span class="att neg">−1 约束</span></td><td><span class="lv">中</span></td><td><span class="lv">中</span></td></tr>
+                    <tr><td>08</td><td>患者家属</td><td>患者安全、异常时能及时介入</td><td>知晓风险、紧急情况下协助处置</td><td>不得干预核心控制逻辑</td><td><span class="att pos">+1 支持</span></td><td><span class="lv">低</span></td><td><span class="lv">中</span></td></tr>
                 </tbody>
             </table>
         </div>
+        <p class="body" style="margin-top:18px">态度口径：<strong>+1 支持</strong>指该相关方从系统获益、倾向推动；<strong>−1 约束</strong>指其职责天然是限制与审查，诉求以「不得」「必须」形式出现。监管与伦理两家并不反对系统本身，但表述方式与患者截然不同。</p>
 
-        <p class="body" style="margin-top:18px">
-            态度一栏的取值口径：<strong>+1 支持</strong>指该相关方从系统获益、倾向推动；
-            <strong>−1 约束</strong>指该相关方的职责天然是限制与审查，其诉求会以"不得""必须"的形式出现。
-            监管与伦理两家并不反对系统本身，但它们对需求的表述方式与使用者截然不同。
-        </p>
-
-        <h3 class="sec"><span class="no">4.1</span>相关方业务需求</h3>
-        <p class="sec-note">只写"他们要什么"，不写"用什么技术满足"。每条都可以回溯到上面表格里的某一方。</p>
-
+        <div class="sec-head"><span class="no">4.1</span><h3>相关方业务需求</h3></div>
+        <p class="sec-note">只写「他们要什么」，不写「用什么技术满足」。每条都可以回溯到上面表格里的某一方。</p>
         <div class="stake-grid">
-            <div class="stake" style="--sc:#e85d4a">
-                <h4>使用者</h4>
+            <div class="stake" style="--sc:var(--purple)">
+                <h4>使用者（患者）</h4>
                 <div class="role">最终用户 · 01</div>
                 <ol>
                     <li>系统须安全无痛，长时间佩戴不引起明显不适</li>
-                    <li>增强功能应随动作意图自然响应，无需刻意学习复杂操作</li>
-                    <li>可随时关闭增强，退回纯自主状态</li>
+                    <li>辅助功能随动作意图自然响应，无需刻意学习复杂操作</li>
+                    <li>可随时关闭辅助，退回纯自主状态</li>
                     <li>不干扰正常呼吸、心跳、睡眠等自主生命活动</li>
                 </ol>
             </div>
-            <div class="stake" style="--sc:#d4a045">
-                <h4>临床／康复医师</h4>
+            <div class="stake" style="--sc:var(--green)">
+                <h4>治疗师 / 康复医师</h4>
                 <div class="role">医疗评估方 · 03</div>
                 <ol>
-                    <li>可采集并导出生命体征与神经信号日志</li>
-                    <li>增强参数可由医师配置，且有明确的安全锁</li>
-                    <li>能区分"设备失效"与"使用者状态变化"两类异常</li>
+                    <li>可采集并导出体征与神经信号日志</li>
+                    <li>辅助参数可由医师配置，且有明确安全锁</li>
+                    <li>能区分「设备失效」与「患者状态变化」两类异常</li>
                 </ol>
             </div>
-            <div class="stake" style="--sc:#2a9d8f">
+            <div class="stake" style="--sc:var(--orange)">
                 <h4>研发工程师</h4>
                 <div class="role">系统实现方 · 02</div>
                 <ol>
@@ -609,303 +414,153 @@
                     <li>具备可复现的测试环境，仿真与实测结果可比对</li>
                 </ol>
             </div>
-            <div class="stake" style="--sc:#9b8de3">
+            <div class="stake" style="--sc:var(--purple-soft)">
                 <h4>监管与伦理方</h4>
                 <div class="role">合规审查方 · 04 / 05</div>
                 <ol>
-                    <li>运行记录可追溯，可还原每次增强介入的上下文</li>
+                    <li>运行记录可追溯，可还原每次辅助介入的上下文</li>
                     <li>具备故障安全机制，单点失效不导致人身伤害</li>
                     <li>材料与电流输出符合医用标准</li>
                     <li>不得无限制改造神经，不得改变人的基础自主意识</li>
                 </ol>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <div class="rule"></div>
+<div class="chapter" id="strs">
+    <p class="eyebrow">Part Ⅴ · StRS</p>
+    <h2 class="serif">系统需求规范<span class="em">System Requirement Specification</span></h2>
+    <p class="prose">把业务语言翻译成工程语言。每条都应能被设计、被测试、被追溯。下面按类别筛选条目查看。</p>
 
-    <section class="band rv" id="strs" style="--band-color:#2a9d8f;--band-line:rgba(42,157,143,.24)">
-        <div class="band-label">Part Ⅴ · StRS</div>
-        <h2>系统需求规范<span>System Requirement Specification</span></h2>
-        <div class="band-lead">把业务语言翻译成工程语言。每条都应能被设计、被测试、被追溯。</div>
+    <div class="filter-bar" id="filterBar">
+        <button class="fchip on" data-cat="all">全部</button>
+        <button class="fchip" data-cat="FR">功能 FR</button>
+        <button class="fchip" data-cat="PR">性能 PR</button>
+        <button class="fchip" data-cat="IR">接口 IR</button>
+        <button class="fchip" data-cat="SR">安全 SR</button>
+        <button class="fchip" data-cat="DR">约束 DR</button>
+    </div>
 
-        <h3 class="sec" style="--accent:#e85d4a"><span class="no">5.1</span>功能需求 FR</h3>
-        <p class="sec-note">系统必须"做什么"。检验方式：逐条问"这一版实现里，哪段代码／哪个部件对应它"。</p>
-        <div class="req-list" style="--id-bg:rgba(232,93,74,.07)">
-            <div class="req" data-id="FR-1" style="--accent:#e85d4a">
-                <div class="req-id" style="--accent:#e85d4a">FR-1</div>
-                <div class="req-txt">系统应能采集人体原生神经信号（<a class="lnk" href="https://en.wikipedia.org/wiki/Electroencephalography">脑电 EEG</a>、<a class="lnk" href="https://en.wikipedia.org/wiki/Electromyography">肌电 EMG</a>）与基础生命体征（心率、血氧、体温）。</div>
-            </div>
-            <div class="req" data-id="FR-2" style="--accent:#e85d4a">
-                <div class="req-id" style="--accent:#e85d4a">FR-2</div>
-                <div class="req-txt">系统应能采集外部环境的多模态传感信号，至少覆盖视觉、听觉、压力与距离四类。</div>
-            </div>
-            <div class="req" data-id="FR-3" style="--accent:#e85d4a">
-                <div class="req-id" style="--accent:#e85d4a">FR-3</div>
-                <div class="req-txt">混合决策单元应能融合生物信号与机器传感信号，识别使用者的运动意图。</div>
-            </div>
-            <div class="req" data-id="FR-4" style="--accent:#e85d4a">
-                <div class="req-id" style="--accent:#e85d4a">FR-4</div>
-                <div class="req-txt">系统应能驱动机器执行单元（<a class="lnk" href="https://en.wikipedia.org/wiki/Powered_exoskeleton">外骨骼</a>、辅助感知模块）完成对应的增强动作。</div>
-            </div>
-            <div class="req" data-id="FR-5" style="--accent:#e85d4a">
-                <div class="req-id" style="--accent:#e85d4a">FR-5</div>
-                <div class="req-txt">系统应支持三种控制模式切换：自动增强模式、辅助模式、纯人体原生模式。</div>
-            </div>
-            <div class="req" data-id="FR-6" style="--accent:#e85d4a">
-                <div class="req-id" style="--accent:#e85d4a">FR-6</div>
-                <div class="req-txt">安全监控子系统应实时监测信号质量与生理指标，越界时触发保护动作并降级。</div>
-            </div>
-            <div class="req" data-id="FR-7" style="--accent:#e85d4a">
-                <div class="req-id" style="--accent:#e85d4a">FR-7</div>
-                <div class="req-txt">系统应存储运行日志，并支持日志导出与可视化回放。</div>
-            </div>
-            <div class="req" data-id="FR-8" style="--accent:#e85d4a">
-                <div class="req-id" style="--accent:#e85d4a">FR-8</div>
-                <div class="req-txt">系统应提供参数配置入口，供医师与工程师调整增强阈值与安全边界。</div>
-            </div>
+    <div class="sec-head"><span class="no">5.1</span><h3>功能需求 FR</h3></div>
+    <p class="sec-note">系统必须「做什么」。检验方式：逐条问「这一版实现里，哪段代码／哪个部件对应它」。</p>
+    <div class="req-list" data-group="FR">
+        <div class="req" data-id="FR-1" data-cat="FR"><div class="req-id">FR-1</div><div class="req-txt">采集患者表面肌电（<a class="lnk" href="https://en.wikipedia.org/wiki/Electromyography">EMG</a>）与关节角度，以及心率、皮温等基础生命体征。</div></div>
+        <div class="req" data-id="FR-2" data-cat="FR"><div class="req-id">FR-2</div><div class="req-txt">采集训练环境的多模态传感信号，至少覆盖接触力、距离、姿态与声响四类。</div></div>
+        <div class="req" data-id="FR-3" data-cat="FR"><div class="req-id">FR-3</div><div class="req-txt">融合生物信号与机器传感信号，识别患者的上肢运动意图与发力水平。</div></div>
+        <div class="req" data-id="FR-4" data-cat="FR"><div class="req-id">FR-4</div><div class="req-txt">驱动上肢外骨骼、功能电刺激、触觉反馈等执行单元完成对应的助动动作。</div></div>
+        <div class="req" data-id="FR-5" data-cat="FR"><div class="req-id">FR-5</div><div class="req-txt">支持被动助动、主动辅助、纯自主三种控制模式切换。</div></div>
+        <div class="req" data-id="FR-6" data-cat="FR"><div class="req-id">FR-6</div><div class="req-txt">实时监测信号质量与生理指标，越界时触发保护动作并降级。</div></div>
+        <div class="req" data-id="FR-7" data-cat="FR"><div class="req-id">FR-7</div><div class="req-txt">存储运行日志，并支持日志导出与可视化回放。</div></div>
+        <div class="req" data-id="FR-8" data-cat="FR"><div class="req-id">FR-8</div><div class="req-txt">提供参数配置入口，供治疗师与工程师调整辅助阈值与安全边界。</div></div>
+    </div>
+
+    <div class="sec-head"><span class="no">5.2</span><h3>性能需求 PR</h3></div>
+    <p class="sec-note">每条都附带数值与验证口径——「可量化」是性能需求和普通功能需求的唯一区别。</p>
+    <div class="req-list" data-group="PR">
+        <div class="req" data-id="PR-1" data-cat="PR"><div class="req-id">PR-1</div><div class="req-txt"><b>意图识别端到端延迟 ≤ 200 ms。</b>从信号进入决策单元到输出执行指令的时间，不含机械机构动作时间。</div></div>
+        <div class="req" data-id="PR-2" data-cat="PR"><div class="req-id">PR-2</div><div class="req-txt"><b>体征采集精度满足临床监测要求。</b>以同款医用监护仪为基准做对比标定，误差须落在其允许区间内。</div></div>
+        <div class="req" data-id="PR-3" data-cat="PR"><div class="req-id">PR-3</div><div class="req-txt"><b>安全保护响应 ≤ 50 ms。</b>从越界事件被检测到切断辅助输出的时间，须显著短于人体受到伤害的最短时间尺度。</div></div>
+        <div class="req" data-id="PR-4" data-cat="PR"><div class="req-id">PR-4</div><div class="req-txt"><b>执行机构定位与出力误差在指标内。</b>关节角度与输出力矩的稳态误差，按设计指标逐项验收。</div></div>
+        <div class="req" data-id="PR-5" data-cat="PR"><div class="req-id">PR-5</div><div class="req-txt"><b>连续工作 8 小时无单点失效。</b>考核项包含电量、温升、信号漂移与机械磨损，任一项超标即视为不通过。</div></div>
+        <div class="req" data-id="PR-6" data-cat="PR"><div class="req-id">PR-6</div><div class="req-txt"><b>采集信噪比满足算法最低要求。</b>以意图识别算法能稳定工作的最小信噪比为验收下限。</div></div>
+    </div>
+
+    <div class="sec-head"><span class="no">5.3</span><h3>接口需求 IR</h3></div>
+    <p class="sec-note">接口是「系统与外部世界握手的地方」，也是故障与安全风险最集中的地方。</p>
+    <div class="req-list" data-group="IR">
+        <div class="req" data-id="IR-1" data-cat="IR"><div class="req-id">IR-1</div><div class="req-txt"><b>生物采集接口。</b>干／湿电极接入，肌电与体征共用采集前端，接触面须为医用级设计。</div></div>
+        <div class="req" data-id="IR-2" data-cat="IR"><div class="req-id">IR-2</div><div class="req-txt"><b>机器执行接口。</b>外骨骼动力单元、功能电刺激器、触觉反馈模块采用统一的通信协议与供电规范。</div></div>
+        <div class="req" data-id="IR-3" data-cat="IR"><div class="req-id">IR-3</div><div class="req-txt"><b>人机交互接口。</b>提供触控终端，并保留独立的物理急停按钮——后者不依赖软件栈。</div></div>
+        <div class="req" data-id="IR-4" data-cat="IR"><div class="req-id">IR-4</div><div class="req-txt"><b>数据接口。</b>日志以通用格式导出，可在治疗师端软件中直接读取分析，不依赖专用上位机。</div></div>
+        <div class="req" data-id="IR-5" data-cat="IR"><div class="req-id">IR-5</div><div class="req-txt"><b>供电接口。</b>可充电电池供电，电源与人体之间须做电气隔离，防漏电与反向电流。</div></div>
+    </div>
+
+    <div class="sec-head"><span class="no">5.4</span><h3>安全需求 SR</h3></div>
+    <p class="sec-note">安全需求的写法特点：<strong>失效即默认安全</strong>，也就是「坏了就停」，而不是「坏了还在跑」。</p>
+    <div class="req-list" data-group="SR">
+        <div class="req" data-id="SR-1" data-cat="SR"><div class="req-id">SR-1</div><div class="req-txt"><b>随时可切断。</b>患者可通过原生动作或物理急停，在任意时刻切断辅助输出，此路径优先级高于一切。</div></div>
+        <div class="req" data-id="SR-2" data-cat="SR"><div class="req-id">SR-2</div><div class="req-txt"><b>双重故障安全。</b>软硬件各设一层保护，任一模块失效时系统默认回到无辅助状态。</div></div>
+        <div class="req" data-id="SR-3" data-cat="SR"><div class="req-id">SR-3</div><div class="req-txt"><b>电气隔离。</b>防止漏电与电刺激损伤神经组织，接触部位须限制输出电流上限。</div></div>
+        <div class="req" data-id="SR-4" data-cat="SR"><div class="req-id">SR-4</div><div class="req-txt"><b>分级告警。</b>信号异常或生命体征超标时，按「提示 → 限制增强 → 强制停机」三级递进响应。</div></div>
+        <div class="req" data-id="SR-5" data-cat="SR"><div class="req-id">SR-5</div><div class="req-txt"><b>数据安全。</b>存储的神经信号与健康数据须加密，访问须授权并留痕，满足<a class="lnk" href="https://flk.npc.gov.cn/">隐私保护要求</a>。</div></div>
+    </div>
+
+    <div class="sec-head"><span class="no">5.5</span><h3>设计约束 DR</h3></div>
+    <p class="sec-note">这些不是「需求」，而是「先天地限定了方案空间」的条件，通常来自标准、法规或既有架构。</p>
+    <div class="req-list" data-group="DR">
+        <div class="req" data-id="DR-1" data-cat="DR"><div class="req-id">DR-1</div><div class="req-txt">所有接触人体的材料须满足医用生物相容性要求。</div></div>
+        <div class="req" data-id="DR-2" data-cat="DR"><div class="req-id">DR-2</div><div class="req-txt">设备须电磁兼容，不干扰心脏起搏器等其他植入式医疗设备。</div></div>
+        <div class="req" data-id="DR-3" data-cat="DR"><div class="req-id">DR-3</div><div class="req-txt">整机须控制重量与体积，降低长期佩戴的负荷与体感负担。</div></div>
+        <div class="req" data-id="DR-4" data-cat="DR"><div class="req-id">DR-4</div><div class="req-txt">系统架构须与<a class="lnk" href="https://boweny67.github.io/assignment1/">六层分解</a>一致：任务 → 体系 → 整机 → 系统 → 子系统 → 模块。</div></div>
+        <div class="req" data-id="DR-5" data-cat="DR"><div class="req-id">DR-5</div><div class="req-txt">算法与硬件模块须可独立测试验证，避免出现只能整机联调的黑盒。</div></div>
+    </div>
+</div>
+
+<div class="deck" id="trace">
+    <div class="deck-head">
+        <p class="eyebrow">Part Ⅵ · Traceability</p>
+        <h2 class="serif">追溯关系<span class="em">业务需求如何落到系统条目上</span></h2>
+        <p class="deck-sub">这一节最能体现「系统工程」的地方——需求之间要有据可查的对应关系。</p>
+    </div>
+    <div class="lab-inner">
+        <div class="trace">
+            <div class="trace-row"><div class="trace-from">BP-1 生命指标稳定可控</div><div class="trace-arrow">分解为 →</div><div class="trace-to"><span>FR-1</span><span>PR-2</span><span>SR-4</span></div></div>
+            <div class="trace-row"><div class="trace-from">BP-2 闭环延迟可接受</div><div class="trace-arrow">分解为 →</div><div class="trace-to"><span>FR-3</span><span>FR-4</span><span>PR-1</span><span>PR-4</span></div></div>
+            <div class="trace-row"><div class="trace-from">BP-3 辅助可启停可降级</div><div class="trace-arrow">分解为 →</div><div class="trace-to"><span>FR-5</span><span>FR-6</span><span>SR-2</span></div></div>
+            <div class="trace-row"><div class="trace-from">BC-2 人拥有最高否决权</div><div class="trace-arrow">分解为 →</div><div class="trace-to"><span>IR-3</span><span>SR-1</span></div></div>
+            <div class="trace-row"><div class="trace-from">治疗师：日志可导出可回放</div><div class="trace-arrow">分解为 →</div><div class="trace-to"><span>FR-7</span><span>FR-8</span><span>IR-4</span></div></div>
+            <div class="trace-row"><div class="trace-from">监管与伦理：可追溯、故障安全</div><div class="trace-arrow">分解为 →</div><div class="trace-to"><span>FR-7</span><span>SR-2</span><span>SR-5</span><span>DR-1</span></div></div>
         </div>
+        <p class="body" style="margin-top:22px">需要留意：追溯表的<strong>反向阅读</strong>同样重要。从任一条 StRS 需求往回看，如果找不到对应的 BRS 条目或相关方诉求，那它很可能是一条「工程师自己想加的功能」，而不是「系统真正需要的功能」。</p>
+    </div>
+</div>
 
-        <h3 class="sec"><span class="no">5.2</span>性能需求 PR</h3>
-        <p class="sec-note">每条都附带数值与验证口径——"可量化"是性能需求和普通功能需求的唯一区别。</p>
-        <div class="req-list">
-            <div class="req" data-id="PR-1" style="--accent:#d4a045">
-                <div class="req-id" style="--accent:#d4a045">PR-1</div>
-                <div class="req-txt"><b>意图识别延迟 ≤ 200 ms。</b>从信号进入决策单元到输出执行指令的端到端时间，不含机械机构动作时间。</div>
-            </div>
-            <div class="req" data-id="PR-2" style="--accent:#d4a045">
-                <div class="req-id" style="--accent:#d4a045">PR-2</div>
-                <div class="req-txt"><b>生命体征采集精度满足临床监测要求。</b>以同款医用监护仪为基准做对比标定，误差须落在其允许区间内。</div>
-            </div>
-            <div class="req" data-id="PR-3" style="--accent:#d4a045">
-                <div class="req-id" style="--accent:#d4a045">PR-3</div>
-                <div class="req-txt"><b>安全保护响应 ≤ 50 ms。</b>从越界事件被检测到切断增强输出的时间，须显著短于人体受到伤害的最短时间尺度。</div>
-            </div>
-            <div class="req" data-id="PR-4" style="--accent:#d4a045">
-                <div class="req-id" style="--accent:#d4a045">PR-4</div>
-                <div class="req-txt"><b>执行机构定位与出力误差在指标内。</b>关节角度与输出力矩的稳态误差，按设计指标逐项验收。</div>
-            </div>
-            <div class="req" data-id="PR-5" style="--accent:#d4a045">
-                <div class="req-id" style="--accent:#d4a045">PR-5</div>
-                <div class="req-txt"><b>连续工作 8 小时无单点失效。</b>考核项包含电量、温升、信号漂移与机械磨损，任一项超标即视为不通过。</div>
-            </div>
-            <div class="req" data-id="PR-6" style="--accent:#d4a045">
-                <div class="req-id" style="--accent:#d4a045">PR-6</div>
-                <div class="req-txt"><b>采集信噪比满足算法最低要求。</b>以意图识别算法能稳定工作的最小信噪比为验收下限。</div>
-            </div>
-        </div>
-
-        <h3 class="sec"><span class="no">5.3</span>接口需求 IR</h3>
-        <p class="sec-note">接口是"系统与外部世界握手的地方"，也是故障与安全风险最集中的地方。</p>
-        <div class="req-list">
-            <div class="req" data-id="IR-1" style="--accent:#9b8de3">
-                <div class="req-id" style="--accent:#9b8de3">IR-1</div>
-                <div class="req-txt"><b>生物采集接口。</b>干／湿电极接入，脑电与肌电共用采集前端，接触面须为医用级设计。</div>
-            </div>
-            <div class="req" data-id="IR-2" style="--accent:#9b8de3">
-                <div class="req-id" style="--accent:#9b8de3">IR-2</div>
-                <div class="req-txt"><b>机器执行接口。</b>外骨骼动力单元、声光增强提示模块采用统一的通信协议与供电规范。</div>
-            </div>
-            <div class="req" data-id="IR-3" style="--accent:#9b8de3">
-                <div class="req-id" style="--accent:#9b8de3">IR-3</div>
-                <div class="req-txt"><b>人机交互接口。</b>提供触控终端，并保留独立的物理急停按钮——后者不依赖软件栈。</div>
-            </div>
-            <div class="req" data-id="IR-4" style="--accent:#9b8de3">
-                <div class="req-id" style="--accent:#9b8de3">IR-4</div>
-                <div class="req-txt"><b>数据接口。</b>日志以通用格式导出，可在医师端软件中直接读取分析，不依赖专用上位机。</div>
-            </div>
-            <div class="req" data-id="IR-5" style="--accent:#9b8de3">
-                <div class="req-id" style="--accent:#9b8de3">IR-5</div>
-                <div class="req-txt"><b>供电接口。</b>可充电电池供电，电源与人体之间须做电气隔离，防漏电与反向电流。</div>
-            </div>
-        </div>
-
-        <h3 class="sec"><span class="no">5.4</span>安全需求 SR</h3>
-        <p class="sec-note">安全需求的写法特点：<strong>失效即默认安全</strong>，也就是"坏了就停"，而不是"坏了还在跑"。</p>
-        <div class="req-list">
-            <div class="req" data-id="SR-1" style="--accent:#d4708a">
-                <div class="req-id" style="--accent:#d4708a">SR-1</div>
-                <div class="req-txt"><b>随时可切断。</b>使用者可通过原生神经动作或物理急停，在任意时刻切断增强输出，此路径优先级高于一切。</div>
-            </div>
-            <div class="req" data-id="SR-2" style="--accent:#d4708a">
-                <div class="req-id" style="--accent:#d4708a">SR-2</div>
-                <div class="req-txt"><b>双重故障安全。</b>软硬件各设一层保护，任一模块失效时系统默认回到无增强状态。</div>
-            </div>
-            <div class="req" data-id="SR-3" style="--accent:#d4708a">
-                <div class="req-id" style="--accent:#d4708a">SR-3</div>
-                <div class="req-txt"><b>电气隔离。</b>防止漏电与电刺激损伤神经组织，接触部位须限制输出电流上限。</div>
-            </div>
-            <div class="req" data-id="SR-4" style="--accent:#d4708a">
-                <div class="req-id" style="--accent:#d4708a">SR-4</div>
-                <div class="req-txt"><b>分级告警。</b>信号异常或生命体征超标时，按"提示 → 限制增强 → 强制停机"三级递进响应。</div>
-            </div>
-            <div class="req" data-id="SR-5" style="--accent:#d4708a">
-                <div class="req-id" style="--accent:#d4708a">SR-5</div>
-                <div class="req-txt"><b>数据安全。</b>存储的神经信号与健康数据须加密，访问须授权并留痕，满足<a class="lnk" href="https://flk.npc.gov.cn/">隐私保护要求</a>。</div>
-            </div>
-        </div>
-
-        <h3 class="sec"><span class="no">5.5</span>设计约束 DR</h3>
-        <p class="sec-note">这些不是"需求"，而是"先天地限定了方案空间"的条件，通常来自标准、法规或既有架构。</p>
-        <div class="req-list">
-            <div class="req" data-id="DR-1" style="--accent:#1a1a2e">
-                <div class="req-id">DR-1</div>
-                <div class="req-txt">所有接触人体的材料须满足医用生物相容性要求。</div>
-            </div>
-            <div class="req" data-id="DR-2">
-                <div class="req-id">DR-2</div>
-                <div class="req-txt">设备须电磁兼容，不干扰心脏起搏器等其他植入式医疗设备。</div>
-            </div>
-            <div class="req" data-id="DR-3">
-                <div class="req-id">DR-3</div>
-                <div class="req-txt">整机须控制重量与体积，降低长期佩戴的负荷与体感负担。</div>
-            </div>
-            <div class="req" data-id="DR-4">
-                <div class="req-id">DR-4</div>
-                <div class="req-txt">系统架构须与<a class="lnk" href="https://boweny67.github.io/assignment1/">六层分解</a>一致：任务 → 体系 → 整机 → 系统 → 子系统 → 模块。</div>
-            </div>
-            <div class="req" data-id="DR-5">
-                <div class="req-id">DR-5</div>
-                <div class="req-txt">算法与硬件模块须可独立测试验证，避免出现只能整机联调的黑盒。</div>
-            </div>
-        </div>
-    </section>
-
-    <div class="rule"></div>
-
-    <section class="band rv" id="trace" style="--band-color:#1a1a2e;--band-line:rgba(26,26,46,.18)">
-        <div class="band-label">Part Ⅵ · Traceability</div>
-        <h2>追溯关系<span>业务需求如何落到系统条目上</span></h2>
-        <div class="band-lead">这一节是作业里最容易被忽略、但最能体现"系统工程"的地方——需求之间要有据可查的对应关系。</div>
-
-        <div class="trace rv">
-            <div class="trace-row">
-                <div class="trace-from">BP-1 生命指标稳定可控</div>
-                <div class="trace-arrow">分解为 →</div>
-                <div class="trace-to"><span>FR-1</span><span>PR-2</span><span>SR-4</span></div>
-            </div>
-            <div class="trace-row">
-                <div class="trace-from">BP-2 闭环延迟可接受</div>
-                <div class="trace-arrow">分解为 →</div>
-                <div class="trace-to"><span>FR-3</span><span>FR-4</span><span>PR-1</span><span>PR-4</span></div>
-            </div>
-            <div class="trace-row">
-                <div class="trace-from">BP-3 增强可启停可降级</div>
-                <div class="trace-arrow">分解为 →</div>
-                <div class="trace-to"><span>FR-5</span><span>FR-6</span><span>SR-2</span></div>
-            </div>
-            <div class="trace-row">
-                <div class="trace-from">BC-2 人拥有最高否决权</div>
-                <div class="trace-arrow">分解为 →</div>
-                <div class="trace-to"><span>IR-3</span><span>SR-1</span></div>
-            </div>
-            <div class="trace-row">
-                <div class="trace-from">医师：日志可导出可回放</div>
-                <div class="trace-arrow">分解为 →</div>
-                <div class="trace-to"><span>FR-7</span><span>FR-8</span><span>IR-4</span></div>
-            </div>
-            <div class="trace-row">
-                <div class="trace-from">监管与伦理：可追溯、故障安全</div>
-                <div class="trace-arrow">分解为 →</div>
-                <div class="trace-to"><span>FR-7</span><span>SR-2</span><span>SR-5</span><span>DR-1</span></div>
-            </div>
-        </div>
-
-        <p class="body" style="margin-top:22px">
-            需要留意：追溯表的<strong>反向阅读</strong>同样重要。从任一条 StRS 需求往回看，如果找不到对应的 BRS 条目或相关方诉求，
-            那它很可能是一条"工程师自己想加的功能"，而不是"系统真正需要的功能"。
-        </p>
-    </section>
-
-    <div class="rule"></div>
-
-    <section class="band rv" style="--band-color:#1a1a2e;--band-line:rgba(26,26,46,.18)">
-        <div class="band-label">References · 参考资料</div>
-        <h2>文中引用的标准与法规<span>Linked sources</span></h2>
-        <div class="band-lead">需求里凡是引用"外部标准"的地方，都给出来源——可核查本身就是需求文档质量的一部分。</div>
-
-        <div class="refs">
-            <div class="ref">
-                <span class="rn">01</span>
-                <div>
-                    <a href="https://en.wikipedia.org/wiki/ISO_10993">ISO 10993 · 医疗器械生物学评价</a>
-                    <span class="rd">生物相容性需求（BC-3、DR-1）的依据标准，评价材料与人体接触后的生物学反应。</span>
-                </div>
-            </div>
-            <div class="ref">
-                <span class="rn">02</span>
-                <div>
-                    <a href="https://en.wikipedia.org/wiki/IEC_60601">IEC 60601 · 医用电气设备安全</a>
-                    <span class="rd">电气隔离与电磁兼容需求（BC-3、SR-3、DR-2）的上位标准族。</span>
-                </div>
-            </div>
-            <div class="ref">
-                <span class="rn">03</span>
-                <div>
-                    <a href="https://www.wma.net/policies-post/wma-declaration-of-helsinki/">赫尔辛基宣言 · 人体医学研究伦理准则</a>
-                    <span class="rd">伦理审查相关方（05）判断"风险收益是否平衡"的基本依据。</span>
-                </div>
-            </div>
-            <div class="ref">
-                <span class="rn">04</span>
-                <div>
-                    <a href="https://flk.npc.gov.cn/">国家法律法规数据库</a>
-                    <span class="rd">个人信息与数据安全相关条文的权威出处，对应 SR-5 的数据保护要求。</span>
-                </div>
-            </div>
-            <div class="ref">
-                <span class="rn">05</span>
-                <div>
-                    <a href="https://www.nmpa.gov.cn/">国家药品监督管理局</a>
-                    <span class="rd">医疗器械注册与准入的监管主体，对应相关方清单中的第 04 项。</span>
-                </div>
-            </div>
-            <div class="ref">
-                <span class="rn">06</span>
-                <div>
-                    <a href="https://en.wikipedia.org/wiki/Brain%E2%80%93computer_interface">脑机接口 BCI · 技术背景</a>
-                    <span class="rd">生物神经信号与机器指令相互转换的技术脉络，对应 FR-1 至 FR-3 的信号链路。</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
+<div class="chapter" id="refs">
+    <p class="eyebrow">References · 参考资料</p>
+    <h2 class="serif">文中引用的标准与法规<span class="em">Linked sources</span></h2>
+    <div class="refs">
+        <div class="ref"><span class="rn">01</span><div><span class="rt"><a class="lnk" href="https://en.wikipedia.org/wiki/ISO_10993">ISO 10993 · 医疗器械生物学评价</a></span><span class="rd">生物相容性需求（BC-3、DR-1）的依据标准，评价材料与人体接触后的生物学反应。</span></div></div>
+        <div class="ref"><span class="rn">02</span><div><span class="rt"><a class="lnk" href="https://en.wikipedia.org/wiki/IEC_60601">IEC 60601 · 医用电气设备安全</a></span><span class="rd">电气隔离与电磁兼容需求（BC-3、SR-3、DR-2）的上位标准族。</span></div></div>
+        <div class="ref"><span class="rn">03</span><div><span class="rt"><a class="lnk" href="https://www.wma.net/policies-post/wma-declaration-of-helsinki/">赫尔辛基宣言 · 人体医学研究伦理准则</a></span><span class="rd">伦理审查相关方（05）判断「风险收益是否平衡」的基本依据。</span></div></div>
+        <div class="ref"><span class="rn">04</span><div><span class="rt"><a class="lnk" href="https://flk.npc.gov.cn/">国家法律法规数据库</a></span><span class="rd">个人信息与数据安全相关条文的权威出处，对应 SR-5 的数据保护要求。</span></div></div>
+        <div class="ref"><span class="rn">05</span><div><span class="rt"><a class="lnk" href="https://www.nmpa.gov.cn/">国家药品监督管理局</a></span><span class="rd">医疗器械注册与准入的监管主体，对应相关方清单中的第 04 项。</span></div></div>
+        <div class="ref"><span class="rn">06</span><div><span class="rt"><a class="lnk" href="https://en.wikipedia.org/wiki/Brain%E2%80%93computer_interface">脑机接口 BCI · 技术背景</a></span><span class="rd">生物神经信号与机器指令相互转换的技术脉络，对应 FR-1 至 FR-3 的信号链路。</span></div></div>
+    </div>
 </div>
 
 <footer class="foot">
-    <div class="foot-q rv">业务需求说清"为什么做"，系统需求说清"做到什么程度算做完"——中间那条线，就是系统工程的工作面。</div>
-    <div class="foot-a rv">杨博文 · 吉林大学</div>
-    <div class="foot-links rv">
+    <div class="foot-grid">
+        <div><h5>关于这份作业</h5><p>系统工程课程小组作业 2：以上肢康复混合辅助训练系统为实例的 BRS 与 StRS 对照，含业务约束、运营概念、相关方与可追溯需求条目。</p></div>
+        <div><h5>方法与口径</h5><p>BRS 回答「为什么做」，StRS 回答「做到什么程度算做完」；需求条目按功能、性能、接口、安全与设计约束分类组织。</p></div>
+        <div><h5>参考</h5><p>需求分类与追溯口径参照 ISO/IEC/IEEE 29148 需求工程大纲；生物相容与电气安全分别对应 ISO 10993、IEC 60601。</p></div>
+    </div>
+    <p class="foot-sig serif">杨博文 · 吉林大学 · 2026</p>
+    <div class="foot-links">
         <a href="https://boweny67.github.io/assignment1/">作业 1 · 六层架构</a>
+        <a href="https://boweny67.github.io/assignment3/">作业 3 · SyRS 与安全分析</a>
         <a href="https://boweny67.github.io/">个人主页</a>
         <a href="https://github.com/boweny67/boweny67.github.io">GitHub 仓库</a>
     </div>
 </footer>
 
 <button class="to-top" id="toTop" aria-label="返回顶部">↑</button>
-<div class="toast" id="toast">已复制需求编号</div>
+<div class="toast" id="toast">已复制编号</div>
 
 <script>
     const secIds = ['top','brs','conops','opscon','stake','strs','trace'];
-    const accentOf = {
-        top:'#e85d4a', brs:'#e85d4a', conops:'#d4a045', opscon:'#9b8de3',
-        stake:'#2a9d8f', strs:'#2a9d8f', trace:'#1a1a2e'
-    };
     const bar = document.getElementById('progress');
     const toTop = document.getElementById('toTop');
 
     function onScroll(){
         const h = document.documentElement.scrollHeight - window.innerHeight;
         bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
-
         let cur = 'top';
         secIds.forEach(id => {
             const el = document.getElementById(id);
             if (el && el.getBoundingClientRect().top <= window.innerHeight / 2) cur = id;
         });
-        document.documentElement.style.setProperty('--accent', accentOf[cur] || '#e85d4a');
         document.querySelectorAll('.nav-dot').forEach(d => d.classList.toggle('active', d.dataset.target === cur));
-
         toTop.classList.toggle('on', window.scrollY > 500);
     }
     window.addEventListener('scroll', onScroll, {passive:true});
@@ -921,12 +576,11 @@
             document.getElementById(d.dataset.target)?.scrollIntoView({behavior:'smooth', block:'start'});
         });
     });
-
     toTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
 
     const toast = document.getElementById('toast');
     let toastTimer = null;
-    function showToast(){
+    function showToast(text){
         toast.classList.add('on');
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toast.classList.remove('on'), 1600);
@@ -940,6 +594,28 @@
             }
             toast.textContent = '已复制 ' + id;
             showToast();
+        });
+    });
+
+    // 类别筛选：按 data-cat 显示/隐藏需求行，无匹配的小节标题一并收起
+    const chips = document.querySelectorAll('.fchip');
+    const groups = [...document.querySelectorAll('.req-list')].map(list => ({
+        list,
+        note: list.previousElementSibling && list.previousElementSibling.classList.contains('sec-note') ? list.previousElementSibling : null,
+        head: list.previousElementSibling && list.previousElementSibling.classList.contains('sec-head') ? list.previousElementSibling : (list.previousElementSibling?.previousElementSibling || null)
+    }));
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            chips.forEach(c => c.classList.remove('on'));
+            chip.classList.add('on');
+            const cat = chip.dataset.cat;
+            document.querySelectorAll('.req-list .req').forEach(row => {
+                row.style.display = (cat === 'all' || row.dataset.cat === cat) ? '' : 'none';
+            });
+            groups.forEach(g => {
+                const anyVisible = [...g.list.querySelectorAll('.req')].some(r => r.style.display !== 'none');
+                [g.head, g.note].forEach(el => { if (el) el.style.display = anyVisible ? '' : 'none'; });
+            });
         });
     });
 </script>
