@@ -21,6 +21,7 @@
      幻灯片控制器
      ---------------------------------------------------------- */
   var track = document.getElementById('track');
+  var canvas = document.getElementById('canvas');
   var slides = Array.prototype.slice.call(track.querySelectorAll('.slide'));
   var total = slides.length;
   var cur = 0;
@@ -69,6 +70,15 @@
 
   prevBtn.addEventListener('click', function () { goTo(cur - 1); });
   nextBtn.addEventListener('click', function () { goTo(cur + 1); });
+
+  /* ---------- 等比缩放：1280×720 设计画布适配视口 ---------- */
+  var CW = 1280, CH = 720;
+  function fit() {
+    var s = Math.min(window.innerWidth / CW, window.innerHeight / CH);
+    canvas.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit);
+  fit();
 
   /* ---------- 全屏切换 ---------- */
   function isFullscreen() {
@@ -414,7 +424,7 @@
     var wrap = canvas.parentElement;
     var w = wrap.clientWidth || wrap.getBoundingClientRect().width;
     if (!w) return;
-    var h = Math.max(210, Math.round(w * 0.42));
+    var h = Math.max(180, Math.round(w * 0.34));
     var dpr = window.devicePixelRatio || 1;
     canvas.width = w * dpr;
     canvas.height = h * dpr;
