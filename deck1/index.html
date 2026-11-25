@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>一次抬手，要经过六层 · 网页幻灯片</title>
 <meta name="description" content="作业1 的网页 PPT 版：把“抬手”按系统工程分层语法拆成六层，保留全部可操作交互——环路延迟、断链降级、系统配置。">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=10">
 <style>
   /* 首屏读头：真实时长 + 慢放倍率标注 */
   .foot-right{display:flex;align-items:baseline;gap:10px}
@@ -40,24 +40,24 @@
 
   /* 07 数据与来源 */
   .src-table{
-    width:100%;margin-top:34px;border-collapse:collapse;
-    font-size:13px;line-height:1.7;
+    width:100%;margin-top:14px;border-collapse:collapse;
+    font-size:10.5px;line-height:1.4;
   }
   .src-table th{
     text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
     text-transform:uppercase;color:var(--purple);font-weight:600;
-    padding:0 14px 10px 0;border-bottom:1px solid var(--ink);
+    padding:0 8px 6px 0;border-bottom:1px solid var(--ink);
     white-space:nowrap;
   }
   .src-table td{
-    padding:11px 14px 11px 0;vertical-align:top;color:var(--ink-2);
+    padding:4px 8px 4px 0;vertical-align:top;color:var(--ink-2);
     border-bottom:1px solid var(--rule);
   }
-  .src-table td:first-child{color:var(--ink);font-weight:600;width:24%}
-  .src-table td:last-child{color:var(--muted);font-size:12px;width:23%}
+  .src-table td:first-child{color:var(--ink);font-weight:600;width:25%}
+  .src-table td:last-child{color:var(--muted);font-size:10.5px;width:26%}
   .src-note{
-    margin-top:26px;padding-left:16px;border-left:2px solid var(--purple-soft);
-    font-size:12.5px;line-height:1.9;color:var(--muted);max-width:760px;
+    margin-top:10px;padding-left:12px;border-left:2px solid var(--purple-soft);
+    font-size:10px;line-height:1.5;color:var(--muted);max-width:760px;
   }
   @media (max-width:640px){
     .src-table{font-size:12px}
@@ -123,7 +123,7 @@
         <div class="deck-head">
           <p class="eyebrow">02 / 结构</p>
           <h2 class="serif">六层，<em>逐层缩小</em></h2>
-          <p class="deck-sub">左边这张图对应的不是尺寸，是<em>责任的范围</em>：从一个人的一生，到一枚芯片的针脚。点任意一层，翻到那一页细看。</p>
+          <p class="deck-sub">这张图对应的不是尺寸，是<em>责任的范围</em>：从一个人的一生，到一枚芯片的针脚。点任意一层，翻到那一页细看。</p>
           <div class="stats" id="stats"></div>
         </div>
 
@@ -138,10 +138,6 @@
               </div>
             </div>
             <div class="ruler" aria-hidden="true"><span>米</span><i></i><i></i><i></i><i></i><i></i><span>微米</span></div>
-          </div>
-          <div class="deck-text" id="overviewText">
-            <p class="prose narrow">下面六页，按从“为什么存在”到“可采购的积木”的顺序逐层拆开。每一层都给出生物原本的做法与机器接手的做法，以及这一层的约束或衡量指标。</p>
-            <p class="after">越往上，回答的是目的与环境；越往下，回答的是芯片与针脚。分层不是抽屉，是一条可以定位故障的线。</p>
           </div>
         </div>
       </div>
@@ -165,23 +161,7 @@
           <p class="eyebrow">03 / 实验一 · 环路延迟</p>
           <h2 class="serif">把延迟调到 120 毫秒，<br><em>手开始不听话</em></h2>
           <div class="prose narrow">
-            <p>人体的本体感觉闭环大约 20–40 毫秒。而任何一条“采集 → 无线 → 推理 → 驱动”的链路，都会把这个数字成倍放大。</p>
-            <p>不用相信我的话。拖一下滑块，看那只手追不追得上目标。</p>
-          </div>
-
-          <div class="purpose">
-            <div class="p-item">
-              <h5>这个实验想干什么</h5>
-              <p>把“延迟”这个抽象的毫秒数，变成眼睛能看见的失误。目标是量出人到底能容忍多少延迟，以及超过之后，身体先坏在哪一环。</p>
-            </div>
-            <div class="p-item">
-              <h5>怎么玩</h5>
-              <p>紫点是目标，墨绿指针是“你的手”，中间那根橙线是偏差。拖三根滑块改变采集、传输、推理的耗时，看右下角的状态在“跟随 / 滞后 / 过冲 / 振荡”之间怎么翻。</p>
-            </div>
-            <div class="p-item">
-              <h5>它证明了什么</h5>
-              <p>60 毫秒以内，机器的手和你的手差不多快；过了 100 毫秒，快速动作开始画弧；145 毫秒以上，环路自己开始振荡——你越纠正，它越抖。所以“反射”不能放在云端，必须留在本地。</p>
-            </div>
+            <p>人体的本体感觉闭环大约 20–40 毫秒。拖三根滑块改变采集、传输、推理耗时，看那只手追不追得上目标。</p>
           </div>
 
           <div class="lab-panel">
@@ -199,14 +179,10 @@
                 <label class="slider"><span>采集与滤波 <b id="v1">16</b> ms</span><input type="range" id="s1" min="2" max="40" step="2" value="16"></label>
                 <label class="slider"><span>无线 / 总线 <b id="v2">10</b> ms</span><input type="range" id="s2" min="0" max="60" step="2" value="10"></label>
                 <label class="slider"><span>边缘推理 <b id="v3">14</b> ms</span><input type="range" id="s3" min="2" max="90" step="2" value="14"></label>
-                <p class="fixed">执行反馈固定 12 ms（伺服响应 2 ms + 传感器回读 10 ms）。默认值：250 Hz 采样滑窗 4–8 ms + 滤波、BLE 连接间隔的一半（≈10 ms）、小模型推理 ≈14 ms。</p>
-                <p class="fixed">对照：36 通道 / 5 kHz 的实验室闭环系统实测端到端 90–131 ms；中科院 2025 年的临床系统压到了 100 ms 以内。</p>
               </div>
               <p class="verdict" id="labVerdict">和自己的身体差不多：你还没想，手已经到位。</p>
             </div>
           </div>
-
-          <p class="after">所以真实的增强系统会把“反射”下沉到本地——就像脊髓不等大脑批准。云端只负责慢的那部分：策略、地图、记忆。</p>
         </div>
       </div>
     </section>
@@ -218,23 +194,7 @@
           <p class="eyebrow">04 / 实验二 · 断链</p>
           <h2 class="serif">六层里，<br><em>最怕断的不是大脑</em></h2>
           <div class="prose narrow">
-            <p>我们习惯以为最关键的是决策层。但真实的失效，多发生在连接处：电极脱落、线缆松脱、电池耗尽、无线丢包。</p>
-            <p>点一层，把它拆掉。看这套系统还剩下什么。</p>
-          </div>
-
-          <div class="purpose">
-            <div class="p-item">
-              <h5>这个实验想干什么</h5>
-              <p>检验分层设计最核心的那个承诺：故障会被关在一层里，不会顺着线传上去把整机拖垮。六个层一个个拔掉，看谁的窟窿能补、谁补不了。</p>
-            </div>
-            <div class="p-item">
-              <h5>怎么玩</h5>
-              <p>点上方 L1–L6 任意一层。卡片会给出这段断链的“症状 / 后果 / 谁接管”，以及剩余能力条——这条越短，说明这一层越没有下层兜底。</p>
-            </div>
-            <div class="p-item">
-              <h5>它证明了什么</h5>
-              <p>越往下断，越有人兜：模块死了重启，信号飘了就用缓存和阻抗监测。越往上断，越没人接管：体系断了退回纯生物，任务断了反而“一切正常、只剩方向错了”。最危险的失效不是停摆，是还在跑、但跑的不是这件事。</p>
-            </div>
+            <p>真实的失效多发生在连接处：电极脱落、线缆松脱、电池耗尽、无线丢包。点一层，把它拆掉，看这套系统还剩下什么。</p>
           </div>
 
           <div class="break-wrap">
@@ -252,8 +212,6 @@
               </div>
             </div>
           </div>
-
-          <p class="after">这就是分层设计的意义：故障被关在一层里，上面五层还能继续工作。</p>
         </div>
       </div>
     </section>
@@ -265,23 +223,7 @@
           <p class="eyebrow">05 / 实验三 · 配置</p>
           <h2 class="serif">给自己<br><em>配一台</em></h2>
           <div class="prose narrow">
-            <p>每一层其实只有一个旋钮是真的：你愿意用多少<em>侵入性</em>，换多少<em>实时性</em>。</p>
-            <p>下面三种组合是常见的原型。点一下，换成你自己的。</p>
-          </div>
-
-          <div class="purpose">
-            <div class="p-item">
-              <h5>这个实验想干什么</h5>
-              <p>把前面拆了半天的六层，重新压回一个人的身体上：不是问你“能做到多少”，而是问你“愿意付多少”。侵入性、实时性、续航、负重，这四样东西不可能同时拿满。</p>
-            </div>
-            <div class="p-item">
-              <h5>怎么玩</h5>
-              <p>五类各三个选项——接口、传输、决策、能源、执行。也可以直接点三个预设原型。每次改动，右边的延迟、带宽、续航、重量、功耗、侵入性和雷达形状都会立刻重算。</p>
-            </div>
-            <div class="p-item">
-              <h5>它证明了什么</h5>
-              <p>想要 20 毫秒的直觉级响应，就得准备开颅或背上两公斤；想要轻、安全、不开刀，就得接受延迟和带宽的折扣。每一种组合都有一句“代价”结语，因为系统工程的工作不是找最优解，而是把代价说清楚摆在台面上。</p>
-            </div>
+            <p>唯一的真旋钮：你愿意用多少<em>侵入性</em>，换多少<em>实时性</em>。五类各选一项，或直接点预设原型。</p>
           </div>
 
           <div class="presets" id="presets"></div>
@@ -294,8 +236,6 @@
               <p class="build-verdict" id="buildVerdict"></p>
             </div>
           </div>
-
-          <p class="after">没有最优解，只有配得上的代价。系统工程的工作，是把代价说清楚，而不是把它藏起来。</p>
         </div>
       </div>
     </section>
@@ -315,13 +255,10 @@
     </section>
 
     <!-- ============ 13 数据与来源 ============ -->
-    <section class="slide" data-title="数据与来源">
+    <section class="slide" data-title="数据与来源 · 上">
       <div class="chapter src">
-        <p class="eyebrow">07 / 数据与来源</p>
-        <h2 class="serif">每个数字<br><em>都能对上一个型号</em></h2>
-        <div class="prose">
-          <p>这一节只有一个用途：让你能核对。页面里出现的功耗、重量、延迟、带宽、续航，逐条对应到下面某个器件的数据手册、厂商规格页，或一篇公开实测的论文与审评文件。对不上型号的数字，页面里不放。</p>
-        </div>
+        <p class="eyebrow">07 / 数据与来源 · 1/2</p>
+        <h2 class="serif src-h">每个数字都能对上一个型号</h2>
 
         <table class="src-table">
           <thead><tr><th>页面里的数字</th><th>依据</th><th>出处</th></tr></thead>
@@ -334,6 +271,19 @@
             <tr><td>植入 96 通道 46 Mbps</td><td>96 通道 × 30 kSPS × 16 bit ≈ 46 Mbps，对应 Utah / Blackrock 级皮层阵列的常规采样率</td><td>皮层阵列公开规格</td></tr>
             <tr><td>外骨骼关节 25 W / 1.45 kg</td><td>实测：行走时每髋关节约 25 W、每膝关节约 27 W，四关节整机 117 W，整机 12 kg</td><td>Farris et al., 2011（下肢动力矫形器实测）</td></tr>
             <tr><td>康复外骨骼续航 2.9 h</td><td>官方审评文件：主电池单次充电可连续行走 2 h 以上，另有备用电池 +15 min</td><td>FDA De Novo, ReWalk, DEN130034</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide" data-title="数据与来源 · 下">
+      <div class="chapter src">
+        <p class="eyebrow">07 / 数据与来源 · 2/2</p>
+        <h2 class="serif src-h">每个数字都能对上一个型号</h2>
+
+        <table class="src-table">
+          <thead><tr><th>页面里的数字</th><th>依据</th><th>出处</th></tr></thead>
+          <tbody>
             <tr><td>小电池包 18.5 Wh / 190 g</td><td>21700 锂电芯约 250 Wh/kg：2 节 = 17.6 Wh / 140 g，加 BMS 与外壳取 190 g</td><td>电芯规格（能量密度量级）</td></tr>
             <tr><td>固定 12 ms 执行反馈</td><td>外骨骼电机官方响应时间 2 ms + 传感器回读约 10 ms</td><td>Hypershell M-One 规格</td></tr>
             <tr><td>实验室闭环 90–131 ms</td><td>36–72 通道、5–100 kHz 的实时脑电系统，实测系统延迟最低 90 ms、最高 131 ms</td><td>Closed-loop feedback system delay, 2021</td></tr>
@@ -344,7 +294,7 @@
           </tbody>
         </table>
 
-        <p class="src-note">仍然要承认三件事：一、器件功耗是数据手册的典型值，真实板级功耗会高出 10–30%；二、外骨骼、刺激器这类执行部件的重量包含结构件分摊，不同产品差别很大；三、延迟实验是一个简化的一维跟踪模型，它演示的是相位滞后的后果，不是某个具体产品的实测曲线。</p>
+        <p class="src-note">说明：功耗为手册典型值，板级实高 10–30%；执行件重量含结构件分摊，产品间差异大；延迟实验是简化一维跟踪模型，演示相位滞后后果，非某产品实测曲线。</p>
       </div>
     </section>
 
