@@ -40,7 +40,7 @@
         <span class="dot-sep"></span>
         <span>约 15 分钟</span>
         <span class="dot-sep"></span>
-        <span>4 份作业 · 19 页</span>
+        <span>4 份作业 · 18 页</span>
       </div>
     </div>
   </section>
@@ -237,25 +237,6 @@
         <div class="card stat"><div class="stat-num">12</div><div class="stat-label">安全需求 SSR</div></div>
       </div>
       <p class="prose narrow">SyRS 依据 ISO/IEC/IEEE 29148:2018 大纲组织：把作业 2 的 StRS 上升为系统级需求，补齐可用性、运行、模式状态、物理与法规条目。关键定量口径：意图识别端到端延迟 ≤ 200 ms；安全保护响应 ≤ 50 ms；连续工作 8 h 无单点失效。</p>
-    </div>
-  </section>
-
-  <section class="slide" data-title="作业3 · 模式与状态">
-    <div class="slide-inner split">
-      <div class="col-text">
-        <p class="eyebrow">Modes & States · 系统在什么状态下做什么</p>
-        <h2 class="serif">七种状态，<br>逐级降级到无增强</h2>
-        <ul class="ticks">
-          <li><strong>自检待机</strong>：上电佩戴后查阻抗、电量、传感器；未通过不进训练</li>
-          <li><strong>主动辅助</strong>：识别稳定后按意图输出助力，监护旁路监视</li>
-          <li><strong>有限辅助</strong>：置信度不足时只给提示与有限助力</li>
-          <li><strong>纯自主</strong>：执行输出全部断开，保留被动支撑与无源保护</li>
-          <li><strong>告警降级 / 故障安全 / 维护校准</strong>：递进响应，默认回无增强状态</li>
-        </ul>
-      </div>
-      <div class="col-media">
-        <div class="anim-frame" data-anim="state-flow" data-caption="状态流转：自检待机 → 主动辅助，异常时逐级降级到纯自主 / 故障安全"></div>
-      </div>
     </div>
   </section>
 

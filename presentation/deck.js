@@ -239,34 +239,6 @@
       }
     },
 
-    /* 5. 状态流转：主动辅助为主线，异常逐级降级 */
-    "state-flow": {
-      dur: 4600,
-      draw: function (ctx, t, w, h) {
-        var main = ["自检待机", "主动辅助"];
-        var subs = ["有限辅助", "纯自主", "告警降级", "故障安全"];
-        var y0 = h * 0.26;
-        var x1 = w * 0.2, x2 = w * 0.5;
-        node(ctx, x1, y0, main[0], t > 0.05, PAL.purple);
-        arrow(ctx, x1 + 46, y0, x2 - 46, y0, t > 0.25);
-        node(ctx, x2, y0, main[1], t > 0.3, PAL.green);
-        var sx = w * 0.8;
-        subs.forEach(function (s, i) {
-          var yy = h * 0.55 + i * (h * 0.11);
-          var on = t > 0.5 + i * 0.1;
-          arrow(ctx, x2, y0 + 18, sx - 30, yy - 6, on);
-          ctx.beginPath(); ctx.arc(sx, yy, 18, 0, Math.PI * 2);
-          ctx.fillStyle = on ? "rgba(194,101,33,.1)" : "#fff"; ctx.fill();
-          ctx.strokeStyle = on ? PAL.orange : PAL.rule; ctx.lineWidth = 1.5; ctx.stroke();
-          ctx.textAlign = "right"; ctx.fillStyle = on ? PAL.ink : PAL.muted;
-          ctx.font = "12px " + getSans();
-          ctx.fillText(s, sx - 30, yy + 4);
-        });
-        ctx.textAlign = "center"; ctx.fillStyle = PAL.muted; ctx.font = "12px " + getMono();
-        ctx.fillText("异常时逐级降级，默认回到无增强状态", w / 2, h - 20);
-      }
-    },
-
     /* 6. STPA 控制回路 + 独立监护 */
     "stpa-loop": {
       dur: 5000,
@@ -355,17 +327,6 @@
 
   /* ---------- 小工具 ---------- */
   function line(ctx, x1, y1, x2, y2) { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
-  function arrow(ctx, x1, y1, x2, y2, on) {
-    ctx.strokeStyle = on ? PAL.green : PAL.rule; ctx.lineWidth = 1.5;
-    line(ctx, x1, y1, x2, y2);
-  }
-  function node(ctx, x, y, label, on, col) {
-    ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2);
-    ctx.fillStyle = on ? "rgba(99,56,138,.1)" : "#fff"; ctx.fill();
-    ctx.strokeStyle = on ? col : PAL.rule; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.textAlign = "center"; ctx.fillStyle = on ? PAL.ink : PAL.muted; ctx.font = "12px " + getSans();
-    ctx.fillText(label, x, y + 4);
-  }
   function getSans() { return '"PingFang SC","Microsoft YaHei",system-ui,sans-serif'; }
   function getSerif() { return '"Songti SC","SimSun",serif'; }
   function getMono() { return '"SFMono-Regular",Consolas,monospace'; }
