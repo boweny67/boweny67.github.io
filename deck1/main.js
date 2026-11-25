@@ -26,6 +26,7 @@
   var cur = 0;
   var prevBtn = document.getElementById('prevBtn');
   var nextBtn = document.getElementById('nextBtn');
+  var fsBtn = document.getElementById('fsBtn');
   var curPage = document.getElementById('curPage');
   var totalPage = document.getElementById('totalPage');
   var dotsEl = document.getElementById('dots');
@@ -69,11 +70,39 @@
   prevBtn.addEventListener('click', function () { goTo(cur - 1); });
   nextBtn.addEventListener('click', function () { goTo(cur + 1); });
 
+  /* ---------- 全屏切换 ---------- */
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+  }
+  function toggleFullscreen() {
+    var el = document.documentElement;
+    if (!isFullscreen()) {
+      var req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+      if (req) req.call(el);
+    } else {
+      var exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+      if (exit) exit.call(document);
+    }
+  }
+  function syncFsBtn() {
+    fsBtn.textContent = isFullscreen() ? '✕ 退出全屏' : '⛶ 全屏';
+    // 全屏尺寸变化后重算画布与首屏连线
+    setTimeout(function () {
+      if (typeof resizeCanvas === 'function' && cur === SLIDE_LAB) resizeCanvas();
+      if (typeof layoutLine === 'function') layoutLine();
+    }, 120);
+  }
+  fsBtn.addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', syncFsBtn);
+  document.addEventListener('webkitfullscreenchange', syncFsBtn);
+  syncFsBtn();
+
   document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); goTo(cur + 1); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(cur - 1); }
     else if (e.key === 'Home') { goTo(0); }
     else if (e.key === 'End') { goTo(total - 1); }
+    else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
   });
 
   // 触屏左右滑动
